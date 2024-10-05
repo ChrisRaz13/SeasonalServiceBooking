@@ -1,0 +1,31 @@
+<h2>Create a New Booking</h2>
+
+<form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+  <label for="clientId">Client:</label>
+  <select id="clientId" formControlName="clientId">
+    <option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</option>
+  </select>
+  <div *ngIf="bookingForm.get('clientId')?.invalid && bookingForm.get('clientId')?.touched">
+    Please select a client.
+  </div>
+
+  <label for="serviceName">Service:</label>
+  <input id="serviceName" formControlName="serviceName">
+  <div *ngIf="bookingForm.get('serviceName')?.invalid && bookingForm.get('serviceName')?.touched">
+    Service name is required.
+  </div>
+
+  <label for="bookingDate">Date:</label>
+  <input id="bookingDate" type="date" formControlName="bookingDate">
+  <div *ngIf="bookingForm.get('bookingDate')?.invalid && bookingForm.get('bookingDate')?.touched">
+    Date is required.
+  </div>
+
+  <label for="bookingTime">Time:</label>
+  <input id="bookingTime" type="time" formControlName="bookingTime">
+  <div *ngIf="bookingForm.get('bookingTime')?.invalid && bookingForm.get('bookingTime')?.touched">
+    Time is required.
+  </div>
+
+  <button type="submit" [disabled]="bookingForm.invalid">Create Booking</button>
+</form>

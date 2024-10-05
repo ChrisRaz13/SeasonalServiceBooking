@@ -3,6 +3,7 @@ package com.seasonalservices.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,10 +37,10 @@ public class ClientRepository {
         return jdbcTemplate.query(sql, clientRowMapper);
     }
 
-    public Client findById(int id) {
+    public Optional<Client> findById(int id) {
         String sql = "SELECT * FROM clients WHERE id = ?";
-        List<Client> clients = jdbcTemplate.query(sql, new Object[] { id }, clientRowMapper);
-        return clients.isEmpty() ? null : clients.get(0);
+        List<Client> clients = jdbcTemplate.query(sql, new Object[]{id}, clientRowMapper);
+        return clients.isEmpty() ? Optional.empty() : Optional.of(clients.get(0));
     }
 
     public Client save(Client client) {
@@ -62,17 +63,14 @@ public class ClientRepository {
         return client;
     }
 
-    public Client update(Client client) {
+    public int update(Client client) {
         String sql = "UPDATE clients SET name = ?, email = ?, phone_number = ?, address = ? WHERE id = ?";
-        int rowsAffected = jdbcTemplate.update(sql, client.getName(), client.getEmail(), client.getPhoneNumber(),
+        return jdbcTemplate.update(sql, client.getName(), client.getEmail(), client.getPhoneNumber(),
                 client.getAddress(), client.getId());
-
-        return rowsAffected > 0 ? client : null;
     }
 
-    public boolean delete(int id) {
+    public int delete(int id) {
         String sql = "DELETE FROM clients WHERE id = ?";
-        int rowsAffected = jdbcTemplate.update(sql, id);
-        return rowsAffected > 0;
+        return jdbcTemplate.update(sql, id);
     }
 }

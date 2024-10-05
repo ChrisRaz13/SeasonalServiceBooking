@@ -1,0 +1,30 @@
+<h2 *ngIf="clientId">Update Client</h2>
+<h2 *ngIf="!clientId">Add Client</h2>
+
+<form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+  <label for="name">Name:</label>
+  <input id="name" formControlName="name">
+  <div *ngIf="clientForm.get('name')?.invalid && clientForm.get('name')?.touched">
+    Name is required.
+  </div>
+
+  <label for="email">Email:</label>
+  <input id="email" formControlName="email" type="email">
+  <div *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched">
+    Please enter a valid email.
+  </div>
+
+  <label for="phoneNumber">Phone Number:</label>
+  <input id="phoneNumber" formControlName="phoneNumber">
+  <div *ngIf="clientForm.get('phoneNumber')?.invalid && clientForm.get('phoneNumber')?.touched">
+    Phone number is required.
+  </div>
+
+  <label for="address">Address:</label>
+  <input id="address" formControlName="address">
+  <div *ngIf="clientForm.get('address')?.invalid && clientForm.get('address')?.touched">
+    Address is required.
+  </div>
+
+  <button type="submit">Submit</button>
+</form>

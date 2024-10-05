@@ -1,16 +1,18 @@
 package com.seasonalservices.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.seasonalservices.entities.Client;
 
 public interface ClientService {
-    List<Client> getAllClients();
+	List<Client> getAllClients();
 
-    Client addClient(Client client);
+	Client addClient(Client client);
 
-    Client updateClient(Client client);
+	int updateClient(Client client);
 
-    boolean deleteClient(int id);
+	int deleteClient(int id);
 
-    Client getClientById(int id);
+	Optional<Client> getClientById(int id); 
 }

@@ -2,10 +2,13 @@ package com.seasonalservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,10 +27,11 @@ public class ClientServiceTest {
     private ClientRepository clientRepository;
 
     @InjectMocks
-    private ClientServiceImpl clientService; 
+    private ClientServiceImpl clientService;
 
     @Test
     public void testAddClient() {
+        // Arrange
         Client client = new Client();
         client.setName("John Doe");
         client.setEmail("john.doe@example.com");
@@ -43,8 +47,10 @@ public class ClientServiceTest {
 
         when(clientRepository.save(any(Client.class))).thenReturn(savedClient);
 
+        // Act
         Client result = clientService.addClient(client);
 
+        // Assert
         assertNotNull(result);
         assertEquals(1, result.getId());
         assertEquals("John Doe", result.getName());
@@ -54,9 +60,9 @@ public class ClientServiceTest {
 
         verify(clientRepository, times(1)).save(any(Client.class));
     }
-
     @Test
     public void testGetClientById() {
+        // Arrange
         Client client = new Client();
         client.setId(1);
         client.setName("Jane Doe");
@@ -64,10 +70,13 @@ public class ClientServiceTest {
         client.setPhoneNumber("098-765-4321");
         client.setAddress("456 Elm St");
 
-        when(clientRepository.findById(1)).thenReturn(client);
+        // Correctly mock repository to return Optional<Client>
+        when(clientRepository.findById(1)).thenReturn(Optional.of(client));
 
-        Client foundClient = clientService.getClientById(1);
+        // Act
+        Client foundClient = clientService.getClientById(1).orElse(null);
 
+        // Assert
         assertNotNull(foundClient);
         assertEquals(1, foundClient.getId());
         assertEquals("Jane Doe", foundClient.getName());
@@ -78,8 +87,11 @@ public class ClientServiceTest {
         verify(clientRepository, times(1)).findById(1);
     }
 
+
+
     @Test
     public void testUpdateClient() {
+        // Arrange
         Client client = new Client();
         client.setId(1);
         client.setName("Jane Smith");
@@ -87,29 +99,27 @@ public class ClientServiceTest {
         client.setPhoneNumber("111-222-3333");
         client.setAddress("789 Oak St");
 
-        when(clientRepository.update(any(Client.class))).thenReturn(client);
+        when(clientRepository.update(any(Client.class))).thenReturn(1);  // Assuming update returns an int for success (usually number of rows updated)
 
-        Client updatedClient = clientService.updateClient(client);
+        // Act
+        int updateResult = clientService.updateClient(client);
 
-        assertNotNull(updatedClient);
-        assertEquals(1, updatedClient.getId());
-        assertEquals("Jane Smith", updatedClient.getName());
-        assertEquals("jane.smith@example.com", updatedClient.getEmail());
-        assertEquals("111-222-3333", updatedClient.getPhoneNumber());
-        assertEquals("789 Oak St", updatedClient.getAddress());
-
+        // Assert
+        assertEquals(1, updateResult);
         verify(clientRepository, times(1)).update(any(Client.class));
     }
 
     @Test
     public void testDeleteClient() {
+        // Arrange
         int clientId = 1;
-        when(clientRepository.delete(clientId)).thenReturn(true);
+        when(clientRepository.delete(clientId)).thenReturn(1);  // Assuming delete returns an int indicating success
 
-        boolean isDeleted = clientService.deleteClient(clientId);
+        // Act
+        int deleteResult = clientService.deleteClient(clientId);
 
-        assertEquals(true, isDeleted);
-
+        // Assert
+        assertEquals(1, deleteResult);
         verify(clientRepository, times(1)).delete(clientId);
     }
 }

@@ -1,14 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { provideRouter, RouterModule, Routes } from '@angular/router';
 import { ClientListComponent } from './components/client-list/client-list.component';
+import { BookingFormComponent } from './components/booking-form/booking-form.component';
+import { HomeComponent } from './components/home/home.component';
 
-const routes: Routes = [
+export const routes: Routes = [
+  { path: '', component: HomeComponent },
   { path: 'clients', component: ClientListComponent },
-  { path: '', redirectTo: '/clients', pathMatch: 'full' } // Redirect root to the client list for easier testing
+  { path: 'bookings', component: BookingFormComponent }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
