@@ -3,44 +3,44 @@ package com.seasonalservices.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.seasonalservices.entities.Client;
+import com.seasonalservices.repository.ClientRepository;
 import com.seasonalservices.service.ClientService;
 
 @Service
 public class ClientServiceImpl implements ClientService {
-    
-    private final JdbcTemplate jdbcTemplate;
-    
+
+    private final ClientRepository clientRepository;
+
     @Autowired
-    public ClientServiceImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ClientServiceImpl(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
-    
+
     @Override
     public List<Client> getAllClients() {
-        String sql = "SELECT * FROM clients";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Client.class));
+        return clientRepository.findAll();
     }
 
     @Override
-    public int addClient(Client client) {
-        String sql = "INSERT INTO clients (name, email, phone_number, address) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, client.getName(), client.getEmail(), client.getPhoneNumber(), client.getAddress());
+    public Client addClient(Client client) {
+        return clientRepository.save(client);
     }
 
     @Override
-    public int updateClient(Client client) {
-        String sql = "UPDATE clients SET name = ?, email = ?, phone_number = ?, address = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, client.getName(), client.getEmail(), client.getPhoneNumber(), client.getAddress(), client.getId());
+    public Client updateClient(Client client) {
+        return clientRepository.update(client);
     }
 
     @Override
-    public int deleteClient(int id) {
-        String sql = "DELETE FROM clients WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+    public boolean deleteClient(int id) {
+        return clientRepository.delete(id);
+    }
+
+    @Override
+    public Client getClientById(int id) {
+        return clientRepository.findById(id);
     }
 }

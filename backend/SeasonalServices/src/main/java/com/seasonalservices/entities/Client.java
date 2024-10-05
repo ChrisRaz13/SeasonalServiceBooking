@@ -1,7 +1,7 @@
 package com.seasonalservices.entities;
 
 public class Client {
-	private int id;
+	private Integer id;
 	private String name;
 	private String email;
 	private String phoneNumber;
@@ -10,7 +10,7 @@ public class Client {
 	public Client() {
 	}
 
-	public Client(int id, String name, String email, String phoneNumber, String address) {
+	public Client(Integer id, String name, String email, String phoneNumber, String address) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -18,11 +18,11 @@ public class Client {
 		this.address = address;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -57,6 +57,4 @@ public class Client {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-
 }
