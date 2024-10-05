@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BookingService, Booking } from '../../services/booking.service';
+import { BookingService} from '../../services/booking.service';
 import { ClientService } from '../../services/client.service';
 import { Client } from '../../models/client.model';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule for reactive forms
 import { Router } from '@angular/router';
+import { Booking } from '../../models/booking.model';
 
 @Component({
   selector: 'app-booking-form',
@@ -26,7 +27,7 @@ export class BookingFormComponent implements OnInit {
   ) {
     this.bookingForm = this.fb.group({
       clientId: ['', Validators.required],
-      serviceName: ['', Validators.required],
+      serviceName: ['Snow Plowing', Validators.required],
       bookingDate: ['', Validators.required],
       bookingTime: ['', Validators.required]
     });

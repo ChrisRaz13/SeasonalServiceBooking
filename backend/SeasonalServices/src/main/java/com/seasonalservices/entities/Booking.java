@@ -1,71 +1,60 @@
 package com.seasonalservices.entities;
 
-import java.time.LocalDateTime;
-
 public class Booking {
-    private int id;
-    private int clientId;
-    private int serviceId;
-    private LocalDateTime bookingDateTime;
-    private String status;
-    private ServiceEntity service;
+	private Integer id;
+	private String serviceName; 
+	private String bookingDate; 
+	private String bookingTime; 
+	private Integer clientId;
 
-    public Booking() {}
-
-    public Booking(int id, int clientId, int serviceId, LocalDateTime bookingDateTime, String status) {
-        this.id = id;
-        this.clientId = clientId;
-        this.serviceId = serviceId;
-        this.bookingDateTime = bookingDateTime;
-        this.status = status;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
- 
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(int serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public LocalDateTime getBookingDateTime() {
-        return bookingDateTime;
-    }
-
-    public void setBookingDateTime(LocalDateTime bookingDateTime) {
-        this.bookingDateTime = bookingDateTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-	public ServiceEntity getService() {
-		return service;
+	public Booking() {
 	}
 
-	public void setService(ServiceEntity service) {
-		this.service = service;
+	public Booking(Integer id, String serviceName, String bookingDate, String bookingTime, Integer clientId) {
+		this.id = id;
+		this.serviceName = serviceName;
+		this.bookingDate = bookingDate;
+		this.bookingTime = bookingTime;
+		this.clientId = clientId;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public String getBookingDate() {
+		return bookingDate;
+	}
+
+	public void setBookingDate(String bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	public String getBookingTime() {
+		return bookingTime;
+	}
+
+	public void setBookingTime(String bookingTime) {
+		this.bookingTime = bookingTime;
+	}
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
 }

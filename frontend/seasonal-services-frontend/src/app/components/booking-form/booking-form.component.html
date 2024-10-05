@@ -9,11 +9,11 @@
     Please select a client.
   </div>
 
-  <label for="serviceName">Service:</label>
-  <input id="serviceName" formControlName="serviceName">
-  <div *ngIf="bookingForm.get('serviceName')?.invalid && bookingForm.get('serviceName')?.touched">
-    Service name is required.
-  </div>
+  <label for="serviceName">Service Name:</label>
+  <select id="serviceName" formControlName="serviceName">
+    <option value="Snow Plowing">Snow Plowing</option>
+    <option value="Lawn Care">Lawn Care</option>
+  </select>
 
   <label for="bookingDate">Date:</label>
   <input id="bookingDate" type="date" formControlName="bookingDate">

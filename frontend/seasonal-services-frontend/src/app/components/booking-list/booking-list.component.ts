@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingService, Booking } from '../../services/booking.service';
+import { BookingService } from '../../services/booking.service'; // Only import the service from here
+import { Booking } from '../../models/booking.model'; // Import Booking from booking.model.ts
 import { CommonModule } from '@angular/common';
 
 @Component({
