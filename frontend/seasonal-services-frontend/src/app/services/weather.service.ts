@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +9,18 @@ import { Observable, switchMap } from 'rxjs';
 export class WeatherService {
   constructor(private http: HttpClient) {}
 
-  // Get the metadata to obtain the forecast URL
-  getForecastForLocation(lat: number, lon: number): Observable<any> {
-    const pointsUrl = `https://api.weather.gov/points/${lat},${lon}`;
+  // First request to get the forecast URL using latitude and longitude
+  getPointData(lat: number, lon: number): Observable<any> {
+    const url = `https://api.weather.gov/points/${lat},${lon}`;
+    return this.http.get(url);
+  }
 
-    const headers = new HttpHeaders({
-      'User-Agent': 'MyWeatherApp (example@example.com)'
-    });
-
-    return this.http.get(pointsUrl, { headers }).pipe(
-      switchMap((pointsResponse: any) => {
-        const forecastUrl = pointsResponse.properties.forecast;
-        return this.http.get(forecastUrl, { headers });
+  // Second request to get the weather forecast
+  getWeatherForecast(lat: number, lon: number): Observable<any> {
+    return this.getPointData(lat, lon).pipe(
+      switchMap((pointData: any) => {
+        const forecastUrl = pointData.properties.forecast;
+        return this.http.get(forecastUrl);
       })
     );
   }
