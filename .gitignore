@@ -9,3 +9,4 @@ default
 .gradle
 *.war
 *.bak
+src/app/services/weather.service.ts

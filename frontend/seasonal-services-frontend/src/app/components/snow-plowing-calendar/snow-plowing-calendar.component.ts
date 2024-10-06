@@ -21,32 +21,49 @@ export class SnowPlowingCalendarComponent implements OnInit {
     selectable: true,
     editable: true,
     events: [],
+    allDaySlot: false,
   };
 
-  weatherForecast: any[] = []; // To store weather forecast details
+  weatherForecast: any[] = [];
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.loadWeatherForecast(); // Call the correct method to load the weather forecast
+    this.loadWeatherForecast();
   }
 
   loadWeatherForecast(): void {
     const lat = 41.6611; // Latitude for Iowa City, Iowa
     const lon = -91.5302; // Longitude for Iowa City, Iowa
 
-    this.weatherService.getWeatherForecast(lat, lon).subscribe(
-      (data) => {
+    this.weatherService.getForecastForLocation(lat, lon).subscribe(
+      (data: any) => {
         console.log('Forecast data:', data); // Debugging: Check API response
 
-        // Create events for each day in the forecast
-        const forecastEvents = data.list.map((forecast: any) => {
-          const date = forecast.dt_txt.split(' ')[0];
-          const weatherDescription = forecast.weather[0]?.description || 'Weather Update';
+        // Extract forecast periods
+        const forecastPeriods = data.properties.periods;
+
+        // Create events for each day
+        const forecastEvents = forecastPeriods.map((forecast: any) => {
+          const date = forecast.startTime.split('T')[0]; // Extract date part
+          const temperature = `${forecast.temperature}°F`;
+          const weatherDescription = forecast.shortForecast.toLowerCase(); // Convert to lowercase for easier matching
+          const chanceOfPrecipitation = forecast.probabilityOfPrecipitation?.value || 0;
+
+          // Check if snow is mentioned
+          let snowInfo = '';
+          if (weatherDescription.includes('snow')) {
+            snowInfo = `, Snow Expected`;
+            if (chanceOfPrecipitation > 0) {
+              snowInfo += ` (${chanceOfPrecipitation}% chance)`;
+            }
+          }
+
           return {
-            title: `Forecast: ${weatherDescription}`,
+            title: `Forecast: ${temperature}, ${forecast.shortForecast}${snowInfo}`,
             start: date,
             allDay: true,
+            classNames: weatherDescription.includes('snow') ? ['fc-event-snow'] : [] // Add a specific class for snow events
           };
         });
 

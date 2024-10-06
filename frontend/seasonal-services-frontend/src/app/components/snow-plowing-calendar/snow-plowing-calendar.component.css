@@ -1,0 +1,20 @@
+/* snow-plowing-calendar.component.css */
+
+/* Style for weather events */
+.fc-event {
+  background-color: #1e90ff; /* Default blue background for weather events */
+  color: #fff; /* White text for readability */
+  border-radius: 5px;
+  padding: 5px;
+}
+
+/* Highlight events with snow in the description */
+.fc-event-snow {
+  background-color: #ff6347; /* Red color for snow events */
+  color: #fff; /* White text */
+}
+
+.full-calendar .fc-toolbar-title {
+  font-size: 1.5rem; /* Larger title for the calendar */
+  font-weight: bold; /* Bold title */
+}

@@ -1,10 +1,2 @@
-<div *ngIf="weatherForecast.length > 0">
-  <p>Weather Forecast for the Next Few Days:</p>
-  <ul>
-    <li *ngFor="let forecast of weatherForecast">
-      {{ forecast.date }}: {{ forecast.description }}
-    </li>
-  </ul>
-</div>
 
 <full-calendar [options]="calendarOptions"></full-calendar>
