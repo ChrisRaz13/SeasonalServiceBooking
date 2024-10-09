@@ -1,8 +1,22 @@
-/* Highlight events with snow in the description */
-.fc-event-snow {
-  background-color: #ff6347; /* Red color for snow events */
-  color: #fff; /* White text */
-  border-radius: 5px;
-  padding: 5px;
+.no-snow-message {
+  text-align: center;
+  font-size: 1.2em;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+::ng-deep .fc .fc-daygrid-day.fc-day-today {
+  background-color: #e0f7fa !important;
+}
+
+::ng-deep .fc-event {
+  background-color: #4db6ac !important;
+  border: none;
+  color: white !important;
   font-weight: bold;
+}
+
+::ng-deep .fc-toolbar-title {
+  font-size: 1.5em;
+  color: #00796b;
 }
