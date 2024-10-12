@@ -12,7 +12,7 @@ import interactionPlugin from '@fullcalendar/interaction';
   standalone: true,
   templateUrl: './snow-plowing-calendar.component.html',
   styleUrls: ['./snow-plowing-calendar.component.css'],
-  imports: [CommonModule, FullCalendarModule]
+  imports: [CommonModule, FullCalendarModule],
 })
 export class SnowPlowingCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions = {
@@ -34,63 +34,60 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   loadWeatherForecast(): void {
-    const lat = 41.6611; // Latitude for Iowa City, Iowa
-    const lon = -91.5302; // Longitude for Iowa City, Iowa
+    const lat = 60.8676; // Latitude for Grandview, Alaska
+    const lon = -149.8797; // Longitude for Grandview, Alaska
 
     this.weatherService.getWeatherForecast(lat, lon).subscribe(
       (data) => {
-        console.log('Forecast data:', data); // Debugging: Check API response
+        console.log('API Data:', data); // Log the full API response for verification
 
-        // Extract daily high and low temperatures, along with snow info
         const groupedForecast: { [date: string]: any } = {};
 
         data.properties.periods.forEach((period: any) => {
           const date = period.startTime.split('T')[0]; // Extract date only
-          const tempMax = period.temperature;
+          const temp = period.temperature;
           const tempUnit = period.temperatureUnit; // Extract temperature unit (e.g., °F)
           const isDaytime = period.isDaytime;
           const snowChance = period.probabilityOfPrecipitation?.value || 0;
-          const snowAmount = period.snowfallAmount?.value || 0; // Extract snowfall amount
 
-          // If any day has a snow chance greater than 0, update snowForecastExists to true
+          // Only care about the chance of snow, skip snowfall amount
           if (snowChance > 0) {
             this.snowForecastExists = true;
           }
 
-          // Group forecasts by day to determine high and low temperatures
+          // Group forecasts by day
           if (!groupedForecast[date]) {
             groupedForecast[date] = {
-              tempMax: isDaytime ? tempMax : null,
-              tempMin: isDaytime ? null : tempMax,
+              tempMax: isDaytime ? temp : null,
+              tempMin: isDaytime ? null : temp, // Store nighttime temperature as low
               snowChance: snowChance,
-              snowAmount: snowAmount,
               tempUnit: tempUnit,
             };
           } else {
             if (isDaytime) {
-              groupedForecast[date].tempMax = Math.max(groupedForecast[date].tempMax ?? tempMax, tempMax);
+              groupedForecast[date].tempMax = Math.max(groupedForecast[date].tempMax ?? temp, temp);
             } else {
-              groupedForecast[date].tempMin = Math.min(groupedForecast[date].tempMin ?? tempMax, tempMax);
+              groupedForecast[date].tempMin = Math.min(groupedForecast[date].tempMin ?? temp, temp);
             }
-
-            groupedForecast[date].snowChance = Math.max(groupedForecast[date].snowChance, snowChance);
-            groupedForecast[date].snowAmount += snowAmount; // Accumulate snow amount
           }
         });
 
-        // Create events for each day
         const forecastEvents = Object.keys(groupedForecast).map((date) => {
-          const { tempMax, tempMin, snowChance, snowAmount, tempUnit } = groupedForecast[date];
-          const weatherDescription = `High: ${tempMax?.toFixed(1)}${tempUnit}, Low: ${tempMin?.toFixed(1)}${tempUnit}, Snow: ${snowAmount.toFixed(1)} mm, Chance of Snow: ${(snowChance).toFixed(1)}%`;
+          const { tempMax, tempMin, snowChance, tempUnit } = groupedForecast[date];
+          const weatherDescription = `High: ${tempMax?.toFixed(1)}${tempUnit}, Low: ${tempMin?.toFixed(1)}${tempUnit}, Chance of Snow: ${(snowChance).toFixed(1)}%`;
+
+          // Add a snowflake if snow is expected
+          const title = snowChance > 0 ? `❄️ Forecast: ${weatherDescription}` : `Forecast: ${weatherDescription}`;
 
           return {
-            title: `Forecast: ${weatherDescription}`,
+            title: title,
             start: date,
             allDay: true,
+            className: snowChance > 0 ? 'snow-day' : '', // Apply CSS class for snow days
           };
         });
 
-        // Update the calendar options with the forecast events
+        // Update calendar options with forecast events
         this.calendarOptions = {
           ...this.calendarOptions,
           events: [...forecastEvents],

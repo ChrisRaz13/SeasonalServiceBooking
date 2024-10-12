@@ -1,9 +1,3 @@
-<nav>
-  <a routerLink="/" routerLinkActive="active">Home</a> |
-  <a routerLink="/clients" routerLinkActive="active">Client List</a> |
-  <a routerLink="/clients/new" routerLinkActive="active">Add Client</a> |
-  <a routerLink="/bookings" routerLinkActive="active">Create Booking</a>
-</nav>
+<app-nav-bar></app-nav-bar>  <!-- Navbar will always be visible -->
 
-<!-- This is required to render routed components -->
-<router-outlet></router-outlet>
+<router-outlet></router-outlet>  <!-- This is where routed components will be displayed -->

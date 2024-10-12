@@ -29,4 +29,5 @@ export class HomeComponent {
   navigateToSnowPlowingCalendar(): void {
     this.router.navigate(['/snow-plowing-calendar']);
   }
+
 }

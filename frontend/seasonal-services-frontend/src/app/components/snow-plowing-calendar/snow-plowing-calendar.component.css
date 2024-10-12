@@ -1,22 +1,47 @@
-.no-snow-message {
-  text-align: center;
-  font-size: 1.2em;
-  color: #007bff;
-  margin-bottom: 20px;
+/* Light snow day */
+.snow-day {
+  background-color: #e0f7fa; /* Light blue */
+  background-image: url('/assets/snowflake-icon.png'); /* Optional: Replace with snowflake icon */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px;
+  color: #00bfff; /* Text color for snow day */
+  border-left: 4px solid #00bfff; /* Snow border */
 }
 
-::ng-deep .fc .fc-daygrid-day.fc-day-today {
-  background-color: #e0f7fa !important;
+/* Blizzard day with more visual effects */
+.blizzard {
+  background-color: #0077b6; /* Darker blue */
+  color: white; /* Blizzard text color */
+  position: relative;
+  overflow: hidden;
+  animation: blizzardEffect 2s linear infinite;
 }
 
-::ng-deep .fc-event {
-  background-color: #4db6ac !important;
-  border: none;
-  color: white !important;
-  font-weight: bold;
+@keyframes blizzardEffect {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
 }
 
-::ng-deep .fc-toolbar-title {
-  font-size: 1.5em;
-  color: #00796b;
+.blizzard::before,
+.blizzard::after {
+  content: '❄️❄️❄️❄️❄️❄️';
+  font-size: 24px;
+  position: absolute;
+  animation: blizzardFlakes 3s infinite linear;
+}
+
+.blizzard::before {
+  top: -50px;
+  left: -50px;
+}
+
+.blizzard::after {
+  top: 50px;
+  right: -50px;
+}
+
+@keyframes blizzardFlakes {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(100vw, 100vh); }
 }
