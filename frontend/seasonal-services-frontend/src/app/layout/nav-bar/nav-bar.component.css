@@ -3,9 +3,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color: #5ba2bc !important; /* Same background color for the navbar */
   padding: 10px 20px;
-  color: white;
+  color: rgb(117, 43, 43);
 }
 
 .navbar-brand {
@@ -52,5 +52,69 @@
 
   .nav-links.active {
     display: flex;
+  }
+}
+
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #333;
+}
+
+/* Adjusted Navbar Styling (Global adaptation) */
+nav {
+  justify-content: center;  /* Center the nav bar on larger screens */
+  background-color: #333; /* Background for the overall nav container */
+  padding: 20px;
+}
+
+nav a {
+  font-size: 1.5rem;
+  padding: 15px 30px;
+  margin: 0 15px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #555;
+  border-radius: 5px;
+}
+
+/* Ensure a responsive layout */
+@media (max-width: 1440px) {
+  nav {
+    flex-wrap: wrap; /* Wrap the nav links if the screen is smaller */
+  }
+
+  nav a {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+  }
+}
+
+/* Typography for readability on large screens */
+body {
+  font-size: 1.25rem;  /* Increase font size for better readability */
+  line-height: 1.6;    /* Make sure there's enough spacing between text lines */
+}
+
+main {
+  padding: 40px;       /* Add some spacing for the content in the main area */
+  max-width: 1200px;
+  margin: 0 auto;      /* Center the content area */
+}
+
+/* Special handling for ultra-large screens (2880x1800 and up) */
+@media (min-width: 2000px) {
+  nav a {
+    font-size: 1.8rem;  /* Even larger font for very high-resolution screens */
+    padding: 20px 40px;
+  }
+
+  body {
+    font-size: 1.5rem;  /* Increase base font size on very large screens */
   }
 }
