@@ -1,18 +1,29 @@
+/* Container for the calendar */
+.full-calendar {
+  max-width: 90%; /* Adjust the overall size of the calendar */
+  margin: 0 auto; /* Center the calendar */
+  padding: 20px;
+}
+
 /* Light snow day */
 .snow-day {
-  background-color: #e0f7fa; /* Light blue */
-  background-image: url('/assets/snowflake-icon.png'); /* Optional: Replace with snowflake icon */
+  background-color: #e0f7fa;
+  background-image: url('https://thumbs.dreamstime.com/b/simple-black-snowflake-rounded-corners-vector-icon-simple-black-snowflake-rounded-corners-vector-icon-159293017.jpg');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 30px;
-  color: #00bfff; /* Text color for snow day */
-  border-left: 4px solid #00bfff; /* Snow border */
+  background-size: 20px; /* Adjust the snowflake icon size */
+  color: #00bfff;
+  border-left: 4px solid #00bfff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px !important; /* Force smaller font size */
 }
 
 /* Blizzard day with more visual effects */
 .blizzard {
-  background-color: #0077b6; /* Darker blue */
-  color: white; /* Blizzard text color */
+  background-color: #0077b6;
+  color: white;
   position: relative;
   overflow: hidden;
   animation: blizzardEffect 2s linear infinite;
@@ -26,22 +37,57 @@
 .blizzard::before,
 .blizzard::after {
   content: '❄️❄️❄️❄️❄️❄️';
-  font-size: 24px;
+  font-size: 16px;
   position: absolute;
   animation: blizzardFlakes 3s infinite linear;
 }
 
 .blizzard::before {
-  top: -50px;
-  left: -50px;
+  top: -20px;
+  left: -20px;
 }
 
 .blizzard::after {
-  top: 50px;
-  right: -50px;
+  top: 20px;
+  right: -20px;
 }
 
 @keyframes blizzardFlakes {
   0% { transform: translate(0, 0); }
   100% { transform: translate(100vw, 100vh); }
+}
+
+/* Calendar day frame styling */
+.fc-daygrid-day-frame {
+  padding: 2px !important; /* Reduce padding to allow more space for content */
+  height: 100%; /* Make sure the frame fills the entire day cell */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure content doesn't overflow */
+  overflow: hidden;
+}
+
+/* Ensure day cells fit well */
+.fc-daygrid-day {
+  height: 100px !important; /* Restrict max height for each day cell */
+  overflow: hidden;
+}
+
+/* Reduce the size of the day numbers */
+.fc-daygrid-day-number {
+  font-size: 10px !important; /* Force a smaller font size for the day numbers */
+  padding-right: 2px;
+  color: #333;
+}
+
+/* Event titles are smaller to fit within the day cells */
+.fc-event-title {
+  font-size: 8px !important; /* Force a very small font size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ensure text doesn't overflow */
+  display: block;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
 }

@@ -80,10 +80,10 @@ export class SnowPlowingCalendarComponent implements OnInit {
           const title = snowChance > 0 ? `❄️ Forecast: ${weatherDescription}` : `Forecast: ${weatherDescription}`;
 
           return {
-            title: title,
+            title: snowChance > 0 ? `❄️ Forecast: ${weatherDescription}` : `Forecast: ${weatherDescription}`,
             start: date,
             allDay: true,
-            className: snowChance > 0 ? 'snow-day' : '', // Apply CSS class for snow days
+            className: snowChance > 0 ? 'snow-day' : '', // Apply class based on snow chance
           };
         });
 

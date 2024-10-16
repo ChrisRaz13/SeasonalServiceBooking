@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavBarComponent } from './nav-bar.component'; // Cleaned up import
+import { NavBarComponent } from './nav-bar.component';
 
 describe('NavBarComponent', () => {
   let component: NavBarComponent;
@@ -7,11 +7,11 @@ describe('NavBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NavBarComponent] // Use declarations instead of imports
+      declarations: [NavBarComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavBarComponent); // Fix the component creation
+    fixture = TestBed.createComponent(NavBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
