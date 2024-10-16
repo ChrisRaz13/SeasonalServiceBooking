@@ -4,18 +4,48 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 100px; /* Increase the height of the navbar */
   background-color: #5ba2bc !important;
   z-index: 1000;
   padding: 10px;
   color: rgb(117, 43, 43);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Align items to the bottom */
 }
 
-.navbar-brand {
-  font-size: 24px;
+/* Logo Styling */
+.navbar-logo img {
+  width: 100 px;
+  height: auto;
+  padding-top: 60px;
+  max-height: 150px; /* Adjust the logo size */
+}
+
+/* Center the nav-links at the bottom */
+.navbar-nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  bottom: 10px; /* Position the links at the bottom of the navbar */
+}
+
+/* Navbar Link Styling */
+.navbar-nav .nav-link {
   color: white;
-  text-decoration: none;
+  font-size: 1.2rem;
+  margin: 0 20px;
+  text-decoration: none; /* Remove the underline */
 }
 
+.navbar-nav .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Add a hover effect without the underline */
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* Toggler for smaller screens */
 .navbar-toggler {
   display: none;
   font-size: 24px;
@@ -25,74 +55,19 @@
   cursor: pointer;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive for smaller screens */
+/* Responsive Styling for Smaller Screens */
 @media (max-width: 768px) {
   .navbar-toggler {
     display: block;
   }
 
-  .nav-links {
+  .navbar-nav {
     flex-direction: column;
     gap: 10px;
     display: none;
   }
 
-  .nav-links.active {
+  .navbar-nav.active {
     display: flex;
-  }
-}
-
-/* Global Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding-top: 60px; /* Adjust based on navbar height */
-  box-sizing: border-box;
-  color: #333;
-}
-
-/* Main Content Styling */
-main {
-  padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Responsive Navigation Bar */
-@media (max-width: 1440px) {
-  nav {
-    flex-wrap: wrap;
-  }
-
-  nav a {
-    font-size: 1.2rem;
-    padding: 10px 20px;
-  }
-}
-
-/* Adjustments for Ultra-large Screens */
-@media (min-width: 2000px) {
-  nav a {
-    font-size: 1.8rem;
-    padding: 20px 40px;
-  }
-
-  body {
-    font-size: 1.5rem;
   }
 }
