@@ -59,10 +59,10 @@
       <mat-card *ngFor="let forecast of weatherForecast" class="forecast-card">
         <h3>{{ forecast.date }}</h3>
         <i class="wi {{ getWeatherIcon(forecast.description) }} weather-icon"></i>
-        <p>High: {{ forecast.tempMax }}</p>
-        <p>Low: {{ forecast.tempMin }}</p>
-        <p>Snowfall: {{ forecast.snowfallAmount }}</p>
+        <p *ngIf="forecast.tempMax">High: {{ forecast.tempMax }}</p>
+        <p *ngIf="forecast.tempMin">Low: {{ forecast.tempMin }}</p>
         <p>{{ forecast.description }}</p>
+        <p>{{ forecast.detailedForecast }}</p>
       </mat-card>
     </div>
   </mat-card-content>

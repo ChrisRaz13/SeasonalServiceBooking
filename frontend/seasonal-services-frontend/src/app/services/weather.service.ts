@@ -22,11 +22,8 @@ export class WeatherService {
   getWeatherForecast(lat: number, lon: number): Observable<any> {
     return this.getPointData(lat, lon).pipe(
       switchMap((pointData: any) => {
-        const gridId = pointData.properties.gridId;
-        const gridX = pointData.properties.gridX;
-        const gridY = pointData.properties.gridY;
-        const gridDataUrl = `https://api.weather.gov/gridpoints/${gridId}/${gridX},${gridY}`;
-        return this.http.get(gridDataUrl, { headers: this.headers });
+        const forecastUrl = pointData.properties.forecast; // Use the 'forecast' URL
+        return this.http.get(forecastUrl, { headers: this.headers });
       })
     );
   }

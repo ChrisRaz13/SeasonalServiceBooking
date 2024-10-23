@@ -34,104 +34,51 @@ export class SnowPlowingCalendarComponent implements OnInit {
         const today = new Date().toISOString().split('T')[0];
         this.todayDate = today;
 
-        // Extract necessary properties
-        const temperatureMax = data.properties.maxTemperature.values;
-        const temperatureMin = data.properties.minTemperature.values;
-        const snowfallAmount = data.properties.snowfallAmount.values;
-        const snowfallUom = data.properties.snowfallAmount.uom;
-        const tempMaxUom = data.properties.maxTemperature.uom;
-        const tempMinUom = data.properties.minTemperature.uom;
-        const weather = data.properties.weather.values;
-
-        // Convert units if necessary
-        const convertSnowfallValue = (value: number): number => {
-          if (snowfallUom.includes('mm')) {
-            return value / 25.4; // Convert mm to inches
-          }
-          return value; // Assume inches
-        };
-
-        const convertTempToFahrenheit = (value: number, uom: string): number => {
-          if (uom.includes('degC')) {
-            return (value * 9) / 5 + 32; // Convert Celsius to Fahrenheit
-          }
-          return value; // Assume Fahrenheit
-        };
-
-        // Prepare maps for tempMin and weather
-        const tempMinMap: { [date: string]: number } = {};
-        temperatureMin.forEach((temp: any) => {
-          const date = temp.validTime.split('T')[0];
-          const tempValue = convertTempToFahrenheit(temp.value, tempMinUom);
-          tempMinMap[date] = tempValue;
-        });
-
-        const weatherMap: { [date: string]: string } = {};
-        weather.forEach((w: any) => {
-          const date = w.validTime.split('T')[0];
-          const weatherDescription = w.value[0]?.weather;
-          if (weatherDescription) {
-            weatherMap[date] = weatherDescription;
-          }
-        });
-
-        // Accumulate snowfall amounts per day
-        const snowfallMap: { [date: string]: number } = {};
-        snowfallAmount.forEach((snow: any) => {
-          const [startTime, duration] = snow.validTime.split('/');
-          const startDate = new Date(startTime);
-          const durationMs = parseDuration(duration);
-          const endDate = new Date(startDate.getTime() + durationMs);
-
-          // Loop through each day in the range
-          for (
-            let date = new Date(startDate);
-            date <= endDate;
-            date.setDate(date.getDate() + 1)
-          ) {
-            const dateString = date.toISOString().split('T')[0];
-            const convertedValue = convertSnowfallValue(snow.value);
-            snowfallMap[dateString] =
-              (snowfallMap[dateString] || 0) + (convertedValue || 0);
-          }
-        });
-
-        // Assemble forecast data
-        const forecastData: any[] = [];
-
-        temperatureMax.forEach((temp: any) => {
-          const date = temp.validTime.split('T')[0];
-          const tempMaxValue = convertTempToFahrenheit(temp.value, tempMaxUom);
-          const tempMinValue = tempMinMap[date];
-          const snowfallValue = snowfallMap[date];
-          const description = weatherMap[date];
-
-          forecastData.push({
-            date: new Date(date).toLocaleDateString('en-US', {
+        // Process the forecast periods
+        this.weatherForecast = data.properties.periods.map((period: any) => {
+          return {
+            date: new Date(period.startTime).toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
               day: 'numeric',
             }),
-            tempMax:
-              tempMaxValue !== null ? `${tempMaxValue.toFixed(1)}°F` : 'N/A',
-            tempMin:
-              tempMinValue !== undefined && tempMinValue !== null
-                ? `${tempMinValue.toFixed(1)}°F`
-                : 'N/A',
-            snowfallAmount:
-              snowfallValue !== undefined && snowfallValue !== null && snowfallValue > 0
-                ? `${snowfallValue.toFixed(1)} inches`
-                : 'No snowfall expected',
-            description: description || 'No description',
-            rawDate: new Date(date),
-          });
+            tempMax: period.isDaytime ? `${period.temperature}°F` : null,
+            tempMin: !period.isDaytime ? `${period.temperature}°F` : null,
+            description: period.shortForecast,
+            detailedForecast: period.detailedForecast,
+            rawDate: new Date(period.startTime),
+          };
         });
 
-        // Sort and filter as needed
-        this.weatherForecast = forecastData
-          .sort((a, b) => a.rawDate.getTime() - b.rawDate.getTime())
+        // Merge day and night periods to get high and low temperatures
+        const forecastMap: { [date: string]: any } = {};
+        this.weatherForecast.forEach((period) => {
+          const dateStr = period.date;
+          if (!forecastMap[dateStr]) {
+            forecastMap[dateStr] = {
+              date: dateStr,
+              tempMax: null,
+              tempMin: null,
+              description: '',
+              detailedForecast: '',
+              rawDate: period.rawDate,
+            };
+          }
+          if (period.tempMax) {
+            forecastMap[dateStr].tempMax = period.tempMax;
+            forecastMap[dateStr].description = period.description;
+            forecastMap[dateStr].detailedForecast = period.detailedForecast;
+          }
+          if (period.tempMin) {
+            forecastMap[dateStr].tempMin = period.tempMin;
+          }
+        });
+
+        // Convert the forecastMap back to an array
+        this.weatherForecast = Object.values(forecastMap)
+          .sort((a: any, b: any) => a.rawDate - b.rawDate)
           .filter(
-            (forecast) =>
+            (forecast: any) =>
               new Date(forecast.rawDate).getTime() >= new Date(today).getTime()
           );
       },
