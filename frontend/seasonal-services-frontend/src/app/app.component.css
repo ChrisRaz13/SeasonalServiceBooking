@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.flex-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+}
+
+main {
+  flex-grow: 1; /* Main content takes all available space */
+}
+
+footer {
+  background-color: #5ba2bc;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+}

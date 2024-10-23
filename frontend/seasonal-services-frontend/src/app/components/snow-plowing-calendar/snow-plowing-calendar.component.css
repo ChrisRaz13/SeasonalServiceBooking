@@ -1,93 +1,83 @@
-/* Container for the calendar */
-.full-calendar {
-  max-width: 90%; /* Adjust the overall size of the calendar */
-  margin: 0 auto; /* Center the calendar */
+/* snow-plowing-calendar.component.css */
+
+/* Weather Alerts Styles */
+.weather-alerts {
+  background-color: #fff3cd;
   padding: 20px;
+  border: 1px solid #ffeeba;
+  margin-bottom: 20px;
 }
 
-/* Light snow day */
-.snow-day {
-  background-color: #e0f7fa;
-  background-image: url('https://thumbs.dreamstime.com/b/simple-black-snowflake-rounded-corners-vector-icon-simple-black-snowflake-rounded-corners-vector-icon-159293017.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 20px; /* Adjust the snowflake icon size */
-  color: #00bfff;
-  border-left: 4px solid #00bfff;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 10px !important; /* Force smaller font size */
+.alert {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ffeeba;
+  padding-bottom: 10px;
 }
 
-/* Blizzard day with more visual effects */
-.blizzard {
-  background-color: #0077b6;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  animation: blizzardEffect 2s linear infinite;
+.alert h3 {
+  color: #856404;
 }
 
-@keyframes blizzardEffect {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
+.no-alerts {
+  margin-bottom: 20px;
+  font-style: italic;
 }
 
-.blizzard::before,
-.blizzard::after {
-  content: '❄️❄️❄️❄️❄️❄️';
-  font-size: 16px;
-  position: absolute;
-  animation: blizzardFlakes 3s infinite linear;
+/* Hourly Forecast Styles */
+.hourly-forecast-container {
+  margin-bottom: 20px;
 }
 
-.blizzard::before {
-  top: -20px;
-  left: -20px;
-}
-
-.blizzard::after {
-  top: 20px;
-  right: -20px;
-}
-
-@keyframes blizzardFlakes {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(100vw, 100vh); }
-}
-
-/* Calendar day frame styling */
-.fc-daygrid-day-frame {
-  padding: 2px !important; /* Reduce padding to allow more space for content */
-  height: 100%; /* Make sure the frame fills the entire day cell */
+.hourly-forecast-scroll {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Ensure content doesn't overflow */
-  overflow: hidden;
+  overflow-x: auto;
+  padding: 10px 0;
 }
 
-/* Ensure day cells fit well */
-.fc-daygrid-day {
-  height: 100px !important; /* Restrict max height for each day cell */
-  overflow: hidden;
+.hourly-forecast-card {
+  flex: 0 0 auto;
+  width: 120px;
+  background-color: #f1f1f1;
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
 }
 
-/* Reduce the size of the day numbers */
-.fc-daygrid-day-number {
-  font-size: 10px !important; /* Force a smaller font size for the day numbers */
-  padding-right: 2px;
-  color: #333;
+.hourly-forecast-card p {
+  margin: 5px 0;
 }
 
-/* Event titles are smaller to fit within the day cells */
-.fc-event-title {
-  font-size: 8px !important; /* Force a very small font size */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Ensure text doesn't overflow */
-  display: block;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
+/* 7-Day Forecast Styles */
+.forecast-container {
+  margin-bottom: 20px;
+}
+
+.forecast-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.forecast-card {
+  flex: 1 1 calc(33.333% - 10px);
+  background-color: #e0f7fa;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.forecast-card h3 {
+  margin-top: 0;
+}
+
+/* snow-plowing-calendar.component.css */
+
+/* Weather Icons */
+.weather-icon {
+  font-size: 48px;
+  margin: 10px 0;
+}
+
+.hourly-forecast-card .weather-icon {
+  font-size: 36px;
 }

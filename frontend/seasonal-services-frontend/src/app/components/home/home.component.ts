@@ -2,18 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WeatherService } from '../../services/weather.service';
-import { CalendarOptions } from '@fullcalendar/core';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import { FooterComponent } from "../../layout/footer/footer.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule, FullCalendarModule]
+  imports: [CommonModule, FooterComponent]
 })
 export class HomeComponent {
   constructor(private router: Router) {}
