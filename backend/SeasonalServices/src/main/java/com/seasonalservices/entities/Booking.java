@@ -1,22 +1,29 @@
 package com.seasonalservices.entities;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Booking {
-	private Integer id;
-	private String serviceName; 
-	private String bookingDate; 
-	private String bookingTime; 
-	private Integer clientId;
+    private Integer id;
+    private String serviceName;
+    private LocalDate bookingDate;
+    private LocalTime bookingTime;
+    private String name;
+    private String email;
+    private String phone;
 
-	public Booking() {
-	}
+    public Booking() {
+    }
 
-	public Booking(Integer id, String serviceName, String bookingDate, String bookingTime, Integer clientId) {
-		this.id = id;
-		this.serviceName = serviceName;
-		this.bookingDate = bookingDate;
-		this.bookingTime = bookingTime;
-		this.clientId = clientId;
-	}
+    public Booking(Integer id, String serviceName, LocalDate bookingDate, LocalTime bookingTime, String name, String email, String phone) {
+        this.id = id;
+        this.serviceName = serviceName;
+        this.bookingDate = bookingDate;
+        this.bookingTime = bookingTime;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
 
 	public Integer getId() {
 		return id;
@@ -34,27 +41,44 @@ public class Booking {
 		this.serviceName = serviceName;
 	}
 
-	public String getBookingDate() {
+	public LocalDate getBookingDate() {
 		return bookingDate;
 	}
 
-	public void setBookingDate(String bookingDate) {
+	public void setBookingDate(LocalDate bookingDate) {
 		this.bookingDate = bookingDate;
 	}
 
-	public String getBookingTime() {
+	public LocalTime getBookingTime() {
 		return bookingTime;
 	}
 
-	public void setBookingTime(String bookingTime) {
+	public void setBookingTime(LocalTime bookingTime) {
 		this.bookingTime = bookingTime;
 	}
 
-	public Integer getClientId() {
-		return clientId;
+	public String getName() {
+		return name;
 	}
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
+	public void setName(String name) {
+		this.name = name;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+    
 }

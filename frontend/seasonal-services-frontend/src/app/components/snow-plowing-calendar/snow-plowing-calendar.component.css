@@ -14,17 +14,6 @@
   margin-top: 50px;
 }
 
-/* Dark Mode Toggle */
-.dark-mode-toggle {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 1000; /* Ensure it stays above other elements */
-  background-color: transparent;
-  color: inherit;
-  border: none;
-}
-
 /* Disclaimer */
 .disclaimer {
   text-align: center;
@@ -69,6 +58,8 @@
   color: #000000;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-height: 400px;
+  overflow: hidden; /* Ensures content overflows inside the scrollable div */
 }
 
 /* Booking Container */
@@ -87,6 +78,16 @@
   margin-bottom: 20px;
 }
 
+.booking-container .full-width {
+  width: 100%;
+}
+
+.booking-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 /* Adjusted mat-card-content to fill available space */
 .hourly-forecast-container .mat-card-content,
 .weather-alert-container .mat-card-content,
@@ -97,20 +98,78 @@
   flex-direction: column;
 }
 
-/* Scrollable Content */
-.hourly-forecast-scroll,
-.alerts-scroll {
-  overflow-y: auto;
-  flex: 1 1 auto;
-  padding: 10px;
-  max-height: 500px; /* Set a max height to enable scrolling */
-}
 
-/* Hourly Forecast Styles */
-.hourly-forecast-scroll {
+/* ... existing CSS ... */
+
+/* Adjusted mat-card-content to fill available space and be scrollable */
+.hourly-forecast-container .mat-card-content,
+.weather-alert-container .mat-card-content {
+  flex: 1 1 auto;
+  overflow: auto; /* Allow scrolling when content overflows */
   display: flex;
   flex-direction: column;
 }
+
+/* Remove overflow: hidden from containers */
+/* ... existing CSS ... */
+
+/* Remove overflow: hidden from the containers */
+.hourly-forecast-container,
+.weather-alert-container {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #e0f7fa, #81d4fa);
+  color: #000000;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-height: 400px;
+  /* Remove overflow: hidden; */
+}
+
+/* Ensure mat-card-content fills available space */
+.hourly-forecast-container .mat-card-content,
+.weather-alert-container .mat-card-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  /* Remove overflow: hidden; */
+}
+
+/* Scrollable Content */
+.hourly-forecast-scroll,
+.alerts-scroll {
+  overflow-y: auto; /* Enable vertical scrolling */
+  flex: 1 1 auto;
+  padding: 10px;
+}
+
+/* ... existing CSS ... */
+
+/* Hourly Forecast Container */
+.hourly-forecast-container {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #e0f7fa, #81d4fa);
+  color: #000000;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-height: 400px;
+}
+
+.hourly-forecast-container .mat-card-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* Remove padding to prevent extra space */
+}
+
+.hourly-forecast-scroll {
+  height: 300px; /* Set a fixed height */
+  overflow-y: auto;
+  padding: 10px;
+}
+
 
 .hourly-forecast-card {
   display: flex;
@@ -132,6 +191,9 @@
   color: #000000;
 }
 
+
+
+
 .date-separator {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 10px;
@@ -148,7 +210,8 @@
 /* Weather Alert Styles */
 .alerts-scroll {
   padding: 10px;
-  max-height: 500px; /* Set a max height to enable scrolling */
+  overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .alert {
@@ -285,85 +348,9 @@
   color: #000000;
 }
 
-/* Dark Mode Styles */
-body.dark-theme {
-  background-color: #303030;
-  color: #ffffff;
-}
-
-body.dark-theme .mat-card {
-  background-color: #424242;
-  color: #ffffff;
-}
-
-body.dark-theme .mat-card-title {
-  color: #ffffff;
-}
-
-body.dark-theme .forecast-container {
-  background: linear-gradient(135deg, #37474f, #263238);
-}
-
-body.dark-theme .forecast-period {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-body.dark-theme .forecast-period.day {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-body.dark-theme .forecast-period.night {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-theme .mat-tab-group .mat-tab-labels {
-  background-color: transparent;
-}
-
-body.dark-theme .mat-tab-label-active {
-  color: #ffffff !important;
-}
-
-body.dark-theme .hourly-forecast-container,
-body.dark-theme .weather-alert-container,
-body.dark-theme .booking-container {
-  background: linear-gradient(135deg, #37474f, #263238);
-}
-
-body.dark-theme .hourly-forecast-card {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-theme .date-separator {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-body.dark-theme .alert {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-theme .hourly-forecast-card p,
-body.dark-theme .date-separator h3,
-body.dark-theme .alert h3,
-body.dark-theme .alert p,
-body.dark-theme .booking-container p,
-body.dark-theme .booking-container mat-card-title {
-  color: #ffffff;
-}
-
-body.dark-theme .mat-progress-spinner circle,
-body.dark-theme .mat-spinner circle {
-  stroke: #ffffff;
-}
-
 /* Weather Icons */
 .weather-icon {
   font-size: 48px;
   margin: 10px 0;
   color: #000000;
-}
-
-body.dark-theme .weather-icon {
-  color: #ffffff;
 }

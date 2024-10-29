@@ -12,16 +12,13 @@
 
 <!-- Main Content -->
 <div *ngIf="!isLoading && !hasError">
-  <!-- Dark Mode Toggle Button -->
-  <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle">
-    <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_2' }}</mat-icon>
-  </button>
-
   <!-- Disclaimer -->
   <div class="disclaimer">
     <p>
       The weather information provided below is sourced from the
-      <a href="https://www.weather.gov/documentation/services-web-api" target="_blank"
+      <a
+        href="https://www.weather.gov/documentation/services-web-api"
+        target="_blank"
         >Weather.gov API</a
       >. Please note that weather conditions can change rapidly.
     </p>
@@ -31,33 +28,6 @@
   <div class="main-content-container">
     <!-- Left Side: Forecast and Alerts -->
     <div class="left-side">
-      <!-- Hourly Forecast Widget -->
-      <mat-card class="hourly-forecast-container">
-        <mat-card-header>
-          <mat-card-title>Hourly Forecast</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="hourly-forecast-scroll">
-            <div *ngFor="let item of hourlyForecast">
-              <!-- Check if the item is a date separator -->
-              <div *ngIf="item.isDateSeparator" class="date-separator">
-                <h3>{{ item.date }}</h3>
-              </div>
-              <!-- Otherwise, display the hourly forecast card -->
-              <div *ngIf="!item.isDateSeparator" class="hourly-forecast-card">
-                <p><strong>{{ item.time }}</strong></p>
-                <i
-                  class="wi {{ getWeatherIcon(item.shortForecast) }} weather-icon"
-                ></i>
-                <p>{{ item.temperature }}</p>
-                <p>{{ item.shortForecast }}</p>
-                <p>Wind: {{ item.windSpeed }}</p>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
       <!-- Weather Alerts Widget -->
       <mat-card
         class="weather-alert-container"
@@ -84,6 +54,33 @@
           </div>
         </mat-card-content>
       </mat-card>
+
+      <!-- Hourly Forecast Widget -->
+      <mat-card class="hourly-forecast-container">
+        <mat-card-header>
+          <mat-card-title>Hourly Forecast</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="hourly-forecast-scroll">
+            <div *ngFor="let item of hourlyForecast">
+              <!-- Check if the item is a date separator -->
+              <div *ngIf="item.isDateSeparator" class="date-separator">
+                <h3>{{ item.date }}</h3>
+              </div>
+              <!-- Otherwise, display the hourly forecast card -->
+              <div *ngIf="!item.isDateSeparator" class="hourly-forecast-card">
+                <p><strong>{{ item.time }}</strong></p>
+                <i
+                  class="wi {{ getWeatherIcon(item.shortForecast) }} weather-icon"
+                ></i>
+                <p>{{ item.temperature }}</p>
+                <p>{{ item.shortForecast }}</p>
+                <p>Wind: {{ item.windSpeed }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
 
     <!-- Right Side: Booking or Business Box -->
@@ -93,12 +90,92 @@
           <mat-card-title>Schedule a Service</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>
-            Use this space to add booking functionality or provide information
-            about your services.
-          </p>
-          <!-- You can add a form or buttons here -->
-          <button mat-raised-button color="primary">Book Now</button>
+          <form>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                placeholder="Your Name"
+                [(ngModel)]="bookingData.name"
+                name="name"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                placeholder="Your Email"
+                [(ngModel)]="bookingData.email"
+                name="email"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Phone Number</mat-label>
+              <input
+                matInput
+                placeholder="Your Phone Number"
+                [(ngModel)]="bookingData.phone"
+                name="phone"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Select Service</mat-label>
+              <mat-select
+                [(ngModel)]="bookingData.service"
+                name="service"
+                required
+              >
+                <mat-option value="driveway">Driveway Plowing</mat-option>
+                <mat-option value="sidewalk">Sidewalk Clearing</mat-option>
+                <mat-option value="both">Driveway & Sidewalk</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                [(ngModel)]="bookingData.date"
+                name="date"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Preferred Time</mat-label>
+              <mat-select
+                [(ngModel)]="bookingData.time"
+                name="time"
+                required
+              >
+                <mat-option *ngFor="let time of timeSlots" [value]="time">
+                  {{ time }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="submitBooking()"
+              class="full-width"
+            >
+              Book Now
+            </button>
+          </form>
         </mat-card-content>
       </mat-card>
     </div>

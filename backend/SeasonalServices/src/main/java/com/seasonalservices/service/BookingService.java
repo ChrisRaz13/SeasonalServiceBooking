@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookingService {
-	List<Booking> getAllBookings();
+    List<Booking> getAllBookings();
 
-	Optional<Booking> getBookingById(int id); 
+    Optional<Booking> getBookingById(int id);
 
-	int addBooking(Booking booking);
+    int addBooking(Booking booking);
 
-	int updateBooking(Booking booking);
+    int updateBooking(Booking booking);
 
-	int deleteBooking(int id);
+    int deleteBooking(int id);
 }

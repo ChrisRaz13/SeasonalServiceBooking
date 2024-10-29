@@ -1,6 +1,6 @@
 // snow-plowing-calendar.component.ts
 
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeatherService } from '../../services/weather.service';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -24,6 +29,11 @@ import { forkJoin } from 'rxjs';
     MatListModule,
     MatTabsModule,
     MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,
   ],
 })
 export class SnowPlowingCalendarComponent implements OnInit {
@@ -33,11 +43,39 @@ export class SnowPlowingCalendarComponent implements OnInit {
   weatherAlerts: any[] = [];
   isLoading = true;
   hasError = false;
-  isDarkTheme = false;
+
+  // Booking form data
+  bookingData = {
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    date: '',
+    time: '',
+  };
+
+  // Predefined time slots
+  timeSlots: string[] = [
+    '6:00 AM', '6:15 AM', '6:30 AM', '6:45 AM',
+    '7:00 AM', '7:15 AM', '7:30 AM', '7:45 AM',
+    '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
+    '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
+    '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
+    '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
+    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
+    '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
+    '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+    '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+    '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
+    '5:00 PM', '5:15 PM', '5:30 PM', '5:45 PM',
+    '6:00 PM', '6:15 PM', '6:30 PM', '6:45 PM',
+    '7:00 PM', '7:15 PM', '7:30 PM', '7:45 PM',
+    '8:00 PM',
+  ];
+  http: any;
 
   constructor(
-    private weatherService: WeatherService,
-    private renderer: Renderer2
+    private weatherService: WeatherService
   ) {}
 
   ngOnInit(): void {
@@ -206,11 +244,50 @@ export class SnowPlowingCalendarComponent implements OnInit {
     }
   }
 
-  toggleDarkMode(): void {
-    this.isDarkTheme = !this.isDarkTheme;
-    const themeClass = this.isDarkTheme ? 'dark-theme' : '';
-    this.renderer.setAttribute(document.body, 'class', themeClass);
+  submitBooking(): void {
+    // Perform form validation
+    if (
+      this.bookingData.name &&
+      this.bookingData.email &&
+      this.bookingData.phone &&
+      this.bookingData.service &&
+      this.bookingData.date &&
+      this.bookingData.time
+    ) {
+      // Prepare the data to match the backend model
+      const bookingPayload = {
+        name: this.bookingData.name,
+        email: this.bookingData.email,
+        phone: this.bookingData.phone,
+        serviceType: this.bookingData.service,
+        date: this.bookingData.date.toString().split('T')[0],
+        time: this.bookingData.time,
+      };
+
+      // Send booking data to backend API
+      this.http.post('http://localhost:9080/api/bookings', bookingPayload).subscribe(
+        () => {
+          alert('Your booking request has been submitted!');
+          // Reset the form
+          this.bookingData = {
+            name: '',
+            email: '',
+            phone: '',
+            service: '',
+            date: '',
+            time: '',
+          };
+        },
+        (error: any) => {
+          alert('An error occurred while submitting your booking. Please try again.');
+          console.error('Booking submission error:', error);
+        }
+      );
+    } else {
+      alert('Please fill in all required fields.');
+    }
   }
+
 
   // Helper function to get weather icon based on description
   getWeatherIcon(description: string): string {
