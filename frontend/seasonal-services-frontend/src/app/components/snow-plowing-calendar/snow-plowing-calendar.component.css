@@ -89,50 +89,40 @@
   margin-bottom: 20px;
 }
 
-.forecast-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.forecast-card {
-  flex: 1 1 calc(50% - 10px); /* Two cards per row */
-  background-color: #e0f7fa;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.forecast-card h3 {
-  margin-top: 0;
-}
-
-.forecast-periods {
-  display: flex;
-  justify-content: space-around;
+.mat-tab-group {
   margin-top: 10px;
 }
 
-.forecast-period {
-  flex: 1 1 45%;
-  background-color: #ffffff;
+.forecast-content {
   padding: 10px;
-  border-radius: 5px;
-  margin: 5px;
 }
 
-.forecast-period h4 {
-  margin: 0 0 5px 0;
+.forecast-period {
+  margin-bottom: 10px;
 }
 
-.forecast-period .weather-icon {
-  font-size: 36px;
+.forecast-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forecast-details .weather-icon {
+  font-size: 64px;
   margin: 10px 0;
 }
 
-.forecast-period p {
+.forecast-details p {
   margin: 5px 0;
+  text-align: center;
+  max-width: 300px;
 }
+
+.detailed-forecast {
+  text-align: justify;
+  margin-top: 10px;
+}
+
 
 
 /* Weather Icons */

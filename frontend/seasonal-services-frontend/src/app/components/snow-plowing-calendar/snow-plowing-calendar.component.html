@@ -65,24 +65,29 @@
     <mat-card-title>7-Day Forecast</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="forecast-cards">
-      <div *ngFor="let forecast of weatherForecast" class="forecast-card">
-        <h3>{{ forecast.date }}</h3>
-        <div class="forecast-periods">
+    <mat-tab-group>
+      <mat-tab *ngFor="let forecast of weatherForecast" label="{{ forecast.date }}">
+        <div class="forecast-content">
           <div *ngFor="let period of forecast.periods" class="forecast-period">
-            <h4>{{ period.timeOfDay }}</h4>
-            <i class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"></i>
-            <p>Temperature: {{ period.temperature }}°{{ period.temperatureUnit }}</p>
-            <p>{{ period.shortForecast }}</p>
-            <!-- Optionally include detailed forecast -->
-            <!-- <p>{{ period.detailedForecast }}</p> -->
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ period.timeOfDay }} - {{ period.shortForecast }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="forecast-details">
+                <i class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"></i>
+                <p>Temperature: {{ period.temperature }}°{{ period.temperatureUnit }}</p>
+                <p>Wind: {{ period.windSpeed }} {{ period.windDirection }}</p>
+                <p>{{ period.detailedForecast }}</p>
+              </div>
+            </mat-expansion-panel>
           </div>
         </div>
-      </div>
-    </div>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card-content>
 </mat-card>
-
 
 
 </div>

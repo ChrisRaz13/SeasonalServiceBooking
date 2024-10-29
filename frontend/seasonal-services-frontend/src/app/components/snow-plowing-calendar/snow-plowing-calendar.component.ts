@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -19,6 +21,8 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule,
     MatIconModule,
     MatListModule,
+    MatTabsModule,
+    MatExpansionModule
   ],
 })
 export class SnowPlowingCalendarComponent implements OnInit {
