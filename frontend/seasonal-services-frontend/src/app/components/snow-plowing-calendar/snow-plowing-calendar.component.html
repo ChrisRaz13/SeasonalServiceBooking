@@ -59,35 +59,49 @@
     </mat-card-content>
   </mat-card>
 
- <!-- 7-Day Forecast Widget -->
+<!-- 7-Day Forecast Widget -->
 <mat-card class="forecast-container" *ngIf="weatherForecast.length > 0">
   <mat-card-header>
     <mat-card-title>7-Day Forecast</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-tab-group>
-      <mat-tab *ngFor="let forecast of weatherForecast" label="{{ forecast.date }}">
+      <mat-tab *ngFor="let forecast of weatherForecast" label="">
+        <ng-template mat-tab-label>
+          <span>{{ forecast.date }}</span>
+          <!-- Use the day period's icon as the tab icon -->
+          <i
+            class="wi {{ getWeatherIcon(forecast.periods[0]?.shortForecast) }} weather-icon-tab"
+          ></i>
+        </ng-template>
         <div class="forecast-content">
-          <div *ngFor="let period of forecast.periods" class="forecast-period">
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{ period.timeOfDay }} - {{ period.shortForecast }}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div class="forecast-details">
-                <i class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"></i>
-                <p>Temperature: {{ period.temperature }}°{{ period.temperatureUnit }}</p>
-                <p>Wind: {{ period.windSpeed }} {{ period.windDirection }}</p>
-                <p>{{ period.detailedForecast }}</p>
-              </div>
-            </mat-expansion-panel>
+          <div class="forecast-periods">
+            <!-- Display Day and Night Periods Side by Side -->
+            <div
+              *ngFor="let period of forecast.periods"
+              class="forecast-period"
+              [ngClass]="{
+                day: period.timeOfDay === 'Day',
+                night: period.timeOfDay === 'Night'
+              }"
+            >
+              <h4>{{ period.timeOfDay }}</h4>
+              <i
+                class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"
+              ></i>
+              <p class="temperature">
+                {{ period.temperature }}°{{ period.temperatureUnit }}
+              </p>
+              <p class="short-forecast">{{ period.shortForecast }}</p>
+              <p class="detailed-forecast">{{ period.detailedForecast }}</p>
+            </div>
           </div>
         </div>
       </mat-tab>
     </mat-tab-group>
   </mat-card-content>
 </mat-card>
+
 
 
 </div>

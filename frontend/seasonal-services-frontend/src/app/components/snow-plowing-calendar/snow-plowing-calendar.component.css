@@ -97,30 +97,95 @@
   padding: 10px;
 }
 
-.forecast-period {
-  margin-bottom: 10px;
-}
-
-.forecast-details {
+.forecast-periods {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  margin-top: 10px;
 }
 
-.forecast-details .weather-icon {
+.forecast-period {
+  flex: 1 1 calc(45% - 20px); /* Adjust to fit two columns with gap */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.forecast-period.day {
+  background-color: #e3f2fd; /* Light blue for day */
+}
+
+.forecast-period.night {
+  background-color: #ede7f6; /* Light purple for night */
+}
+
+.forecast-period h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+}
+
+.forecast-period .weather-icon {
   font-size: 64px;
   margin: 10px 0;
 }
 
-.forecast-details p {
-  margin: 5px 0;
-  text-align: center;
-  max-width: 300px;
+.forecast-period .temperature {
+  font-size: 2em;
+  margin: 10px 0;
+}
+
+.forecast-period .short-forecast {
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 .detailed-forecast {
   text-align: justify;
   margin-top: 10px;
+  font-size: 0.9em;
+}
+
+/* Centering Text Under the Icon and Temperature */
+.forecast-period h4,
+.forecast-period .weather-icon,
+.forecast-period .temperature,
+.forecast-period .short-forecast,
+.forecast-period .detailed-forecast {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+/* Weather Icon in Tab Label */
+.weather-icon-tab {
+  font-size: 24px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* Adjustments for Dark Mode */
+body.dark-theme .forecast-period {
+  background-color: #424242;
+  color: #ffffff;
+}
+
+body.dark-theme .forecast-period.day {
+  background-color: #546e7a; /* Darker shade for day */
+}
+
+body.dark-theme .forecast-period.night {
+  background-color: #5e35b1; /* Darker shade for night */
+}
+
+body.dark-theme .mat-tab-group .mat-tab-labels {
+  background-color: #424242;
+}
+
+body.dark-theme .mat-tab-label-active {
+  color: #ffffff !important;
 }
 
 
