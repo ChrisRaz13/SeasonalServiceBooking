@@ -23,10 +23,40 @@
 
 /* Weather Alert Styles */
 .weather-alert-card {
-  background-color: #ffccbc;
-  color: #bf360c;
+  background-color: #fff3cd;
+  color: #856404;
   margin-bottom: 20px;
 }
+
+.alert {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ffeeba;
+  padding-bottom: 10px;
+}
+
+.alert h3 {
+  color: #856404;
+  margin-top: 0;
+}
+
+.alert p {
+  margin: 5px 0;
+}
+
+/* Adjusted to prevent overlapping */
+.alerts-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+/* Ensure the dark mode toggle doesn't overlap */
+.dark-mode-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
 
 /* Hourly Forecast Styles */
 .hourly-forecast-container {
@@ -66,7 +96,10 @@
 }
 
 .forecast-card {
-  flex: 1 1 calc(33.333% - 10px);
+  flex: 1 1 calc(50% - 10px); /* Two cards per row */
+  background-color: #e0f7fa;
+  padding: 15px;
+  border-radius: 5px;
   text-align: center;
 }
 
@@ -74,10 +107,33 @@
   margin-top: 0;
 }
 
-.forecast-card .weather-icon {
-  font-size: 48px;
-  margin-bottom: 10px;
+.forecast-periods {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
 }
+
+.forecast-period {
+  flex: 1 1 45%;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.forecast-period h4 {
+  margin: 0 0 5px 0;
+}
+
+.forecast-period .weather-icon {
+  font-size: 36px;
+  margin: 10px 0;
+}
+
+.forecast-period p {
+  margin: 5px 0;
+}
+
 
 /* Weather Icons */
 .weather-icon {

@@ -19,7 +19,6 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule,
     MatIconModule,
     MatListModule,
-    // Removed ChartsModule
   ],
 })
 export class SnowPlowingCalendarComponent implements OnInit {
@@ -30,7 +29,6 @@ export class SnowPlowingCalendarComponent implements OnInit {
   isLoading = true;
   hasError = false;
   isDarkTheme = false;
-  // Removed currentWeather and chart-related properties
 
   constructor(private weatherService: WeatherService) {}
 
@@ -65,57 +63,55 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   processForecastData(data: any): void {
-    const today = new Date().toISOString().split('T')[0];
-    this.todayDate = today;
+    const today = new Date().setHours(0, 0, 0, 0);
 
     // Process the forecast periods
     const forecastPeriods = data.properties.periods.map((period: any) => {
+      const rawDate = new Date(period.startTime);
       return {
-        date: new Date(period.startTime).toLocaleDateString('en-US', {
+        date: rawDate.toLocaleDateString('en-US', {
           weekday: 'long',
           month: 'long',
           day: 'numeric',
         }),
-        tempMax: period.isDaytime ? period.temperature : null,
-        tempMin: !period.isDaytime ? period.temperature : null,
-        description: period.shortForecast,
+        rawDate: rawDate,
+        timeOfDay: period.isDaytime ? 'Day' : 'Night',
+        temperature: period.temperature,
+        temperatureUnit: period.temperatureUnit,
+        windSpeed: period.windSpeed,
+        windDirection: period.windDirection,
+        shortForecast: period.shortForecast,
         detailedForecast: period.detailedForecast,
-        rawDate: new Date(period.startTime),
+        icon: period.icon,
       };
     });
 
-    // Merge day and night periods to get high and low temperatures
+    // Group periods by date using the raw date
     const forecastMap: { [date: string]: any } = {};
-    forecastPeriods.forEach((period: { date: any; rawDate: any; tempMax: null; description: any; detailedForecast: any; tempMin: null; }) => {
-      const dateStr = period.date;
-      if (!forecastMap[dateStr]) {
-        forecastMap[dateStr] = {
-          date: dateStr,
-          tempMax: null,
-          tempMin: null,
-          description: '',
-          detailedForecast: '',
+    forecastPeriods.forEach((period: any) => {
+      const dateKey = period.rawDate.toDateString(); // Use the raw date for grouping
+      if (!forecastMap[dateKey]) {
+        forecastMap[dateKey] = {
+          date: period.date,
           rawDate: period.rawDate,
+          periods: [],
         };
       }
-      if (period.tempMax !== null) {
-        forecastMap[dateStr].tempMax = period.tempMax;
-        forecastMap[dateStr].description = period.description;
-        forecastMap[dateStr].detailedForecast = period.detailedForecast;
-      }
-      if (period.tempMin !== null) {
-        forecastMap[dateStr].tempMin = period.tempMin;
-      }
+      forecastMap[dateKey].periods.push(period);
     });
 
     // Convert the forecastMap back to an array
     this.weatherForecast = Object.values(forecastMap)
-      .sort((a: any, b: any) => a.rawDate - b.rawDate)
       .filter(
         (forecast: any) =>
-          new Date(forecast.rawDate).getTime() >= new Date(today).getTime()
+          forecast.rawDate.setHours(0, 0, 0, 0) >= today
+      )
+      .sort(
+        (a: any, b: any) =>
+          a.rawDate.getTime() - b.rawDate.getTime()
       );
   }
+
 
   processHourlyData(data: any): void {
     const now = new Date();
@@ -143,9 +139,9 @@ export class SnowPlowingCalendarComponent implements OnInit {
       })
       .sort((a: any, b: any) => {
         // Ensure the periods are sorted in chronological order
-        const timeA = new Date(`1970-01-01T${a.time}`);
-        const timeB = new Date(`1970-01-01T${b.time}`);
-        return timeA.getTime() - timeB.getTime();
+        const timeA = new Date(`1970-01-01T${a.time}`).getTime();
+        const timeB = new Date(`1970-01-01T${b.time}`).getTime();
+        return timeA - timeB;
       });
   }
 
