@@ -1,5 +1,6 @@
 // snow-plowing-calendar.component.ts
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeatherService } from '../../services/weather.service';
 import { MatCardModule } from '@angular/material/card';
@@ -7,7 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -22,7 +23,7 @@ import { forkJoin } from 'rxjs';
     MatIconModule,
     MatListModule,
     MatTabsModule,
-    MatExpansionModule
+    MatButtonModule,
   ],
 })
 export class SnowPlowingCalendarComponent implements OnInit {
@@ -34,7 +35,10 @@ export class SnowPlowingCalendarComponent implements OnInit {
   hasError = false;
   isDarkTheme = false;
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(
+    private weatherService: WeatherService,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
     this.loadWeatherData();
@@ -67,19 +71,23 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   processForecastData(data: any): void {
-    const today = new Date().setHours(0, 0, 0, 0);
-
     // Process the forecast periods
     const forecastPeriods = data.properties.periods.map((period: any) => {
-      const rawDate = new Date(period.startTime);
+      const rawStartDate = new Date(period.startTime);
+
+      // Determine the date for grouping (using the start date)
+      const groupingDate = new Date(rawStartDate);
+      const dateStr = groupingDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+      });
+
       return {
-        date: rawDate.toLocaleDateString('en-US', {
-          weekday: 'long',
-          month: 'long',
-          day: 'numeric',
-        }),
-        rawDate: rawDate,
-        timeOfDay: period.isDaytime ? 'Day' : 'Night',
+        date: dateStr,
+        rawDate: groupingDate,
+        timeOfDay: period.name, // e.g., "Monday", "Monday Night"
+        isDaytime: period.isDaytime,
         temperature: period.temperature,
         temperatureUnit: period.temperatureUnit,
         windSpeed: period.windSpeed,
@@ -90,63 +98,90 @@ export class SnowPlowingCalendarComponent implements OnInit {
       };
     });
 
-    // Group periods by date using the raw date
+    // Group periods by date using the grouping date
     const forecastMap: { [date: string]: any } = {};
     forecastPeriods.forEach((period: any) => {
-      const dateKey = period.rawDate.toDateString(); // Use the raw date for grouping
+      const dateKey = period.rawDate.toDateString(); // Use the grouping date for grouping
       if (!forecastMap[dateKey]) {
         forecastMap[dateKey] = {
           date: period.date,
           rawDate: period.rawDate,
           periods: [],
+          tempHigh: null,
+          tempLow: null,
         };
       }
       forecastMap[dateKey].periods.push(period);
+
+      // Update tempHigh and tempLow
+      if (period.isDaytime) {
+        // For daytime, assume it's the high temperature
+        forecastMap[dateKey].tempHigh = period.temperature;
+      } else {
+        // For nighttime, assume it's the low temperature
+        forecastMap[dateKey].tempLow = period.temperature;
+      }
     });
 
     // Convert the forecastMap back to an array
     this.weatherForecast = Object.values(forecastMap)
+      .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime())
       .filter(
         (forecast: any) =>
-          forecast.rawDate.setHours(0, 0, 0, 0) >= today
-      )
-      .sort(
-        (a: any, b: any) =>
-          a.rawDate.getTime() - b.rawDate.getTime()
+          forecast.rawDate.setHours(0, 0, 0, 0) >=
+          new Date().setHours(0, 0, 0, 0)
       );
   }
-
 
   processHourlyData(data: any): void {
     const now = new Date();
 
-    this.hourlyForecast = data.properties.periods
+    // Initialize an empty array to hold the processed hourly data
+    const hourlyData: any[] = [];
+
+    let previousDate: string | null = null;
+
+    data.properties.periods
       .filter((period: any) => {
         const periodStartTime = new Date(period.startTime);
         return periodStartTime >= now;
       })
-      .map((period: any) => {
+      .forEach((period: any) => {
+        const periodDate = new Date(period.startTime);
+        const dateStr = periodDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+        });
+
+        // If the date changes, add a date separator
+        if (dateStr !== previousDate) {
+          hourlyData.push({
+            isDateSeparator: true,
+            date: dateStr,
+          });
+          previousDate = dateStr;
+        }
+
         // Convert temperature to Fahrenheit if necessary
         let temperature = period.temperature;
         if (period.temperatureUnit === 'C') {
           temperature = (temperature * 9) / 5 + 32;
         }
-        return {
-          time: new Date(period.startTime).toLocaleTimeString('en-US', {
+
+        hourlyData.push({
+          time: periodDate.toLocaleTimeString('en-US', {
             hour: 'numeric',
             hour12: true,
           }),
           temperature: `${temperature.toFixed(1)}°F`,
           windSpeed: period.windSpeed,
           shortForecast: period.shortForecast,
-        };
-      })
-      .sort((a: any, b: any) => {
-        // Ensure the periods are sorted in chronological order
-        const timeA = new Date(`1970-01-01T${a.time}`).getTime();
-        const timeB = new Date(`1970-01-01T${b.time}`).getTime();
-        return timeA - timeB;
+          isDateSeparator: false,
+        });
       });
+
+    this.hourlyForecast = hourlyData;
   }
 
   processAlertsData(data: any): void {
@@ -173,8 +208,8 @@ export class SnowPlowingCalendarComponent implements OnInit {
 
   toggleDarkMode(): void {
     this.isDarkTheme = !this.isDarkTheme;
-    const themeClass = this.isDarkTheme ? 'dark-theme' : 'light-theme';
-    document.body.className = themeClass;
+    const themeClass = this.isDarkTheme ? 'dark-theme' : '';
+    this.renderer.setAttribute(document.body, 'class', themeClass);
   }
 
   // Helper function to get weather icon based on description

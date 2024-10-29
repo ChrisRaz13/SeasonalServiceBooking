@@ -12,96 +12,142 @@
 
 <!-- Main Content -->
 <div *ngIf="!isLoading && !hasError">
+  <!-- Dark Mode Toggle Button -->
+  <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle">
+    <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_2' }}</mat-icon>
+  </button>
 
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <p>
+      The weather information provided below is sourced from the
+      <a href="https://www.weather.gov/documentation/services-web-api" target="_blank"
+        >Weather.gov API</a
+      >. Please note that weather conditions can change rapidly.
+    </p>
+  </div>
 
-
-<!-- Weather Alerts Widget -->
-<div *ngIf="weatherAlerts.length > 0">
-  <mat-card class="weather-alert-card">
-    <mat-card-header>
-      <mat-card-title>Weather Alerts</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="alerts-container">
-        <div *ngFor="let alert of weatherAlerts" class="alert">
-          <h3>{{ alert.event }}</h3>
-          <p><strong>{{ alert.headline }}</strong></p>
-          <p>{{ alert.description }}</p>
-          <p *ngIf="alert.instruction"><em>{{ alert.instruction }}</em></p>
-          <p>Severity: {{ alert.severity }}</p>
-          <p>Effective: {{ alert.effective | date: 'short' }}</p>
-          <p>Expires: {{ alert.expires | date: 'short' }}</p>
-          <p>Issued by: {{ alert.senderName }}</p>
-          <p>Areas affected: {{ alert.areaDesc }}</p>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-
-
-  <!-- Hourly Forecast Widget -->
-  <mat-card class="hourly-forecast-container">
-    <mat-card-header>
-      <mat-card-title>Hourly Forecast</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="hourly-forecast-scroll">
-        <div *ngFor="let hour of hourlyForecast" class="hourly-forecast-card">
-          <p><strong>{{ hour.time }}</strong></p>
-          <i class="wi {{ getWeatherIcon(hour.shortForecast) }} weather-icon"></i>
-          <p>{{ hour.temperature }}</p>
-          <p>{{ hour.shortForecast }}</p>
-          <p>Wind: {{ hour.windSpeed }}</p>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-<!-- 7-Day Forecast Widget -->
-<mat-card class="forecast-container" *ngIf="weatherForecast.length > 0">
-  <mat-card-header>
-    <mat-card-title>7-Day Forecast</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-tab-group>
-      <mat-tab *ngFor="let forecast of weatherForecast" label="">
-        <ng-template mat-tab-label>
-          <span>{{ forecast.date }}</span>
-          <!-- Use the day period's icon as the tab icon -->
-          <i
-            class="wi {{ getWeatherIcon(forecast.periods[0]?.shortForecast) }} weather-icon-tab"
-          ></i>
-        </ng-template>
-        <div class="forecast-content">
-          <div class="forecast-periods">
-            <!-- Display Day and Night Periods Side by Side -->
-            <div
-              *ngFor="let period of forecast.periods"
-              class="forecast-period"
-              [ngClass]="{
-                day: period.timeOfDay === 'Day',
-                night: period.timeOfDay === 'Night'
-              }"
-            >
-              <h4>{{ period.timeOfDay }}</h4>
-              <i
-                class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"
-              ></i>
-              <p class="temperature">
-                {{ period.temperature }}°{{ period.temperatureUnit }}
-              </p>
-              <p class="short-forecast">{{ period.shortForecast }}</p>
-              <p class="detailed-forecast">{{ period.detailedForecast }}</p>
+  <!-- Main Content Container -->
+  <div class="main-content-container">
+    <!-- Left Side: Forecast and Alerts -->
+    <div class="left-side">
+      <!-- Hourly Forecast Widget -->
+      <mat-card class="hourly-forecast-container">
+        <mat-card-header>
+          <mat-card-title>Hourly Forecast</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="hourly-forecast-scroll">
+            <div *ngFor="let item of hourlyForecast">
+              <!-- Check if the item is a date separator -->
+              <div *ngIf="item.isDateSeparator" class="date-separator">
+                <h3>{{ item.date }}</h3>
+              </div>
+              <!-- Otherwise, display the hourly forecast card -->
+              <div *ngIf="!item.isDateSeparator" class="hourly-forecast-card">
+                <p><strong>{{ item.time }}</strong></p>
+                <i
+                  class="wi {{ getWeatherIcon(item.shortForecast) }} weather-icon"
+                ></i>
+                <p>{{ item.temperature }}</p>
+                <p>{{ item.shortForecast }}</p>
+                <p>Wind: {{ item.windSpeed }}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-card-content>
-</mat-card>
+        </mat-card-content>
+      </mat-card>
 
+      <!-- Weather Alerts Widget -->
+      <mat-card
+        class="weather-alert-container"
+        *ngIf="weatherAlerts.length > 0"
+      >
+        <mat-card-header>
+          <mat-card-title>Weather Alerts</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="alerts-scroll">
+            <div *ngFor="let alert of weatherAlerts" class="alert">
+              <h3>{{ alert.event }}</h3>
+              <p><strong>{{ alert.headline }}</strong></p>
+              <p>{{ alert.description }}</p>
+              <p *ngIf="alert.instruction">
+                <em>{{ alert.instruction }}</em>
+              </p>
+              <p>Severity: {{ alert.severity }}</p>
+              <p>Effective: {{ alert.effective | date: 'short' }}</p>
+              <p>Expires: {{ alert.expires | date: 'short' }}</p>
+              <p>Issued by: {{ alert.senderName }}</p>
+              <p>Areas affected: {{ alert.areaDesc }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
+    <!-- Right Side: Booking or Business Box -->
+    <div class="right-side">
+      <mat-card class="booking-container">
+        <mat-card-header>
+          <mat-card-title>Schedule a Service</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Use this space to add booking functionality or provide information
+            about your services.
+          </p>
+          <!-- You can add a form or buttons here -->
+          <button mat-raised-button color="primary">Book Now</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 
+  <!-- 7-Day Forecast Widget -->
+  <mat-card class="forecast-container" *ngIf="weatherForecast.length > 0">
+    <mat-card-header>
+      <mat-card-title>7-Day Forecast</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab *ngFor="let forecast of weatherForecast" label="">
+          <ng-template mat-tab-label>
+            <span>{{ forecast.date }}</span>
+            <!-- Display High and Low Temperatures in Tab Label -->
+            <span class="temp-high-low">
+              H: {{ forecast.tempHigh }}° / L: {{ forecast.tempLow }}°
+            </span>
+            <!-- Use the first period's icon as the tab icon -->
+            <i
+              class="wi {{ getWeatherIcon(forecast.periods[0]?.shortForecast) }} weather-icon-tab"
+            ></i>
+          </ng-template>
+          <div class="forecast-content">
+            <div class="forecast-periods">
+              <!-- Display Day and Night Periods Side by Side -->
+              <div
+                *ngFor="let period of forecast.periods"
+                class="forecast-period"
+                [ngClass]="{
+                  day: period.isDaytime,
+                  night: !period.isDaytime
+                }"
+              >
+                <h4>{{ period.timeOfDay }}</h4>
+                <i
+                  class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"
+                ></i>
+                <p class="temperature">
+                  {{ period.temperature }}°{{ period.temperatureUnit }}
+                </p>
+                <p class="short-forecast">{{ period.shortForecast }}</p>
+                <p class="detailed-forecast">{{ period.detailedForecast }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
 </div>
