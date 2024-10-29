@@ -145,14 +145,13 @@
                 [matDatepicker]="picker"
                 [(ngModel)]="bookingData.date"
                 name="date"
+                [min]="minDate"
                 required
               />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+
 
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Preferred Time</mat-label>

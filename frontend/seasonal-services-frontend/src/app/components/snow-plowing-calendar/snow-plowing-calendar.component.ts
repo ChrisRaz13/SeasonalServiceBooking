@@ -43,6 +43,7 @@ export class SnowPlowingCalendarComponent implements OnInit {
   weatherAlerts: any[] = [];
   isLoading = true;
   hasError = false;
+  minDate: Date;
 
   // Booking form data
   bookingData = {
@@ -76,7 +77,9 @@ export class SnowPlowingCalendarComponent implements OnInit {
 
   constructor(
     private weatherService: WeatherService
-  ) {}
+  ) {
+    this.minDate = new Date();
+  }
 
   ngOnInit(): void {
     this.loadWeatherData();
@@ -245,7 +248,6 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   submitBooking(): void {
-    // Perform form validation
     if (
       this.bookingData.name &&
       this.bookingData.email &&
@@ -259,9 +261,9 @@ export class SnowPlowingCalendarComponent implements OnInit {
         name: this.bookingData.name,
         email: this.bookingData.email,
         phone: this.bookingData.phone,
-        serviceType: this.bookingData.service,
-        date: this.bookingData.date.toString().split('T')[0],
-        time: this.bookingData.time,
+        serviceName: this.bookingData.service,
+        bookingDate: this.bookingData.date.toString().split('T')[0], // 'YYYY-MM-DD'
+        bookingTime: this.convertTimeTo24HourFormat(this.bookingData.time), // 'HH:mm:ss'
       };
 
       // Send booking data to backend API
@@ -286,6 +288,22 @@ export class SnowPlowingCalendarComponent implements OnInit {
     } else {
       alert('Please fill in all required fields.');
     }
+  }
+
+  // Helper method to convert time to 'HH:mm:ss' format
+  convertTimeTo24HourFormat(time12h: string): string {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+
+    if (hours === '12') {
+      hours = '00';
+    }
+
+    if (modifier === 'PM') {
+      hours = String(parseInt(hours, 10) + 12);
+    }
+
+    return `${hours}:${minutes}:00`;
   }
 
 
