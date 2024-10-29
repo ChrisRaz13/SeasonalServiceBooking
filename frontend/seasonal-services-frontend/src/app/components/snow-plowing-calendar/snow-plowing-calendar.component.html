@@ -1,69 +1,75 @@
 <!-- snow-plowing-calendar.component.html -->
 
-<!-- Weather Alerts Section -->
-<div *ngIf="weatherAlerts.length > 0">
-  <mat-card class="weather-alerts">
+<!-- Loading Indicator -->
+<div *ngIf="isLoading" class="loading-spinner">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="hasError" class="error-message">
+  <p>Unable to load weather data. Please try again later.</p>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading && !hasError">
+
+  <!-- Dark Mode Toggle -->
+  <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle">
+    <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_2' }}</mat-icon>
+  </button>
+
+  <!-- Weather Alerts Widget -->
+  <div *ngIf="weatherAlerts.length > 0">
+    <mat-card class="weather-alert-card">
+      <mat-card-header>
+        <mat-card-title>Weather Alerts</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let alert of weatherAlerts">
+            <h3>{{ alert.event }}</h3>
+            <p>{{ alert.headline }}</p>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Hourly Forecast Widget -->
+  <mat-card class="hourly-forecast-container">
     <mat-card-header>
-      <mat-card-title>Weather Alerts</mat-card-title>
+      <mat-card-title>Hourly Forecast</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div *ngFor="let alert of weatherAlerts" class="alert">
-        <h3>{{ alert.event }}</h3>
-        <p><strong>{{ alert.headline }}</strong></p>
-        <p>{{ alert.description }}</p>
-        <p *ngIf="alert.instruction"><em>{{ alert.instruction }}</em></p>
-        <p>Severity: {{ alert.severity }}</p>
-        <p>Effective: {{ alert.effective | date: 'short' }}</p>
-        <p>Expires: {{ alert.expires | date: 'short' }}</p>
-        <p>Issued by: {{ alert.senderName }}</p>
-        <p>Areas affected: {{ alert.areaDesc }}</p>
+      <div class="hourly-forecast-scroll">
+        <div *ngFor="let hour of hourlyForecast" class="hourly-forecast-card">
+          <p><strong>{{ hour.time }}</strong></p>
+          <i class="wi {{ getWeatherIcon(hour.shortForecast) }} weather-icon"></i>
+          <p>{{ hour.temperature }}</p>
+          <p>{{ hour.shortForecast }}</p>
+          <p>Wind: {{ hour.windSpeed }}</p>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
-</div>
 
-<!-- No Alerts Message -->
-<div *ngIf="weatherAlerts.length === 0">
-  <mat-card class="no-alerts">
+  <!-- 7-Day Forecast Widget -->
+  <mat-card class="forecast-container">
+    <mat-card-header>
+      <mat-card-title>7-Day Forecast</mat-card-title>
+    </mat-card-header>
     <mat-card-content>
-      <p>No active weather alerts at this time.</p>
+      <div class="forecast-cards">
+        <div *ngFor="let forecast of weatherForecast" class="forecast-card">
+          <h3>{{ forecast.date }}</h3>
+          <i class="wi {{ getWeatherIcon(forecast.description) }} weather-icon"></i>
+          <p>High: {{ forecast.tempMax }}</p>
+          <p>Low: {{ forecast.tempMin }}</p>
+          <p>{{ forecast.description }}</p>
+          <p>{{ forecast.detailedForecast }}</p>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
+
 </div>
-
-<!-- Hourly Forecast Section -->
-<mat-card class="hourly-forecast-container">
-  <mat-card-header>
-    <mat-card-title>Hourly Forecast for Today</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="hourly-forecast-scroll">
-      <mat-card *ngFor="let hour of hourlyForecast" class="hourly-forecast-card">
-        <p><strong>{{ hour.time }}</strong></p>
-        <i class="wi {{ getWeatherIcon(hour.shortForecast) }} weather-icon"></i>
-        <p>{{ hour.temperature }}</p>
-        <p>{{ hour.shortForecast }}</p>
-        <p>Wind: {{ hour.windSpeed }}</p>
-      </mat-card>
-    </div>
-  </mat-card-content>
-</mat-card>
-
-<!-- 7-Day Forecast Section -->
-<mat-card class="forecast-container">
-  <mat-card-header>
-    <mat-card-title>7-Day Forecast</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="forecast-cards">
-      <mat-card *ngFor="let forecast of weatherForecast" class="forecast-card">
-        <h3>{{ forecast.date }}</h3>
-        <i class="wi {{ getWeatherIcon(forecast.description) }} weather-icon"></i>
-        <p *ngIf="forecast.tempMax">High: {{ forecast.tempMax }}</p>
-        <p *ngIf="forecast.tempMin">Low: {{ forecast.tempMin }}</p>
-        <p>{{ forecast.description }}</p>
-        <p>{{ forecast.detailedForecast }}</p>
-      </mat-card>
-    </div>
-  </mat-card-content>
-</mat-card>
