@@ -140,11 +140,10 @@
 .hourly-forecast-scroll,
 .alerts-scroll {
   overflow-y: auto; /* Enable vertical scrolling */
-  flex: 1 1 auto;
+  height: 300px;
   padding: 10px;
 }
 
-/* ... existing CSS ... */
 
 /* Hourly Forecast Container */
 .hourly-forecast-container {
