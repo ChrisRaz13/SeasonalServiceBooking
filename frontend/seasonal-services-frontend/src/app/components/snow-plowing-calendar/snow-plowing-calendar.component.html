@@ -1,5 +1,3 @@
-<!-- snow-plowing-calendar.component.html -->
-
 <!-- Loading Indicator -->
 <div *ngIf="isLoading" class="loading-spinner">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
@@ -16,10 +14,8 @@
   <div class="disclaimer">
     <p>
       The weather information provided below is sourced from the
-      <a
-        href="https://www.weather.gov/documentation/services-web-api"
-        target="_blank"
-        >Weather.gov API</a
+      <a href="https://www.weather.gov/documentation/services-web-api" target="_blank">
+        Weather.gov API</a
       >. Please note that weather conditions can change rapidly.
     </p>
   </div>
@@ -29,29 +25,29 @@
     <!-- Left Side: Forecast and Alerts -->
     <div class="left-side">
       <!-- Weather Alerts Widget -->
-      <mat-card
-        class="weather-alert-container"
-        *ngIf="weatherAlerts.length > 0"
-      >
+      <mat-card class="weather-alert-container">
         <mat-card-header>
           <mat-card-title>Weather Alerts</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="alerts-scroll">
-            <div *ngFor="let alert of weatherAlerts" class="alert">
-              <h3>{{ alert.event }}</h3>
-              <p><strong>{{ alert.headline }}</strong></p>
-              <p>{{ alert.description }}</p>
-              <p *ngIf="alert.instruction">
-                <em>{{ alert.instruction }}</em>
-              </p>
-              <p>Severity: {{ alert.severity }}</p>
-              <p>Effective: {{ alert.effective | date: 'short' }}</p>
-              <p>Expires: {{ alert.expires | date: 'short' }}</p>
-              <p>Issued by: {{ alert.senderName }}</p>
-              <p>Areas affected: {{ alert.areaDesc }}</p>
+          <div *ngIf="weatherAlerts.length > 0; else noAlerts">
+            <div class="alerts-scroll">
+              <div *ngFor="let alert of weatherAlerts" class="alert">
+                <h3>{{ alert.event }}</h3>
+                <p><strong>{{ alert.headline }}</strong></p>
+                <p>{{ alert.description }}</p>
+                <p *ngIf="alert.instruction"><em>{{ alert.instruction }}</em></p>
+                <p>Severity: {{ alert.severity }}</p>
+                <p>Effective: {{ alert.effective | date: 'short' }}</p>
+                <p>Expires: {{ alert.expires | date: 'short' }}</p>
+                <p>Issued by: {{ alert.senderName }}</p>
+                <p>Areas affected: {{ alert.areaDesc }}</p>
+              </div>
             </div>
           </div>
+          <ng-template #noAlerts>
+            <p>No major weather alerts available at the moment.</p>
+          </ng-template>
         </mat-card-content>
       </mat-card>
 
@@ -70,9 +66,7 @@
               <!-- Otherwise, display the hourly forecast card -->
               <div *ngIf="!item.isDateSeparator" class="hourly-forecast-card">
                 <p><strong>{{ item.time }}</strong></p>
-                <i
-                  class="wi {{ getWeatherIcon(item.shortForecast) }} weather-icon"
-                ></i>
+                <i class="wi {{ getWeatherIcon(item.shortForecast) }} weather-icon"></i>
                 <p>{{ item.temperature }}</p>
                 <p>{{ item.shortForecast }}</p>
                 <p>Wind: {{ item.windSpeed }}</p>
@@ -127,11 +121,7 @@
 
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Select Service</mat-label>
-              <mat-select
-                [(ngModel)]="bookingData.service"
-                name="service"
-                required
-              >
+              <mat-select [(ngModel)]="bookingData.service" name="service" required>
                 <mat-option value="driveway">Driveway Plowing</mat-option>
                 <mat-option value="sidewalk">Sidewalk Clearing</mat-option>
                 <mat-option value="both">Driveway & Sidewalk</mat-option>
@@ -152,26 +142,14 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Preferred Time</mat-label>
-              <mat-select
-                [(ngModel)]="bookingData.time"
-                name="time"
-                required
-              >
-                <mat-option *ngFor="let time of timeSlots" [value]="time">
-                  {{ time }}
-                </mat-option>
+              <mat-select [(ngModel)]="bookingData.time" name="time" required>
+                <mat-option *ngFor="let time of timeSlots" [value]="time">{{ time }}</mat-option>
               </mat-select>
             </mat-form-field>
 
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="submitBooking()"
-              class="full-width"
-            >
+            <button mat-raised-button color="primary" (click)="submitBooking()" class="full-width">
               Book Now
             </button>
           </form>
@@ -187,36 +165,18 @@
     </mat-card-header>
     <mat-card-content>
       <mat-tab-group>
-        <mat-tab *ngFor="let forecast of weatherForecast" label="">
+        <mat-tab *ngFor="let forecast of weatherForecast">
           <ng-template mat-tab-label>
             <span>{{ forecast.date }}</span>
-            <!-- Display High and Low Temperatures in Tab Label -->
-            <span class="temp-high-low">
-              H: {{ forecast.tempHigh }}° / L: {{ forecast.tempLow }}°
-            </span>
-            <!-- Use the first period's icon as the tab icon -->
-            <i
-              class="wi {{ getWeatherIcon(forecast.periods[0]?.shortForecast) }} weather-icon-tab"
-            ></i>
+            <span class="temp-high-low">H: {{ forecast.tempHigh }}° / L: {{ forecast.tempLow }}°</span>
+            <i class="wi {{ getWeatherIcon(forecast.periods[0]?.shortForecast) }} weather-icon-tab"></i>
           </ng-template>
           <div class="forecast-content">
             <div class="forecast-periods">
-              <!-- Display Day and Night Periods Side by Side -->
-              <div
-                *ngFor="let period of forecast.periods"
-                class="forecast-period"
-                [ngClass]="{
-                  day: period.isDaytime,
-                  night: !period.isDaytime
-                }"
-              >
+              <div *ngFor="let period of forecast.periods" class="forecast-period" [ngClass]="{ day: period.isDaytime, night: !period.isDaytime }">
                 <h4>{{ period.timeOfDay }}</h4>
-                <i
-                  class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"
-                ></i>
-                <p class="temperature">
-                  {{ period.temperature }}°{{ period.temperatureUnit }}
-                </p>
+                <i class="wi {{ getWeatherIcon(period.shortForecast) }} weather-icon"></i>
+                <p class="temperature">{{ period.temperature }}°{{ period.temperatureUnit }}</p>
                 <p class="short-forecast">{{ period.shortForecast }}</p>
                 <p class="detailed-forecast">{{ period.detailedForecast }}</p>
               </div>

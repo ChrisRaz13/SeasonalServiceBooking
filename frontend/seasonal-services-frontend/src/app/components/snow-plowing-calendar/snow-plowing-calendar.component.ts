@@ -89,8 +89,8 @@ export class SnowPlowingCalendarComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    const lat = 61.2181; // Latitude for Anchorage, Alaska
-    const lon = -149.9003; // Longitude for Anchorage, Alaska
+    const lat = 41.6611; // Latitude for Iowa City
+    const lon = -91.5302; // Longitude for Iowa City
 
     forkJoin({
       forecast: this.weatherService.getWeatherForecast(lat, lon),

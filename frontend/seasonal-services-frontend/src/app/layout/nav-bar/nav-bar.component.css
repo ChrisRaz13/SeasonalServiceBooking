@@ -1,73 +1,110 @@
-/* Navbar Styling */
+/* General Navbar Styling */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100px; /* Increase the height of the navbar */
-  background-color: #5ba2bc !important;
-  z-index: 1000;
-  padding: 10px;
-  color: rgb(117, 43, 43);
+  height: 80px;
+  background-color: #1a374d;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end; /* Align items to the bottom */
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 
 /* Logo Styling */
+.navbar-logo {
+  margin-right: auto; /* Push the logo to the left */
+}
+
 .navbar-logo img {
-  width: 100 px;
-  height: auto;
-  padding-top: 60px;
-  max-height: 150px; /* Adjust the logo size */
+  height: 60px;
 }
 
-/* Center the nav-links at the bottom */
-.navbar-nav {
+/* Centering the Navbar Links */
+.navbar-links {
   display: flex;
-  justify-content: center;
-  width: 100%;
-  position: absolute;
-  bottom: 10px; /* Position the links at the bottom of the navbar */
+  justify-content: center; /* Center the links */
+  flex-grow: 1; /* Allow links to take up available space */
+  gap: 20px;
 }
 
-/* Navbar Link Styling */
-.navbar-nav .nav-link {
-  color: white;
-  font-size: 1.2rem;
-  margin: 0 20px;
+.navbar-links.active {
+  display: flex;
+}
+
+.navbar .nav-link {
+  color: #e0f4f1;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  position: relative;
+  padding: 10px;
   text-decoration: none;
 }
 
-.navbar-nav .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Add a hover effect without the underline */
-  border-radius: 5px;
-  padding: 5px 10px;
+.navbar .nav-link:hover,
+.navbar .nav-link.active-link {
+  color: #f1c40f;
 }
 
-/* Toggler for smaller screens */
+/* Underline Hover Effect */
+.navbar .nav-link::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background-color: #f1c40f;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active-link::after {
+  transform: scaleX(1);
+}
+
+/* Toggler Button for Mobile */
 .navbar-toggler {
-  display: none;
   font-size: 24px;
   background: none;
   border: none;
-  color: white;
+  color: #e0f4f1;
   cursor: pointer;
+  display: none;
 }
 
-/* Responsive Styling for Smaller Screens */
+/* Mobile Styling */
 @media (max-width: 768px) {
-  .navbar-toggler {
-    display: block;
+  .navbar {
+    height: 60px;
   }
 
-  .navbar-nav {
+  .navbar-logo img {
+    height: 50px;
+  }
+
+  .navbar-links {
     flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #1a374d;
+    padding: 20px;
     gap: 10px;
     display: none;
   }
 
-  .navbar-nav.active {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-links.active {
     display: flex;
   }
 }

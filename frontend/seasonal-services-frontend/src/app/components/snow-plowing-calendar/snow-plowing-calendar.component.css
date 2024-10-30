@@ -230,6 +230,13 @@
   color: #000000;
 }
 
+.no-alert-message {
+  font-style: italic;
+  color: #888;
+  text-align: center;
+}
+
+
 /* Responsive Design */
 @media (max-width: 800px) {
   .main-content-container {
