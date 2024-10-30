@@ -1,3 +1,60 @@
+.footer {
+  background-color: #1a374d; /* Same as navbar */
+  color: #e0f4f1; /* Light color for text */
+  padding: 40px 20px; /* Add padding for spacing */
+  text-align: center;
+  position: relative; /* To keep footer above content */
+  width: 100%;
+  bottom: 0;
+}
+
+/* Flex container for footer contents */
+.flex-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button styling */
+.btn {
+  background-color: #f1c40f; /* Highlight button color */
+  color: #1a374d; /* Text color on button */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  text-decoration: none;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #e0b200; /* Darker shade on hover */
+}
+
+/* Social Links Styling */
+.social-links {
+  margin: 20px 0;
+}
+
+.social-links a {
+  color: #e0f4f1; /* Social icon color */
+  margin: 0 10px; /* Spacing between icons */
+  font-size: 1.5rem; /* Increase icon size */
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #f1c40f; /* Change color on hover */
+}
+
+/* Current Year for copyright */
+p {
+  margin-top: 10px;
+}
+
+/* Make sure footer is at the bottom */
 html, body {
   height: 100%; /* Ensure the page takes up the full height of the viewport */
   margin: 0;
@@ -11,21 +68,4 @@ html, body {
 
 main {
   flex: 1; /* Makes the main content area grow to push footer to the bottom */
-}
-
-.footer {
-  background-color: #5ba2bc;
-  color: white;
-  padding: 20px 0;
-  text-align: center;
-  position: relative;
-  width: 100%;
-  bottom: 0;
-}
-
-.flex-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
