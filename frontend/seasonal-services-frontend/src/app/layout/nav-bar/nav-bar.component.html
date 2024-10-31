@@ -1,21 +1,54 @@
-<nav class="navbar">
-  <!-- Logo Section -->
+<nav #navbar class="navbar" [class.scrolled]="isScrolled" [@fadeSlide]>
+  <!-- Logo Section with Animation -->
   <div class="navbar-logo">
-    <a href="/">
+    <a routerLink="/" class="logo-link">
       <img src="assets/logo.png" alt="Snow and Lawn Services Logo" class="logo-image" />
     </a>
   </div>
 
-  <!-- Toggler for smaller screens -->
-  <button class="navbar-toggler" (click)="toggleNavbar()">
-    <span class="navbar-toggler-icon">&#9776;</span>
+  <!-- Mobile Menu Button -->
+  <button class="navbar-toggler" (click)="toggleNavbar()" [class.active]="navbarOpen">
+    <span class="toggler-icon"></span>
+    <span class="toggler-icon"></span>
+    <span class="toggler-icon"></span>
   </button>
 
   <!-- Navigation Links -->
-  <div class="navbar-links" [ngClass]="{'active': navbarOpen}">
-    <a class="nav-link" routerLink="/" routerLinkActive="active-link">Home</a>
-    <a class="nav-link" routerLink="/bookings" routerLinkActive="active-link">Services</a>
-    <a class="nav-link" routerLink="/lawn-care" routerLinkActive="active-link">Lawn Care</a>
-    <a class="nav-link" routerLink="/snow-plowing-calendar" routerLinkActive="active-link">Snow Plowing</a>
+  <div class="navbar-links" [class.active]="navbarOpen">
+    <ng-container *ngFor="let item of menuItems">
+      <!-- Regular Menu Item -->
+      <a *ngIf="!item.children"
+         [routerLink]="item.route"
+         routerLinkActive="active-link"
+         class="nav-link animate__animated"
+         [class.animate__fadeInDown]="navbarOpen">
+        <mat-icon>{{item.icon}}</mat-icon>
+        <span>{{item.label}}</span>
+      </a>
+
+      <!-- Dropdown Menu Item -->
+      <div *ngIf="item.children" class="dropdown-container">
+        <button mat-button [matMenuTriggerFor]="menu" class="nav-link">
+          <mat-icon>{{item.icon}}</mat-icon>
+          <span>{{item.label}}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" class="custom-menu">
+          <a *ngFor="let child of item.children"
+             mat-menu-item
+             [routerLink]="child.route"
+             routerLinkActive="active-link">
+            <mat-icon>{{child.icon}}</mat-icon>
+            <span>{{child.label}}</span>
+          </a>
+        </mat-menu>
+      </div>
+    </ng-container>
+
+    <!-- Emergency Contact Button -->
+    <button mat-raised-button color="warn" class="emergency-btn" matBadge="24/7">
+      <mat-icon>emergency</mat-icon>
+      Emergency Service
+    </button>
   </div>
 </nav>
