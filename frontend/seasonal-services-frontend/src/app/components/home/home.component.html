@@ -1,28 +1,68 @@
+<!-- Hero Section -->
 <section class="hero">
   <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
   <p>Efficient, Reliable, and Local Services for Your Property Needs.</p>
+  <a routerLink="/quote" class="btn">Get a Free Quote</a>
 </section>
 
+<!-- Service Boxes -->
 <section class="service-boxes">
+  <!-- Snow Plowing Box -->
   <div class="service-box snow-plowing">
-    <img src="https://media.istockphoto.com/id/536778097/photo/highway-snow-plow.jpg?s=2048x2048&w=is&k=20&c=ns8LS-y1-jWpJks808sCFeeSP14oyrS-l3Su6FA2_U4=" alt="Snow Plowing">
+    <img
+      src="https://media.istockphoto.com/id/536778097/photo/highway-snow-plow.jpg?s=2048x2048&w=is&k=20&c=ns8LS-y1-jWpJks808sCFeeSP14oyrS-l3Su6FA2_U4="
+      alt="Snow Plowing"
+    />
     <div class="overlay">
       <h2>Snow Plowing Services</h2>
-      <a href="/clients" class="btn">Learn More</a>
+      <a routerLink="/snow-plowing-calendar" class="btn">Learn More</a>
     </div>
   </div>
+
+  <!-- Lawn Care Box -->
   <div class="service-box lawn-care">
-    <img src ="https://media.istockphoto.com/id/2044312647/photo/professional-latino-man-using-a-riding-lawnmower-caring-for-a-park-with-a-landscaping-company.jpg?s=2048x2048&w=is&k=20&c=Ael-VrEpwZbobzfnGj8V7HBShBPVB81I7reWtxVcZ6o=">
+    <img
+      src="https://media.istockphoto.com/id/2044312647/photo/professional-latino-man-using-a-riding-lawnmower-caring-for-a-park-with-a-landscaping-company.jpg?s=2048x2048&w=is&k=20&c=Ael-VrEpwZbobzfnGj8V7HBShBPVB81I7reWtxVcZ6o="
+      alt="Lawn Care"
+    />
     <div class="overlay">
       <h2>Lawn Care Services</h2>
-      <a href="/lawn-care" class="btn">Learn More</a>
+      <a routerLink="/lawn-care" class="btn">Learn More</a>
     </div>
   </div>
 </section>
 
-<section class="about-us">
-  <h3>About Alex Services</h3>
-  <p>We have been operating in the Iowa City area for 10 years.</p>
+<!-- Additional Services -->
+<section class="additional-services">
+  <h2>Our Services</h2>
+  <div class="services-list">
+    <div class="service-item" *ngFor="let service of services">
+      <h4>{{ service.name }}</h4>
+      <p>{{ service.description }}</p>
+      <a [routerLink]="service.link" class="btn">Explore</a>
+    </div>
+  </div>
 </section>
 
+<!-- Testimonials -->
+<section class="testimonial-carousel">
+  <h2>What Our Customers Say</h2>
+  <div class="testimonial">
+    <blockquote>{{ testimonials[currentIndex].quote }}</blockquote>
+    <p>&mdash; {{ testimonials[currentIndex].author }}</p>
+  </div>
+</section>
 
+<!-- About Us Section -->
+<section class="about-us">
+  <h3>About Alex Services</h3>
+  <p>
+    At Alex Services, we've been proudly serving the Iowa City area for over a
+    decade. Our commitment to excellence ensures that your property looks its
+    best all year round. From reliable snow plowing in the harsh winters to
+    meticulous lawn care in the vibrant summers, we're dedicated to providing
+    top-notch services tailored to your needs. Our experienced team uses
+    state-of-the-art equipment to deliver efficient, high-quality results every
+    time.
+  </p>
+</section>
