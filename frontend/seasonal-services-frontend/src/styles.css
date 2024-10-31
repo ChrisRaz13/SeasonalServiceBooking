@@ -1,3 +1,21 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* Add to your global styles.css */
+body {
+  padding-top: 100px; /* Match the navbar height */
+  margin: 0;
+}
+
+/* Add specific class for pages that need different padding */
+.no-nav-padding {
+  padding-top: 0 !important;
+}
+
+/* Add this class to pages with hero sections */
+.hero-page {
+  padding-top: 0 !important;
+  margin-top: -100px; /* Negative margin equal to navbar height */
+}

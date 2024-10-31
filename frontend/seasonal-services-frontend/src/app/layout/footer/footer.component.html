@@ -1,13 +1,133 @@
 <footer class="footer">
-  <div class="flex-wrapper">
-    <h3>Get a Free Estimate Today!</h3>
-    <a href="/request-estimate" class="btn">Request Estimate</a>
-    <div class="social-links">
-      <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+  <!-- Emergency Contact Bar -->
+  <div class="emergency-bar" [class.open]="getCurrentStatus() === 'Open Now'">
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      {{ getCurrentStatus() }}
     </div>
-    <p>&copy; {{ currentYear }} Your Company Name. All Rights Reserved.</p>
+    <div class="emergency-contact">
+      <mat-icon>emergency</mat-icon>
+      24/7 Emergency: (555) 123-4567
+    </div>
+    <div class="current-time">
+      {{ currentTime | date:'shortTime' }}
+    </div>
+  </div>
+
+  <div class="footer-content">
+    <!-- Main Footer Grid -->
+    <div class="footer-grid">
+      <!-- Company Info -->
+      <div class="footer-section company-info">
+        <img src="assets/logo.png" alt="Company Logo" class="footer-logo">
+        <p class="company-description">
+          Professional snow plowing and lawn care services in Iowa City.
+          Committed to excellence in every season.
+        </p>
+        <div class="certification-badges">
+          <img src="assets/badge1.png" alt="Certification" matTooltip="Licensed & Insured">
+          <img src="assets/badge2.png" alt="Certification" matTooltip="BBB Accredited">
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section quick-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li *ngFor="let link of quickLinks">
+            <a [routerLink]="link.route">
+              <mat-icon>chevron_right</mat-icon>
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Business Hours -->
+      <div class="footer-section business-hours">
+        <h3>Business Hours</h3>
+        <div class="hours-grid">
+          <div *ngFor="let schedule of businessHours" class="hours-row">
+            <span class="day">{{ schedule.day }}</span>
+            <span class="hours" [class.closed]="!schedule.isOpen">
+              {{ schedule.hours }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Newsletter Signup -->
+      <div class="footer-section newsletter">
+        <h3>Stay Updated</h3>
+        <p>Subscribe for seasonal tips and exclusive offers!</p>
+        <div class="newsletter-form">
+          <mat-form-field appearance="outline">
+            <input matInput
+                   type="email"
+                   placeholder="Enter your email"
+                   [(ngModel)]="emailSubscription">
+          </mat-form-field>
+          <button mat-raised-button
+                  color="accent"
+                  (click)="subscribeToNewsletter()"
+                  [disabled]="!emailSubscription">
+            Subscribe
+          </button>
+        </div>
+        <div class="success-message" *ngIf="isNewsletterSubmitted">
+          Thanks for subscribing!
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Links & Call to Action -->
+    <div class="footer-cta">
+      <div class="social-links">
+        <a *ngFor="let social of socialLinks"
+           [href]="social.url"
+           [attr.aria-label]="social.label"
+           matTooltip="{{social.label}}">
+          <mat-icon>{{social.icon}}</mat-icon>
+        </a>
+      </div>
+      <a routerLink="/quote" class="cta-button" mat-raised-button color="primary">
+        Get Free Estimate
+      </a>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; {{ currentYear }} Alex Services. All Rights Reserved.
+      </div>
+      <div class="footer-links">
+        <a routerLink="/privacy">Privacy Policy</a>
+        <a routerLink="/terms">Terms of Service</a>
+        <a routerLink="/sitemap">Sitemap</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top"
+          mat-mini-fab
+          color="primary"
+          (click)="scrollToTop()"
+          matTooltip="Scroll to top">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+
+  <!-- Chat Widget -->
+  <div class="chat-widget" [class.open]="showChatWidget">
+    <button class="chat-toggle"
+            mat-fab
+            color="primary"
+            (click)="toggleChatWidget()"
+            matTooltip="Chat with us">
+      <mat-icon>{{ showChatWidget ? 'close' : 'chat' }}</mat-icon>
+    </button>
+    <div class="chat-content" *ngIf="showChatWidget">
+      <!-- Add your chat widget content here -->
+    </div>
   </div>
 </footer>
