@@ -1,42 +1,47 @@
-// snow-plowing-calendar.component.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WeatherService } from '../../services/weather.service';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
 import { forkJoin } from 'rxjs';
+import { WeatherService } from '../../services/weather.service';
+
+
+interface BookingData {
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  date: string;
+  time: string;
+}
 
 @Component({
   selector: 'app-snow-plowing-calendar',
   standalone: true,
-  templateUrl: './snow-plowing-calendar.component.html',
-  styleUrls: ['./snow-plowing-calendar.component.css'],
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatIconModule,
-    MatListModule,
-    MatTabsModule,
-    MatButtonModule,
+    MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    FormsModule,
+    MatTabsModule
   ],
+  templateUrl: './snow-plowing-calendar.component.html',
+  styleUrl: './snow-plowing-calendar.component.css' // Note: styleUrl is singular in Angular 18
 })
-export class SnowPlowingCalendarComponent implements OnInit {
+export class SnowPlowingCalendarComponent {
   weatherForecast: any[] = [];
   hourlyForecast: any[] = [];
   todayDate: string = '';
@@ -45,8 +50,7 @@ export class SnowPlowingCalendarComponent implements OnInit {
   hasError = false;
   minDate: Date;
 
-  // Booking form data
-  bookingData = {
+  bookingData: BookingData = {
     name: '',
     email: '',
     phone: '',
@@ -55,7 +59,6 @@ export class SnowPlowingCalendarComponent implements OnInit {
     time: '',
   };
 
-  // Predefined time slots
   timeSlots: string[] = [
     '6:00 AM', '6:15 AM', '6:30 AM', '6:45 AM',
     '7:00 AM', '7:15 AM', '7:30 AM', '7:45 AM',
@@ -73,10 +76,10 @@ export class SnowPlowingCalendarComponent implements OnInit {
     '7:00 PM', '7:15 PM', '7:30 PM', '7:45 PM',
     '8:00 PM',
   ];
-  http: any;
 
   constructor(
-    private weatherService: WeatherService
+    private weatherService: WeatherService,
+    private http: HttpClient
   ) {
     this.minDate = new Date();
   }
@@ -96,27 +99,24 @@ export class SnowPlowingCalendarComponent implements OnInit {
       forecast: this.weatherService.getWeatherForecast(lat, lon),
       hourly: this.weatherService.getHourlyForecast(lat, lon),
       alerts: this.weatherService.getWeatherAlerts(lat, lon),
-    }).subscribe(
-      (data) => {
+    }).subscribe({
+      next: (data) => {
         this.processForecastData(data.forecast);
         this.processHourlyData(data.hourly);
         this.processAlertsData(data.alerts);
         this.isLoading = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading weather data', error);
         this.hasError = true;
         this.isLoading = false;
       }
-    );
+    });
   }
 
   processForecastData(data: any): void {
-    // Process the forecast periods
     const forecastPeriods = data.properties.periods.map((period: any) => {
       const rawStartDate = new Date(period.startTime);
-
-      // Determine the date for grouping (using the start date)
       const groupingDate = new Date(rawStartDate);
       const dateStr = groupingDate.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -127,7 +127,7 @@ export class SnowPlowingCalendarComponent implements OnInit {
       return {
         date: dateStr,
         rawDate: groupingDate,
-        timeOfDay: period.name, // e.g., "Monday", "Monday Night"
+        timeOfDay: period.name,
         isDaytime: period.isDaytime,
         temperature: period.temperature,
         temperatureUnit: period.temperatureUnit,
@@ -139,10 +139,9 @@ export class SnowPlowingCalendarComponent implements OnInit {
       };
     });
 
-    // Group periods by date using the grouping date
     const forecastMap: { [date: string]: any } = {};
     forecastPeriods.forEach((period: any) => {
-      const dateKey = period.rawDate.toDateString(); // Use the grouping date for grouping
+      const dateKey = period.rawDate.toDateString();
       if (!forecastMap[dateKey]) {
         forecastMap[dateKey] = {
           date: period.date,
@@ -154,17 +153,13 @@ export class SnowPlowingCalendarComponent implements OnInit {
       }
       forecastMap[dateKey].periods.push(period);
 
-      // Update tempHigh and tempLow
       if (period.isDaytime) {
-        // For daytime, assume it's the high temperature
         forecastMap[dateKey].tempHigh = period.temperature;
       } else {
-        // For nighttime, assume it's the low temperature
         forecastMap[dateKey].tempLow = period.temperature;
       }
     });
 
-    // Convert the forecastMap back to an array
     this.weatherForecast = Object.values(forecastMap)
       .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime())
       .filter(
@@ -176,10 +171,7 @@ export class SnowPlowingCalendarComponent implements OnInit {
 
   processHourlyData(data: any): void {
     const now = new Date();
-
-    // Initialize an empty array to hold the processed hourly data
     const hourlyData: any[] = [];
-
     let previousDate: string | null = null;
 
     data.properties.periods
@@ -195,7 +187,6 @@ export class SnowPlowingCalendarComponent implements OnInit {
           day: 'numeric',
         });
 
-        // If the date changes, add a date separator
         if (dateStr !== previousDate) {
           hourlyData.push({
             isDateSeparator: true,
@@ -204,7 +195,6 @@ export class SnowPlowingCalendarComponent implements OnInit {
           previousDate = dateStr;
         }
 
-        // Convert temperature to Fahrenheit if necessary
         let temperature = period.temperature;
         if (period.temperatureUnit === 'C') {
           temperature = (temperature * 9) / 5 + 32;
@@ -256,21 +246,18 @@ export class SnowPlowingCalendarComponent implements OnInit {
       this.bookingData.date &&
       this.bookingData.time
     ) {
-      // Prepare the data to match the backend model
       const bookingPayload = {
         name: this.bookingData.name,
         email: this.bookingData.email,
         phone: this.bookingData.phone,
         serviceName: this.bookingData.service,
-        bookingDate: this.bookingData.date.toString().split('T')[0], // 'YYYY-MM-DD'
-        bookingTime: this.convertTimeTo24HourFormat(this.bookingData.time), // 'HH:mm:ss'
+        bookingDate: this.bookingData.date.toString().split('T')[0],
+        bookingTime: this.convertTimeTo24HourFormat(this.bookingData.time),
       };
 
-      // Send booking data to backend API
-      this.http.post('http://localhost:9080/api/bookings', bookingPayload).subscribe(
-        () => {
+      this.http.post('http://localhost:9080/api/bookings', bookingPayload).subscribe({
+        next: () => {
           alert('Your booking request has been submitted!');
-          // Reset the form
           this.bookingData = {
             name: '',
             email: '',
@@ -280,17 +267,16 @@ export class SnowPlowingCalendarComponent implements OnInit {
             time: '',
           };
         },
-        (error: any) => {
+        error: (error: any) => {
           alert('An error occurred while submitting your booking. Please try again.');
           console.error('Booking submission error:', error);
         }
-      );
+      });
     } else {
       alert('Please fill in all required fields.');
     }
   }
 
-  // Helper method to convert time to 'HH:mm:ss' format
   convertTimeTo24HourFormat(time12h: string): string {
     const [time, modifier] = time12h.split(' ');
     let [hours, minutes] = time.split(':');
@@ -306,16 +292,11 @@ export class SnowPlowingCalendarComponent implements OnInit {
     return `${hours}:${minutes}:00`;
   }
 
-
-  // Helper function to get weather icon based on description
   getWeatherIcon(description: string): string {
     description = description.toLowerCase();
     if (description.includes('sunny') || description.includes('clear')) {
       return 'wi-day-sunny';
-    } else if (
-      description.includes('partly sunny') ||
-      description.includes('partly cloudy')
-    ) {
+    } else if (description.includes('partly sunny') || description.includes('partly cloudy')) {
       return 'wi-day-cloudy';
     } else if (description.includes('cloudy')) {
       return 'wi-cloudy';
