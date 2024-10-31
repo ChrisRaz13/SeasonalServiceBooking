@@ -1,181 +1,137 @@
+/* Global Styles */
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
+/* Weather Alert */
+.weather-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Hero Section */
-.hero {
-  background-image: linear-gradient(
-      rgba(0, 0, 0, 0.4),
-      rgba(0, 0, 0, 0.4)
-    ),
-    url('https://media.istockphoto.com/id/172685391/photo/plowing-the-road.jpg?s=2048x2048&w=is&k=20&c=8pdXKpm6bJoXT7IfTSbBMuAfUCwZtvjae1-hAIylmt4=');
-  text-align: center;
-  padding: 150px 0;
-  color: white;
+.hero-section {
+  min-height: 100vh;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+              url('https://media.istockphoto.com/id/172685391/photo/plowing-the-road.jpg?s=2048x2048&w=is&k=20&c=8pdXKpm6bJoXT7IfTSbBMuAfUCwZtvjae1-hAIylmt4=') no-repeat center center;
   background-size: cover;
-  background-position: center;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-.hero p {
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-}
-
-.hero .btn {
-  padding: 12px 24px;
-  background-color: #ff6f61;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   color: white;
-  text-decoration: none;
-  border-radius: 4px;
+  position: relative;
+  padding: 80px 20px;
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
-.hero .btn:hover {
-  background-color: #ff4b3a;
+.typed-text {
+  color: #ff6b6b;
+  display: inline-block;
+  min-width: 200px;
+  text-align: left;
 }
 
-/* Service Boxes */
-.service-boxes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  margin: 40px auto;
-  max-width: 1200px;
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: currentColor;
+  margin-left: 2px;
+  animation: blink 1s infinite;
 }
 
-.service-box {
-  position: relative;
-  width: 45%;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.weather-widget {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
   border-radius: 15px;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Services Section */
+.services-section {
+  padding: 80px 20px;
+  background: #f8f9fa;
+}
+
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.service-card {
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+}
+
+.service-image {
+  position: relative;
+  height: 200px;
   overflow: hidden;
 }
 
-.service-box img {
+.service-image img {
   width: 100%;
-  height: auto;
-  border-radius: 15px;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.overlay {
+.service-card:hover .service-image img {
+  transform: scale(1.1);
+}
+
+.service-overlay {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  color: #f1c40f;
-  width: 100%;
-  text-align: center;
-  padding: 20px;
-}
-
-.service-box .btn {
-  background-color: #f1c40f;
-  color: #1a374d;
-  margin-top: 10px;
-  padding: 8px 16px;
-  border-radius: 4px;
-}
-
-.service-box .btn:hover {
-  background-color: #ffd700;
-}
-
-/* Additional Services */
-.additional-services {
-  text-align: center;
-  padding: 60px 20px;
-  background-color: #f7f7f7;
-}
-
-.additional-services h2 {
-  font-size: 2.5rem;
-  color: #1a374d;
-  margin-bottom: 40px;
-}
-
-.services-list {
+  background: rgba(0,0,0,0.3);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 30px;
 }
 
-.service-item {
-  background-color: #ffffff;
-  color: #1a374d;
-  padding: 20px;
-  border-radius: 10px;
-  width: 280px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.service-overlay mat-icon {
+  font-size: 48px;
+  color: white;
 }
 
-.service-item h4 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-}
-
-.service-item p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
-
-.service-item .btn {
-  background-color: #1a374d;
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-
-.service-item .btn:hover {
-  background-color: #16354d;
-}
-
-/* Testimonials */
-.testimonial-carousel {
-  background-color: #1a374d;
-  color: #e0f4f1;
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.testimonial-carousel h2 {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
-}
-
-.testimonial {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.testimonial blockquote {
-  font-size: 1.5rem;
-  font-style: italic;
-  margin-bottom: 20px;
-}
-
-.testimonial p {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-/* About Us */
-.about-us {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.about-us h3 {
-  font-size: 2.5rem;
-  color: #1a374d;
-  margin-bottom: 30px;
-}
-
-.about-us p {
-  max-width: 800px;
-  margin: 0 auto;
-  font-size: 1.2rem;
-  color: #555;
-  line-height: 1.6;
-}

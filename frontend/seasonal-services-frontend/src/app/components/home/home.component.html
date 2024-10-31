@@ -1,68 +1,103 @@
-<!-- Hero Section -->
-<section class="hero">
-  <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
-  <p>Efficient, Reliable, and Local Services for Your Property Needs.</p>
-  <a routerLink="/quote" class="btn">Get a Free Quote</a>
-</section>
+<div class="homepage-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content" @fadeInOut>
+      <h1>
+        Your Trusted Experts in
+        <span class="typed-text">{{ typingText }}<span class="cursor">|</span></span>
+      </h1>
+      <p class="hero-subtitle">Professional Services for Every Season</p>
 
-<!-- Service Boxes -->
-<section class="service-boxes">
-  <!-- Snow Plowing Box -->
-  <div class="service-box snow-plowing">
-    <img
-      src="https://media.istockphoto.com/id/536778097/photo/highway-snow-plow.jpg?s=2048x2048&w=is&k=20&c=ns8LS-y1-jWpJks808sCFeeSP14oyrS-l3Su6FA2_U4="
-      alt="Snow Plowing"
-    />
-    <div class="overlay">
-      <h2>Snow Plowing Services</h2>
-      <a routerLink="/snow-plowing-calendar" class="btn">Learn More</a>
+      <div class="hero-cta">
+        <button mat-raised-button color="primary" routerLink="/quote">
+          <mat-icon>calculate</mat-icon>
+          Get a Free Quote
+        </button>
+        <button mat-stroked-button color="accent" (click)="scrollToSection('services')">
+          <mat-icon>explore</mat-icon>
+          Explore Services
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Lawn Care Box -->
-  <div class="service-box lawn-care">
-    <img
-      src="https://media.istockphoto.com/id/2044312647/photo/professional-latino-man-using-a-riding-lawnmower-caring-for-a-park-with-a-landscaping-company.jpg?s=2048x2048&w=is&k=20&c=Ael-VrEpwZbobzfnGj8V7HBShBPVB81I7reWtxVcZ6o="
-      alt="Lawn Care"
-    />
-    <div class="overlay">
-      <h2>Lawn Care Services</h2>
-      <a routerLink="/lawn-care" class="btn">Learn More</a>
+    <div class="scroll-indicator" (click)="scrollToSection('services')">
+      <div class="mouse"></div>
+      <span>Scroll to explore</span>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Additional Services -->
-<section class="additional-services">
-  <h2>Our Services</h2>
-  <div class="services-list">
-    <div class="service-item" *ngFor="let service of services">
-      <h4>{{ service.name }}</h4>
-      <p>{{ service.description }}</p>
-      <a [routerLink]="service.link" class="btn">Explore</a>
+  <!-- Services Section -->
+  <section id="services" class="services-section">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+      <mat-card *ngFor="let service of services" class="service-card" @fadeInOut>
+        <div class="service-image">
+          <img [src]="service.image" [alt]="service.title">
+          <div class="service-overlay">
+            <mat-icon>{{ service.icon }}</mat-icon>
+          </div>
+        </div>
+        <mat-card-content>
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.description }}</p>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              {{ feature }}
+            </li>
+          </ul>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" [routerLink]="service.link">
+            Learn More
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Testimonials -->
-<section class="testimonial-carousel">
-  <h2>What Our Customers Say</h2>
-  <div class="testimonial">
-    <blockquote>{{ testimonials[currentIndex].quote }}</blockquote>
-    <p>&mdash; {{ testimonials[currentIndex].author }}</p>
-  </div>
-</section>
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial-carousel">
+      <div class="testimonial-slide"
+           *ngFor="let testimonial of testimonials; let i = index"
+           [@fadeInOut]
+           [class.active]="i === currentTestimonialIndex">
+        <div class="testimonial-content">
+          <div class="quote-marks">"</div>
+          <p>{{ testimonial.quote }}</p>
+          <div class="author-info">
+            <div class="author-details">
+              <h4>{{ testimonial.author }}</h4>
+              <p>{{ testimonial.role }}</p>
+              <div class="rating">
+                <mat-icon *ngFor="let star of getStarArray(testimonial.rating)">
+                  star
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- About Us Section -->
-<section class="about-us">
-  <h3>About Alex Services</h3>
-  <p>
-    At Alex Services, we've been proudly serving the Iowa City area for over a
-    decade. Our commitment to excellence ensures that your property looks its
-    best all year round. From reliable snow plowing in the harsh winters to
-    meticulous lawn care in the vibrant summers, we're dedicated to providing
-    top-notch services tailored to your needs. Our experienced team uses
-    state-of-the-art equipment to deliver efficient, high-quality results every
-    time.
-  </p>
-</section>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content" @fadeInOut>
+      <h2>Ready to Get Started?</h2>
+      <p>Contact us today for a free consultation and estimate!</p>
+      <div class="cta-buttons">
+        <button mat-raised-button color="primary" routerLink="/quote">
+          <mat-icon>schedule</mat-icon>
+          Schedule Service
+        </button>
+        <button mat-stroked-button color="accent" routerLink="/contact">
+          <mat-icon>phone</mat-icon>
+          Contact Us
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
