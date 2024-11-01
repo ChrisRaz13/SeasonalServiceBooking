@@ -1,5 +1,6 @@
+<!-- nav-bar.component.html -->
 <nav #navbar class="navbar" [class.scrolled]="isScrolled" [@fadeSlide]>
-  <!-- Logo Section with Animation -->
+  <!-- Logo Section -->
   <div class="navbar-logo">
     <a routerLink="/" class="logo-link">
       <img src="assets/logo.png" alt="Snow and Lawn Services Logo" class="logo-image" />
@@ -15,40 +16,44 @@
 
   <!-- Navigation Links -->
   <div class="navbar-links" [class.active]="navbarOpen">
-    <ng-container *ngFor="let item of menuItems">
+    <ng-container *ngFor="let item of menuItems; let i = index">
       <!-- Regular Menu Item -->
       <a *ngIf="!item.children"
          [routerLink]="item.route"
          routerLinkActive="active-link"
-         class="nav-link animate__animated"
+         class="nav-link"
          [class.animate__fadeInDown]="navbarOpen">
-        <mat-icon>{{item.icon}}</mat-icon>
-        <span>{{item.label}}</span>
+        <i class="nav-icon" [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
       </a>
 
       <!-- Dropdown Menu Item -->
-      <div *ngIf="item.children" class="dropdown-container">
-        <button mat-button [matMenuTriggerFor]="menu" class="nav-link">
-          <mat-icon>{{item.icon}}</mat-icon>
-          <span>{{item.label}}</span>
-          <mat-icon>expand_more</mat-icon>
+      <div *ngIf="item.children"
+           class="dropdown-container"
+           [class.show]="dropdownStates[i]"
+           (mouseenter)="toggleDropdown(i, true)"
+           (mouseleave)="toggleDropdown(i, false)">
+        <button class="nav-link dropdown-toggle">
+          <i class="nav-icon" [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+          <i class="nav-icon chevron" [class.rotate]="dropdownStates[i]">&#x2304;</i>
         </button>
-        <mat-menu #menu="matMenu" class="custom-menu">
+        <div class="dropdown-menu" [class.show]="dropdownStates[i]">
           <a *ngFor="let child of item.children"
-             mat-menu-item
              [routerLink]="child.route"
-             routerLinkActive="active-link">
-            <mat-icon>{{child.icon}}</mat-icon>
-            <span>{{child.label}}</span>
+             routerLinkActive="active-link"
+             class="dropdown-item">
+            <i class="nav-icon" [class]="child.icon"></i>
+            <span>{{ child.label }}</span>
           </a>
-        </mat-menu>
+        </div>
       </div>
     </ng-container>
 
     <!-- Emergency Contact Button -->
-    <button mat-raised-button color="warn" class="emergency-btn" matBadge="24/7">
-      <mat-icon>emergency</mat-icon>
-      Emergency Service
+    <button class="emergency-btn">
+      <i class="emergency-icon">⚡</i>
+      <span>24/7 Emergency Service</span>
     </button>
   </div>
 </nav>
