@@ -2,11 +2,15 @@
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-content" @fadeInOut>
-      <h1>
-        Your Trusted Experts in
-        <span class="typed-text">{{ typingText }}<span class="cursor">|</span></span>
-      </h1>
+      <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
       <p class="hero-subtitle">Professional Services for Every Season</p>
+
+      <div class="weather-widget" matTooltip="Current Weather Conditions">
+        <div class="weather-info">
+          <mat-icon>{{ weatherAlerts[0]?.description?.toLowerCase().includes('snow') ? 'ac_unit' : 'wb_sunny' }}</mat-icon>
+          <span class="temp">{{ weatherAlerts[0]?.temperature || '--' }}°F</span>
+        </div>
+      </div>
 
       <div class="hero-cta">
         <button mat-raised-button color="primary" routerLink="/quote">
@@ -100,4 +104,60 @@
       </div>
     </div>
   </section>
+
+  <!-- Floating Weather Alert -->
+  <div class="floating-alert" *ngIf="!hasError">
+    <button
+      class="alert-fab"
+      [class.has-alerts]="weatherAlerts.length > 0"
+      [class.is-loading]="isLoading"
+      [ngClass]="getAlertSeverityClass(weatherAlerts[0]?.severity)"
+      (click)="toggleAlerts()"
+      [matTooltip]="getAlertTooltip()"
+    >
+      <div class="alert-icon-wrapper">
+        <mat-icon class="alert-icon">{{ getAlertIcon(weatherAlerts[0]?.severity) }}</mat-icon>
+        <span class="alert-pulse" *ngIf="weatherAlerts.length > 0"></span>
+      </div>
+      <span class="alert-count" *ngIf="weatherAlerts.length > 0">{{ weatherAlerts.length }}</span>
+    </button>
+
+    <!-- Alert Panel -->
+    <div class="floating-alerts-panel" *ngIf="showAlerts && weatherAlerts.length > 0" @expandCollapse>
+      <div class="panel-header">
+        <h3>Active Weather Alerts</h3>
+        <button mat-icon-button (click)="toggleAlerts()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="alerts-list">
+        <div
+          *ngFor="let alert of weatherAlerts"
+          class="alert-item"
+          [ngClass]="getAlertSeverityClass(alert.severity)"
+        >
+          <div class="alert-item-header">
+            <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+            <div class="alert-item-title">
+              <h4>{{ alert.event }}</h4>
+              <span class="alert-severity-badge">{{ alert.severity }}</span>
+            </div>
+          </div>
+          <p class="alert-headline">{{ alert.headline }}</p>
+          <div class="alert-details">
+            <span class="alert-timing">
+              Expires: {{ formatDate(alert.expires) }}
+            </span>
+            <button
+              mat-button
+              color="primary"
+              (click)="showAlertDetails(alert)"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

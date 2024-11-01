@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Subscription, interval } from 'rxjs';
+import { WeatherService } from '../../services/weather.service';
 
 interface ServiceCard {
   title: string;
@@ -16,6 +18,14 @@ interface ServiceCard {
   icon: string;
 }
 
+interface WeatherAlertSeverity {
+  label: string;
+  color: string;
+  icon: string;
+  bgColor: string;
+  pulseColor: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -24,11 +34,31 @@ interface ServiceCard {
     RouterModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule,
+    MatBadgeModule
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css'],
   animations: [
+    trigger('expandCollapse', [
+      transition(':enter', [
+        style({
+          opacity: 0,
+          transform: 'translateY(20px) scale(0.95)'
+        }),
+        animate('200ms ease-out', style({
+          opacity: 1,
+          transform: 'translateY(0) scale(1)'
+        }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({
+          opacity: 0,
+          transform: 'translateY(20px) scale(0.95)'
+        }))
+      ])
+    ]),
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
@@ -37,14 +67,42 @@ interface ServiceCard {
     ])
   ]
 })
-export class HomeComponent implements OnInit, OnDestroy {
-  typingText = '';
-  private phrases = ['Snow Plowing', 'Lawn Care', 'Property Maintenance'];
-  private currentPhraseIndex = 0;
-  private typingSpeed = 100;
-  private deletingSpeed = 50;
-  private pauseDuration = 2000;
-  private typingSubscription?: Subscription;
+export class HomeComponent implements OnInit {
+  weatherAlerts: any[] = [];
+  isLoading = true;
+  hasError = false;
+  showAlerts = false;
+
+  private readonly severityConfig: { [key: string]: WeatherAlertSeverity } = {
+    extreme: {
+      label: 'Extreme',
+      color: '#ff1744',
+      icon: 'warning',
+      bgColor: 'rgba(255, 23, 68, 0.95)',
+      pulseColor: 'rgba(255, 23, 68, 0.6)'
+    },
+    severe: {
+      label: 'Severe',
+      color: '#f50057',
+      icon: 'error',
+      bgColor: 'rgba(245, 0, 87, 0.95)',
+      pulseColor: 'rgba(245, 0, 87, 0.6)'
+    },
+    moderate: {
+      label: 'Moderate',
+      color: '#ff9100',
+      icon: 'info',
+      bgColor: 'rgba(255, 145, 0, 0.95)',
+      pulseColor: 'rgba(255, 145, 0, 0.6)'
+    },
+    minor: {
+      label: 'Minor',
+      color: '#00b0ff',
+      icon: 'info_outline',
+      bgColor: 'rgba(0, 176, 255, 0.95)',
+      pulseColor: 'rgba(0, 176, 255, 0.6)'
+    }
+  };
 
   services: ServiceCard[] = [
     {
@@ -82,48 +140,96 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   currentTestimonialIndex = 0;
 
-  constructor() { }
+  constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.startTypingAnimation();
+    this.loadWeatherAlerts();
     this.rotateTestimonials();
+    // Refresh weather alerts every 5 minutes
+    setInterval(() => this.loadWeatherAlerts(), 300000);
   }
 
-  ngOnDestroy(): void {
-    if (this.typingSubscription) {
-      this.typingSubscription.unsubscribe();
-    }
-  }
+  loadWeatherAlerts(): void {
+    const lat = 61.1043; // Iowa City coordinates
+    const lon = -149.8173;
 
-  private startTypingAnimation(): void {
-    let isDeleting = false;
-    let charIndex = 0;
-
-    this.typingSubscription = interval(this.typingSpeed).subscribe(() => {
-      const currentPhrase = this.phrases[this.currentPhraseIndex];
-
-      if (!isDeleting) {
-        this.typingText = currentPhrase.slice(0, charIndex + 1);
-        charIndex++;
-
-        if (charIndex === currentPhrase.length) {
-          isDeleting = true;
-          this.delay(this.pauseDuration);
+    this.weatherService.getWeatherAlerts(lat, lon).subscribe({
+      next: (data) => {
+        if (data.features && data.features.length > 0) {
+          this.weatherAlerts = data.features.map((feature: any) => ({
+            event: feature.properties.event,
+            headline: feature.properties.headline,
+            description: feature.properties.description,
+            severity: feature.properties.severity,
+            expires: feature.properties.expires,
+            effective: feature.properties.effective,
+            senderName: feature.properties.senderName,
+            areaDesc: feature.properties.areaDesc,
+            instruction: feature.properties.instruction,
+            parameters: feature.properties.parameters
+          }));
+          // Sort alerts by severity
+          this.weatherAlerts.sort((a, b) =>
+            this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
+          );
         }
-      } else {
-        this.typingText = currentPhrase.slice(0, charIndex - 1);
-        charIndex--;
-
-        if (charIndex === 0) {
-          isDeleting = false;
-          this.currentPhraseIndex = (this.currentPhraseIndex + 1) % this.phrases.length;
-        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading weather alerts:', error);
+        this.hasError = true;
+        this.isLoading = false;
       }
     });
   }
 
-  private delay(ms: number): void {
-    setTimeout(() => {}, ms);
+  private getSeverityWeight(severity: string): number {
+    const weights: Record<string, number> = {
+      'extreme': 4,
+      'severe': 3,
+      'moderate': 2,
+      'minor': 1
+    };
+    return weights[severity.toLowerCase()] || 0;
+  }
+
+  getAlertSeverityClass(severity: string): string {
+    const severityLower = severity?.toLowerCase() || 'minor';
+    return `severity-${severityLower}`;
+  }
+
+  getAlertIcon(severity: string): string {
+    const severityLower = severity?.toLowerCase() || 'minor';
+    return this.severityConfig[severityLower]?.icon || 'info_outline';
+  }
+
+  getAlertTooltip(): string {
+    if (this.isLoading) return 'Checking weather alerts...';
+    if (this.weatherAlerts.length === 0) return 'No active alerts';
+    if (this.weatherAlerts.length === 1) return this.weatherAlerts[0].event;
+    return `${this.weatherAlerts.length} Active Weather Alerts`;
+  }
+
+  toggleAlerts(): void {
+    if (this.weatherAlerts.length > 0) {
+      this.showAlerts = !this.showAlerts;
+    }
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  showAlertDetails(alert: any): void {
+    console.log('Alert details:', alert);
   }
 
   private rotateTestimonials(): void {
