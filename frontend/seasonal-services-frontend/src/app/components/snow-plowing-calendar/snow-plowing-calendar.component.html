@@ -1,71 +1,3 @@
-<div class="weather-disclaimer"></div>
-  <mat-card>
-    <mat-card-content>
-      <div class="disclaimer-content">
-        <div class="disclaimer-icon">❄️</div>
-        <div class="disclaimer-text">
-          <p class="primary-text">Weather data provided by the National Weather Service (weather.gov)</p>
-          <p class="secondary-text">Service activation is based on snowfall accumulation of 2 inches or more. Updates occur every 60 minutes.</p>
-        </div>
-        <button mat-button color="primary" (click)="loadWeatherData()" class="refresh-button">
-          <span>Refresh Data</span>
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-
-  <!-- Snow Conditions Card -->
-<mat-card class="weather-card snow-conditions-card">
-  <mat-card-header>
-    <mat-card-title>
-      <div class="title-with-icon">
-        <span class="snow-icon">❄️</span>
-        Snow Conditions
-      </div>
-    </mat-card-title>
-    <mat-card-subtitle>Next 24 Hours Outlook</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="snow-grid">
-      <!-- Snow Probability -->
-      <div class="snow-stat-box">
-        <div class="stat-label">Snow Chance</div>
-        <div class="stat-value">{{ getSnowProbability() }}%</div>
-        <div class="stat-period">Next 12 hours</div>
-      </div>
-
-      <!-- Expected Accumulation -->
-      <div class="snow-stat-box">
-        <div class="stat-label">Expected Accumulation</div>
-        <div class="stat-value">{{ getSnowAccumulation() }}"</div>
-        <div class="stat-period">Total expected</div>
-      </div>
-
-      <!-- Service Status -->
-      <div class="snow-stat-box" [ngClass]="getServiceStatusClass()">
-        <div class="stat-label">Service Status</div>
-        <div class="stat-value">{{ getServiceStatus() }}</div>
-        <div class="stat-period">Based on forecast</div>
-      </div>
-
-      <!-- Ground Temperature -->
-      <div class="snow-stat-box">
-        <div class="stat-label">Ground Temperature</div>
-        <div class="stat-value">{{ getGroundTemperature() }}°F</div>
-        <div class="stat-period">Surface conditions</div>
-      </div>
-    </div>
-
-    <!-- Service Threshold Notice -->
-    <div class="service-notice" *ngIf="showServiceNotice()">
-      <p>🚨 Approaching service threshold (2" accumulation)</p>
-      <button mat-raised-button color="primary">Schedule Service</button>
-    </div>
-  </mat-card-content>
-</mat-card>
-
-
 <!-- Background Animation -->
 <div id="particles-js" class="particles-container"></div>
 
@@ -92,11 +24,21 @@
 
 <!-- Main Content -->
 <div *ngIf="!isLoading && !hasError" class="dashboard-container" @scaleIn>
-  <!-- Weather Status Header -->
-  <div class="weather-status">
-    <h1>Weather Dashboard</h1>
-    <p class="location">Iowa City, IA</p>
-  </div>
+  <!-- Weather Disclaimer -->
+  <mat-card class="disclaimer-card">
+    <mat-card-content>
+      <div class="disclaimer-content">
+        <div class="disclaimer-icon">❄️</div>
+        <div class="disclaimer-text">
+          <p class="primary-text">Weather data provided by the National Weather Service (weather.gov)</p>
+          <p class="secondary-text">Service activation is based on snowfall accumulation of 2 inches or more. Updates occur every 60 minutes.</p>
+        </div>
+        <button mat-button color="primary" (click)="loadWeatherData()" class="refresh-button">
+          <span>Refresh Data</span>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
   <!-- Active Weather Alerts -->
   <div *ngIf="weatherAlerts.length > 0" class="alerts-banner" @fadeSlideInOut>
@@ -118,8 +60,53 @@
     </div>
   </div>
 
-  <!-- Weather Dashboard Grid -->
-  <div class="dashboard-grid">
+  <!-- Snow Conditions Card -->
+  <mat-card class="weather-card snow-conditions-card">
+    <mat-card-header>
+      <mat-card-title>
+        <div class="title-with-icon">
+          <span class="snow-icon">❄️</span>
+          Current Snow Conditions
+        </div>
+      </mat-card-title>
+      <mat-card-subtitle>Service Status & Forecast</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="snow-grid">
+        <div class="snow-stat-box">
+          <div class="stat-label">Snow Chance</div>
+          <div class="stat-value">{{ getSnowProbability() }}%</div>
+          <div class="stat-period">Next 12 hours</div>
+        </div>
+
+        <div class="snow-stat-box">
+          <div class="stat-label">Expected Accumulation</div>
+          <div class="stat-value">{{ getSnowAccumulation() }}"</div>
+          <div class="stat-period">Total expected</div>
+        </div>
+
+        <div class="snow-stat-box" [ngClass]="getServiceStatusClass()">
+          <div class="stat-label">Service Status</div>
+          <div class="stat-value">{{ getServiceStatus() }}</div>
+          <div class="stat-period">Based on forecast</div>
+        </div>
+
+        <div class="snow-stat-box">
+          <div class="stat-label">Ground Temperature</div>
+          <div class="stat-value">{{ getGroundTemperature() }}°F</div>
+          <div class="stat-period">Surface conditions</div>
+        </div>
+      </div>
+
+      <div class="service-notice" *ngIf="showServiceNotice()">
+        <p>🚨 Approaching service threshold (2" accumulation)</p>
+        <button mat-raised-button color="primary">Schedule Service</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Chart Grid -->
+  <div class="chart-grid">
     <!-- Temperature Chart -->
     <mat-card class="weather-card chart-card">
       <mat-card-header>
@@ -137,92 +124,120 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Wind Speed Chart -->
+    <!-- Snow Chart -->
     <mat-card class="weather-card chart-card">
       <mat-card-header>
-        <mat-card-title>Wind Speed Trend</mat-card-title>
-        <mat-card-subtitle>Next 24 Hours</mat-card-subtitle>
+        <mat-card-title>Snow Forecast</mat-card-title>
+        <mat-card-subtitle>Probability & Accumulation</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="chart-container">
           <p-chart type="line"
-                  [data]="windSpeedData"
-                  [options]="windSpeedOptions"
+                  [data]="snowChartData"
+                  [options]="snowChartOptions"
                   height="300px">
           </p-chart>
         </div>
       </mat-card-content>
     </mat-card>
+  </div>
 
-    <!-- Hourly Forecast -->
-    <mat-card class="weather-card hourly-card">
-      <mat-card-header>
-        <mat-card-title>Hourly Forecast</mat-card-title>
-        <mat-card-subtitle>Detailed hourly conditions</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="hourly-scroll custom-scrollbar">
-          <div *ngFor="let item of hourlyForecast"
-               [ngClass]="{'hourly-item': !item.isDateSeparator, 'date-separator': item.isDateSeparator}">
-            <ng-container *ngIf="!item.isDateSeparator">
-              <div class="time">{{ item.time }}</div>
-              <div class="weather-emoji">{{ getWeatherEmoji(item.shortForecast || '') }}</div>
-              <div class="temp">{{ item.temperature }}</div>
-              <div class="wind">{{ item.windSpeed }}</div>
-              <div class="forecast">{{ item.shortForecast }}</div>
-            </ng-container>
-            <ng-container *ngIf="item.isDateSeparator">
-              {{ item.date }}
-            </ng-container>
+  <!-- Hourly Forecast -->
+<mat-card class="weather-card hourly-card">
+  <mat-card-header>
+    <mat-card-title>Hourly Forecast</mat-card-title>
+    <mat-card-subtitle>Detailed conditions</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="hourly-scroll custom-scrollbar">
+      <div *ngFor="let item of hourlyForecast">
+        <div *ngIf="item.isDateSeparator" class="date-separator">
+          {{ item.date }}
+        </div>
+        <div *ngIf="!item.isDateSeparator" class="hourly-item">
+          <div class="time">{{ item.time }}</div>
+          <div class="weather-emoji">{{ getWeatherEmoji(item.shortForecast || '') }}</div>
+          <div class="temp">{{ item.temperature }}°F</div>
+          <div class="wind">{{ item.windSpeed }}</div>
+          <div class="forecast">{{ item.shortForecast }}</div>
+          <div class="snow-chance">
+            <span>Snow Likely: {{ item.snowChance }}%</span>
+          </div>
+          <div class="snow-accumulation">
+            <span>Accumulation: {{ item.snowAccumulation }}"</span>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
 
-    <!-- Weekly Forecast -->
+
+  <!-- 7-Day Forecast -->
+  <div class="forecast-section">
     <mat-card class="weather-card forecast-card">
       <mat-card-header>
-        <mat-card-title>7-Day Forecast</mat-card-title>
-        <mat-card-subtitle>Extended weather outlook</mat-card-subtitle>
+        <mat-card-title>Extended Forecast</mat-card-title>
+        <mat-card-subtitle>7-Day Outlook</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <mat-tab-group animationDuration="200ms" class="custom-tabs">
-          <mat-tab *ngFor="let forecast of weatherForecast">
-            <ng-template mat-tab-label>
-              <div class="tab-label">
-                <span class="day">{{ forecast.date }}</span>
-                <span class="temp-range" *ngIf="forecast.tempHigh && forecast.tempLow">
-                  {{ forecast.tempHigh }}° / {{ forecast.tempLow }}°
-                </span>
-                <span class="emoji">{{ getWeatherEmoji(forecast.shortForecast || '') }}</span>
+        <div class="forecast-timeline">
+          <div *ngFor="let forecast of weatherForecast" class="forecast-day">
+            <div class="day-header">
+              <div class="day-info">
+                <span class="day-name">{{ getDayName(forecast.date) }}</span>
+                <span class="full-date">{{ getFormattedDate(forecast.date) }}</span>
               </div>
-            </ng-template>
+              <div class="temp-range">
+                <span class="high" *ngIf="forecast.tempHigh">{{ forecast.tempHigh }}°</span>
+                <span class="low" *ngIf="forecast.tempLow">{{ forecast.tempLow }}°</span>
+              </div>
+            </div>
 
-            <div class="forecast-content">
-              <div class="forecast-period"
-                   *ngFor="let period of forecast.periods"
+            <div class="periods-container">
+              <div *ngFor="let period of forecast.periods"
+                   class="period-card"
                    [class.day-period]="period.isDaytime"
                    [class.night-period]="!period.isDaytime">
                 <div class="period-header">
-                  <div class="period-time">
-                    <span class="time-label">{{ period.timeOfDay }}</span>
-                    <span class="weather-emoji">{{ getWeatherEmoji(period.shortForecast) }}</span>
-                  </div>
-                  <div class="period-temp">{{ period.temperature }}°{{ period.temperatureUnit }}</div>
+                  <span class="time-label">{{ period.timeOfDay }}</span>
+                  <span class="temp-value">{{ period.temperature }}°{{ period.temperatureUnit }}</span>
                 </div>
 
-                <div class="period-details">
-                  <div class="short-forecast">{{ period.shortForecast }}</div>
-                  <div class="wind-info">
-                    <span class="wind-speed">{{ period.windSpeed }}</span>
-                    <span class="wind-direction">{{ period.windDirection }}</span>
+                <div class="period-weather">
+                  <span class="weather-emoji">{{ getWeatherEmoji(period.shortForecast) }}</span>
+                  <span class="condition">{{ period.shortForecast }}</span>
+                </div>
+
+                <div class="snow-info" *ngIf="hasSnowInfo(period)">
+                  <div class="snow-chance">
+                    <span class="label">Chance of Snow:</span>
+                    <span class="value">{{ extractSnowChance(period.shortForecast) }}%</span>
                   </div>
-                  <div class="detailed-forecast">{{ period.detailedForecast }}</div>
+                  <div class="snow-amount" *ngIf="extractHourlyAccumulation(period.detailedForecast) > 0">
+                    <span class="label">Expected:</span>
+                    <span class="value">{{ extractHourlyAccumulation(period.detailedForecast) }}"</span>
+                  </div>
+                </div>
+
+                <div class="wind-info">
+                  <span class="wind-speed">{{ period.windSpeed }}</span>
+                  <span class="wind-direction">{{ period.windDirection }}</span>
+                </div>
+
+                <div class="details-expand">
+                  <button mat-button color="primary" (click)="toggleDetails(period)">
+                    {{ period.showDetails ? 'Less Details' : 'More Details' }}
+                  </button>
+                </div>
+
+                <div class="detailed-forecast" *ngIf="period.showDetails">
+                  {{ period.detailedForecast }}
                 </div>
               </div>
             </div>
-          </mat-tab>
-        </mat-tab-group>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
