@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -140,7 +140,7 @@ export class HomeComponent implements OnInit {
 
   currentTestimonialIndex = 0;
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(private weatherService: WeatherService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadWeatherAlerts();
@@ -229,7 +229,7 @@ export class HomeComponent implements OnInit {
   }
 
   showAlertDetails(alert: any): void {
-    console.log('Alert details:', alert);
+    this.router.navigate(['/snow-plowing-calendar']);
   }
 
   private rotateTestimonials(): void {

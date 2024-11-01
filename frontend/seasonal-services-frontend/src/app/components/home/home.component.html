@@ -4,14 +4,12 @@
     <div class="hero-content" @fadeInOut>
       <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
       <p class="hero-subtitle">Professional Services for Every Season</p>
-
       <div class="weather-widget" matTooltip="Current Weather Conditions">
         <div class="weather-info">
           <mat-icon>{{ weatherAlerts[0]?.description?.toLowerCase().includes('snow') ? 'ac_unit' : 'wb_sunny' }}</mat-icon>
           <span class="temp">{{ weatherAlerts[0]?.temperature || '--' }}°F</span>
         </div>
       </div>
-
       <div class="hero-cta">
         <button mat-raised-button color="primary" routerLink="/quote">
           <mat-icon>calculate</mat-icon>
@@ -23,7 +21,6 @@
         </button>
       </div>
     </div>
-
     <div class="scroll-indicator" (click)="scrollToSection('services')">
       <div class="mouse"></div>
       <span>Scroll to explore</span>
@@ -131,11 +128,7 @@
         </button>
       </div>
       <div class="alerts-list">
-        <div
-          *ngFor="let alert of weatherAlerts"
-          class="alert-item"
-          [ngClass]="getAlertSeverityClass(alert.severity)"
-        >
+        <div *ngFor="let alert of weatherAlerts" class="alert-item" [ngClass]="getAlertSeverityClass(alert.severity)">
           <div class="alert-item-header">
             <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
             <div class="alert-item-title">
@@ -148,11 +141,7 @@
             <span class="alert-timing">
               Expires: {{ formatDate(alert.expires) }}
             </span>
-            <button
-              mat-button
-              color="primary"
-              (click)="showAlertDetails(alert)"
-            >
+            <button mat-button color="primary" (click)="showAlertDetails(alert)">
               View Details
             </button>
           </div>
