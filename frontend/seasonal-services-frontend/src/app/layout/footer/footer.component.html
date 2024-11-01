@@ -116,18 +116,4 @@
           matTooltip="Scroll to top">
     <mat-icon>arrow_upward</mat-icon>
   </button>
-
-  <!-- Chat Widget -->
-  <div class="chat-widget" [class.open]="showChatWidget">
-    <button class="chat-toggle"
-            mat-fab
-            color="primary"
-            (click)="toggleChatWidget()"
-            matTooltip="Chat with us">
-      <mat-icon>{{ showChatWidget ? 'close' : 'chat' }}</mat-icon>
-    </button>
-    <div class="chat-content" *ngIf="showChatWidget">
-      <!-- Add your chat widget content here -->
-    </div>
-  </div>
 </footer>

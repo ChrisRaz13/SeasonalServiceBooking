@@ -1,26 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { forkJoin } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChartModule } from 'primeng/chart';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { WeatherService } from '../../services/weather.service';
+import { gsap } from 'gsap';
 
+// Interfaces
+interface WeatherPeriod {
+  timeOfDay: string;
+  isDaytime: boolean;
+  temperature: number;
+  temperatureUnit: string;
+  windSpeed: string;
+  windDirection: string;
+  shortForecast: string;
+  detailedForecast: string;
+  icon: string;
+}
 
-interface BookingData {
-  name: string;
-  email: string;
-  phone: string;
-  service: string;
+interface ForecastDay {
   date: string;
-  time: string;
+  rawDate: Date;
+  periods: WeatherPeriod[];
+  tempHigh: number | null;
+  tempLow: number | null;
+  shortForecast?: string;
+}
+
+interface HourlyForecastItem {
+  isDateSeparator: boolean;
+  date?: string;
+  time?: string;
+  temperature?: string;
+  windSpeed?: string;
+  shortForecast?: string;
+}
+
+interface WeatherAlert {
+  event: string;
+  headline: string;
+  description: string;
+  instruction: string | null;
+  severity: string;
+  effective: string;
+  expires: string;
+  senderName: string;
+  areaDesc: string;
+}
+
+interface ChartData {
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    borderColor: string;
+    tension: number;
+    fill: boolean;
+    backgroundColor: string;
+  }>;
 }
 
 @Component({
@@ -28,83 +71,165 @@ interface BookingData {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTabsModule
+    MatTabsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    ChartModule
   ],
   templateUrl: './snow-plowing-calendar.component.html',
-  styleUrl: './snow-plowing-calendar.component.css' // Note: styleUrl is singular in Angular 18
+  styleUrls: ['./snow-plowing-calendar.component.scss'],
+  animations: [
+    trigger('fadeSlideInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('0.5s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('scaleIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.95)' }),
+        animate('0.4s ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ])
+    ])
+  ]
 })
-export class SnowPlowingCalendarComponent {
-  weatherForecast: any[] = [];
-  hourlyForecast: any[] = [];
-  todayDate: string = '';
-  weatherAlerts: any[] = [];
+export class SnowPlowingCalendarComponent implements OnInit, AfterViewInit {
+  weatherForecast: ForecastDay[] = [];
+  hourlyForecast: HourlyForecastItem[] = [];
+  weatherAlerts: WeatherAlert[] = [];
   isLoading = true;
   hasError = false;
-  minDate: Date;
+  temperatureData!: ChartData;
+  temperatureOptions: any;
+  windSpeedData!: ChartData;
+  windSpeedOptions: any;
+  lastUpdated: Date = new Date();
 
-  bookingData: BookingData = {
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
-    date: '',
-    time: '',
-  };
-
-  timeSlots: string[] = [
-    '6:00 AM', '6:15 AM', '6:30 AM', '6:45 AM',
-    '7:00 AM', '7:15 AM', '7:30 AM', '7:45 AM',
-    '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-    '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-    '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-    '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-    '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-    '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-    '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-    '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
-    '5:00 PM', '5:15 PM', '5:30 PM', '5:45 PM',
-    '6:00 PM', '6:15 PM', '6:30 PM', '6:45 PM',
-    '7:00 PM', '7:15 PM', '7:30 PM', '7:45 PM',
-    '8:00 PM',
-  ];
-
-  constructor(
-    private weatherService: WeatherService,
-    private http: HttpClient
-  ) {
-    this.minDate = new Date();
+  constructor(private weatherService: WeatherService) {
+    this.initChartOptions();
   }
 
   ngOnInit(): void {
     this.loadWeatherData();
   }
 
+  ngAfterViewInit() {
+    this.initParticles();
+    this.initAnimations();
+  }
+
+  private initParticles() {
+    if (typeof window !== 'undefined' && 'particlesJS' in window) {
+      (window as any).particlesJS('particles-js', {
+        particles: {
+          number: { value: 80 },
+          color: { value: '#ffffff' },
+          opacity: { value: 0.5 },
+          size: { value: 3 },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: '#ffffff',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: 'none',
+            random: false,
+            straight: false,
+            out_mode: 'out'
+          }
+        }
+      });
+    }
+  }
+
+  private initAnimations() {
+    gsap.to('.weather-card', {
+      duration: 0.8,
+      y: 0,
+      opacity: 1,
+      stagger: 0.2,
+      ease: "power2.out",
+      from: { y: 30, opacity: 0 }
+    });
+  }
+
+  private initChartOptions() {
+    const commonOptions = {
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(255,255,255,0.1)',
+            drawBorder: false
+          },
+          ticks: { color: 'rgba(255,255,255,0.8)' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: 'rgba(255,255,255,0.8)' }
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    };
+
+    this.temperatureOptions = {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: {
+          ...commonOptions.scales.y,
+          title: {
+            display: true,
+            text: 'Temperature (°F)',
+            color: 'rgba(255,255,255,0.8)'
+          }
+        }
+      }
+    };
+
+    this.windSpeedOptions = {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: {
+          ...commonOptions.scales.y,
+          title: {
+            display: true,
+            text: 'Wind Speed (mph)',
+            color: 'rgba(255,255,255,0.8)'
+          }
+        }
+      }
+    };
+  }
+
   loadWeatherData(): void {
     this.isLoading = true;
     this.hasError = false;
 
-    const lat = 41.6611; // Latitude for Iowa City
-    const lon = -91.5302; // Longitude for Iowa City
+    const lat =  61.1043       //41.6611; // Iowa City coordinates
+    const lon =  -149.8173       //-91.5302;
 
-    forkJoin({
-      forecast: this.weatherService.getWeatherForecast(lat, lon),
-      hourly: this.weatherService.getHourlyForecast(lat, lon),
-      alerts: this.weatherService.getWeatherAlerts(lat, lon),
-    }).subscribe({
+    this.weatherService.getAllWeatherData(lat, lon).subscribe({
       next: (data) => {
         this.processForecastData(data.forecast);
         this.processHourlyData(data.hourly);
         this.processAlertsData(data.alerts);
+        this.updateCharts();
         this.isLoading = false;
+        this.lastUpdated = new Date();
       },
       error: (error) => {
         console.error('Error loading weather data', error);
@@ -115,18 +240,35 @@ export class SnowPlowingCalendarComponent {
   }
 
   processForecastData(data: any): void {
-    const forecastPeriods = data.properties.periods.map((period: any) => {
-      const rawStartDate = new Date(period.startTime);
-      const groupingDate = new Date(rawStartDate);
-      const dateStr = groupingDate.toLocaleDateString('en-US', {
+    if (!data?.properties?.periods) {
+      this.hasError = true;
+      return;
+    }
+
+    const forecastMap = new Map<string, ForecastDay>();
+
+    data.properties.periods.forEach((period: any) => {
+      const date = new Date(period.startTime);
+      const dateKey = date.toDateString();
+      const dateStr = date.toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
       });
 
-      return {
-        date: dateStr,
-        rawDate: groupingDate,
+      if (!forecastMap.has(dateKey)) {
+        forecastMap.set(dateKey, {
+          date: dateStr,
+          rawDate: date,
+          periods: [],
+          tempHigh: null,
+          tempLow: null,
+          shortForecast: period.shortForecast
+        });
+      }
+
+      const dayForecast = forecastMap.get(dateKey)!;
+      const weatherPeriod: WeatherPeriod = {
         timeOfDay: period.name,
         isDaytime: period.isDaytime,
         temperature: period.temperature,
@@ -135,50 +277,33 @@ export class SnowPlowingCalendarComponent {
         windDirection: period.windDirection,
         shortForecast: period.shortForecast,
         detailedForecast: period.detailedForecast,
-        icon: period.icon,
+        icon: period.icon
       };
-    });
 
-    const forecastMap: { [date: string]: any } = {};
-    forecastPeriods.forEach((period: any) => {
-      const dateKey = period.rawDate.toDateString();
-      if (!forecastMap[dateKey]) {
-        forecastMap[dateKey] = {
-          date: period.date,
-          rawDate: period.rawDate,
-          periods: [],
-          tempHigh: null,
-          tempLow: null,
-        };
-      }
-      forecastMap[dateKey].periods.push(period);
+      dayForecast.periods.push(weatherPeriod);
 
       if (period.isDaytime) {
-        forecastMap[dateKey].tempHigh = period.temperature;
+        dayForecast.tempHigh = period.temperature;
       } else {
-        forecastMap[dateKey].tempLow = period.temperature;
+        dayForecast.tempLow = period.temperature;
       }
     });
 
-    this.weatherForecast = Object.values(forecastMap)
-      .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime())
-      .filter(
-        (forecast: any) =>
-          forecast.rawDate.setHours(0, 0, 0, 0) >=
-          new Date().setHours(0, 0, 0, 0)
-      );
+    this.weatherForecast = Array.from(forecastMap.values());
   }
 
   processHourlyData(data: any): void {
+    if (!data?.properties?.periods) {
+      this.hasError = true;
+      return;
+    }
+
     const now = new Date();
-    const hourlyData: any[] = [];
+    const hourlyData: HourlyForecastItem[] = [];
     let previousDate: string | null = null;
 
     data.properties.periods
-      .filter((period: any) => {
-        const periodStartTime = new Date(period.startTime);
-        return periodStartTime >= now;
-      })
+      .filter((period: any) => new Date(period.startTime) >= now)
       .forEach((period: any) => {
         const periodDate = new Date(period.startTime);
         const dateStr = periodDate.toLocaleDateString('en-US', {
@@ -201,6 +326,7 @@ export class SnowPlowingCalendarComponent {
         }
 
         hourlyData.push({
+          isDateSeparator: false,
           time: periodDate.toLocaleTimeString('en-US', {
             hour: 'numeric',
             hour12: true,
@@ -208,7 +334,6 @@ export class SnowPlowingCalendarComponent {
           temperature: `${temperature.toFixed(1)}°F`,
           windSpeed: period.windSpeed,
           shortForecast: period.shortForecast,
-          isDateSeparator: false,
         });
       });
 
@@ -217,99 +342,142 @@ export class SnowPlowingCalendarComponent {
 
   processAlertsData(data: any): void {
     if (data.features && data.features.length > 0) {
-      this.weatherAlerts = data.features.map((feature: any) => {
-        const properties = feature.properties;
-        return {
-          event: properties.event,
-          headline: properties.headline,
-          description: properties.description,
-          instruction: properties.instruction,
-          severity: properties.severity,
-          effective: properties.effective,
-          expires: properties.expires,
-          senderName: properties.senderName,
-          id: feature.id,
-          areaDesc: properties.areaDesc,
-        };
-      });
+      this.weatherAlerts = data.features.map((feature: any) => ({
+        event: feature.properties.event,
+        headline: feature.properties.headline,
+        description: feature.properties.description,
+        instruction: feature.properties.instruction,
+        severity: feature.properties.severity,
+        effective: feature.properties.effective,
+        expires: feature.properties.expires,
+        senderName: feature.properties.senderName,
+        areaDesc: feature.properties.areaDesc,
+      }));
     } else {
       this.weatherAlerts = [];
     }
   }
 
-  submitBooking(): void {
-    if (
-      this.bookingData.name &&
-      this.bookingData.email &&
-      this.bookingData.phone &&
-      this.bookingData.service &&
-      this.bookingData.date &&
-      this.bookingData.time
-    ) {
-      const bookingPayload = {
-        name: this.bookingData.name,
-        email: this.bookingData.email,
-        phone: this.bookingData.phone,
-        serviceName: this.bookingData.service,
-        bookingDate: this.bookingData.date.toString().split('T')[0],
-        bookingTime: this.convertTimeTo24HourFormat(this.bookingData.time),
-      };
+  private updateCharts() {
+    const next24Hours = this.hourlyForecast
+      .filter(hour => !hour.isDateSeparator)
+      .slice(0, 24);
 
-      this.http.post('http://localhost:9080/api/bookings', bookingPayload).subscribe({
-        next: () => {
-          alert('Your booking request has been submitted!');
-          this.bookingData = {
-            name: '',
-            email: '',
-            phone: '',
-            service: '',
-            date: '',
-            time: '',
-          };
-        },
-        error: (error: any) => {
-          alert('An error occurred while submitting your booking. Please try again.');
-          console.error('Booking submission error:', error);
-        }
-      });
-    } else {
-      alert('Please fill in all required fields.');
-    }
+    this.temperatureData = {
+      labels: next24Hours.map(hour => hour.time || ''),
+      datasets: [{
+        label: 'Temperature (°F)',
+        data: next24Hours.map(hour => this.extractTemperature(hour.temperature || '')),
+        borderColor: '#ff6384',
+        tension: 0.4,
+        fill: true,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)'
+      }]
+    };
+
+    this.windSpeedData = {
+      labels: next24Hours.map(hour => hour.time || ''),
+      datasets: [{
+        label: 'Wind Speed',
+        data: next24Hours.map(hour => this.extractWindSpeed(hour.windSpeed || '')),
+        borderColor: '#36a2eb',
+        tension: 0.4,
+        fill: true,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)'
+      }]
+    };
   }
 
-  convertTimeTo24HourFormat(time12h: string): string {
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
-
-    if (hours === '12') {
-      hours = '00';
-    }
-
-    if (modifier === 'PM') {
-      hours = String(parseInt(hours, 10) + 12);
-    }
-
-    return `${hours}:${minutes}:00`;
+  private extractWindSpeed(windSpeed: string): number {
+    const match = windSpeed.match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
   }
 
-  getWeatherIcon(description: string): string {
+  private extractTemperature(temp: string): number {
+    return parseFloat(temp.replace('°F', ''));
+  }
+
+  getWeatherEmoji(description: string): string {
     description = description.toLowerCase();
-    if (description.includes('sunny') || description.includes('clear')) {
-      return 'wi-day-sunny';
-    } else if (description.includes('partly sunny') || description.includes('partly cloudy')) {
-      return 'wi-day-cloudy';
-    } else if (description.includes('cloudy')) {
-      return 'wi-cloudy';
-    } else if (description.includes('rain')) {
-      return 'wi-rain';
-    } else if (description.includes('snow')) {
-      return 'wi-snow';
-    } else if (description.includes('fog')) {
-      return 'wi-fog';
-    } else if (description.includes('thunderstorm')) {
-      return 'wi-thunderstorm';
-    } else {
-      return 'wi-day-cloudy';
+    if (description.includes('snow')) return '❄️';
+    if (description.includes('rain')) return '🌧️';
+    if (description.includes('cloud')) return '☁️';
+    if (description.includes('sun') || description.includes('clear')) return '☀️';
+    if (description.includes('fog')) return '🌫️';
+    if (description.includes('thunder')) return '⛈️';
+    return '🌤️';
+  }
+
+  getSeverityColor(severity: string): string {
+    switch (severity.toLowerCase()) {
+      case 'extreme': return 'rgb(150, 0, 0)';
+      case 'severe': return 'rgb(255, 0, 0)';
+      case 'moderate': return 'rgb(255, 165, 0)';
+      default: return 'rgb(255, 255, 0)';
     }
+  }
+
+
+  getSnowProbability(): number {
+    // Calculate from weather data
+    const next12Hours = this.hourlyForecast
+      .filter(hour => !hour.isDateSeparator)
+      .slice(0, 12);
+
+    const snowyHours = next12Hours.filter(hour =>
+      hour.shortForecast?.toLowerCase().includes('snow'));
+
+    return Math.round((snowyHours.length / 12) * 100);
+  }
+
+  getSnowAccumulation(): string {
+    // Parse accumulation from forecast data
+    const snowyPeriods = this.weatherForecast
+      .flatMap(day => day.periods)
+      .filter(period => period.detailedForecast.toLowerCase().includes('snow accumulation'));
+
+    if (snowyPeriods.length === 0) return '0';
+
+    // Extract accumulation values and sum them
+    const accumulation = this.parseAccumulation(snowyPeriods[0].detailedForecast);
+    return accumulation.toString();
+  }
+
+  private parseAccumulation(forecast: string): number {
+    const matches = forecast.match(/(\d+(?:\.\d+)?)\s*(?:to\s*(\d+(?:\.\d+)?))?\s*inches?/i);
+    if (!matches) return 0;
+
+    if (matches[2]) {
+      // If range (e.g., "2 to 4 inches"), take average
+      return (parseFloat(matches[1]) + parseFloat(matches[2])) / 2;
+    }
+    return parseFloat(matches[1]);
+  }
+
+  getServiceStatus(): string {
+    const accumulation = this.getSnowAccumulation();
+    if (parseFloat(accumulation) >= 2) return 'Active';
+    if (parseFloat(accumulation) >= 1.5) return 'Pending';
+    return 'Standby';
+  }
+
+  getServiceStatusClass(): string {
+    const status = this.getServiceStatus();
+    return `status-${status.toLowerCase()}`;
+  }
+
+  getGroundTemperature(): number {
+    // This would ideally come from additional weather data
+    // For now, estimate based on air temperature
+    const currentTemp = this.hourlyForecast
+      .find(hour => !hour.isDateSeparator)?.temperature;
+
+    if (!currentTemp) return 32;
+    return Math.round(parseFloat(currentTemp.replace('°F', '')));
+  }
+
+  showServiceNotice(): boolean {
+    const accumulation = parseFloat(this.getSnowAccumulation());
+    return accumulation >= 1.5 && accumulation < 2;
   }
 }
