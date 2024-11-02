@@ -18,11 +18,11 @@ export const routes: Routes = [
   },
   {
     path: 'snowplowing-service-page',
-    component: SnowPlowingServicePageComponent // Bookings route
+    component: SnowPlowingServicePageComponent // Snowplowing service page
   },
   {
     path: 'weather-dashboard',
-    component: SnowPlowingCalendarComponent // Snow plowing calendar route
+    component: SnowPlowingCalendarComponent // Weather Dashboard
   },
   {
     path: '**',

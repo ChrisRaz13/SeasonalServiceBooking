@@ -141,7 +141,7 @@ export class NavBarComponent implements AfterViewInit {
       children: [
         {
           label: 'Snow Removal',
-          route: '/snow-removal',
+          route: 'snowplowing-service-page',
           icon: 'fas fa-snowflake',
           color: '#64B5F6'
         },
@@ -155,7 +155,7 @@ export class NavBarComponent implements AfterViewInit {
     },
     {
       label: 'Weather',
-      route: '/weather',
+      route: 'weather-dashboard',
       icon: 'fas fa-cloud-sun',
       color: '#FF9800'
     },
