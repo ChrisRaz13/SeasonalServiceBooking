@@ -5,6 +5,7 @@ import { BookingFormComponent } from './components/booking-form/booking-form.com
 import { SnowPlowingCalendarComponent } from './components/snow-plowing-calendar/snow-plowing-calendar.component';
 import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { AppComponent } from './app.component';
+import { SnowPlowingServicePageComponent } from './components/snow-plowing-service-page/snow-plowing-service-page.component';
 
 export const routes: Routes = [
   {
@@ -16,11 +17,11 @@ export const routes: Routes = [
     component: ClientListComponent // Clients route
   },
   {
-    path: 'bookings',
-    component: BookingFormComponent // Bookings route
+    path: 'snowplowing-service-page',
+    component: SnowPlowingServicePageComponent // Bookings route
   },
   {
-    path: 'snow-plowing-calendar',
+    path: 'weather-dashboard',
     component: SnowPlowingCalendarComponent // Snow plowing calendar route
   },
   {

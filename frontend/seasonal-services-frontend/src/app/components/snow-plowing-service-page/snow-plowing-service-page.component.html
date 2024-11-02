@@ -1,1 +1,79 @@
-<p>snow-plowing-service-page works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Professional Snow Management</h1>
+    <p>Keeping Iowa City Safe & Accessible All Winter Long</p>
+    <button mat-raised-button color="primary" routerLink="/quote">
+      Get a Free Quote
+    </button>
+  </div>
+</section>
+
+<!-- Service Highlights -->
+<section class="highlights-section">
+  <div class="highlights-container">
+    <div class="highlight-card" *ngFor="let highlight of serviceHighlights">
+      <mat-icon>{{highlight.icon}}</mat-icon>
+      <h3>{{highlight.title}}</h3>
+      <p>{{highlight.description}}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Service Sections -->
+<section class="service-sections">
+  <div class="service-section" *ngFor="let section of serviceSections" [class.reversed]="section.reversed">
+    <div class="service-content">
+      <h2>{{section.title}}</h2>
+      <p>{{section.description}}</p>
+      <ul class="service-bullets">
+        <li *ngFor="let point of section.bulletPoints">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{point}}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="service-image">
+      <img [src]="section.imageUrl" [alt]="section.imageAlt">
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="pricing-section">
+  <h2>Flexible Pricing Options</h2>
+  <div class="pricing-container">
+    <div class="pricing-card" *ngFor="let option of pricingOptions">
+      <div class="pricing-header">
+        <h3>{{option.title}}</h3>
+        <p class="price">{{option.price}}</p>
+        <p class="description">{{option.description}}</p>
+      </div>
+      <ul class="pricing-features">
+        <li *ngFor="let feature of option.features">
+          <mat-icon>done</mat-icon>
+          {{feature}}
+        </li>
+      </ul>
+      <button mat-raised-button color="primary" routerLink="/quote">
+        Choose Plan
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Ready for Professional Snow Removal?</h2>
+    <p>Contact us today to discuss your snow removal needs and get a customized quote.</p>
+    <div class="cta-buttons">
+      <button mat-raised-button color="primary" routerLink="/quote">
+        Get a Quote
+      </button>
+      <button mat-stroked-button color="primary" routerLink="/contact">
+        Contact Us
+      </button>
+    </div>
+  </div>
+</section>

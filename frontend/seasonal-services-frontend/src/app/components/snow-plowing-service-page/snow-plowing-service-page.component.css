@@ -1,0 +1,315 @@
+/* Hero Section */
+.hero-section {
+  height: 80vh;
+  background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('https://media.istockphoto.com/id/536778097/photo/highway-snow-plow.jpg?s=2048x2048&w=is&k=20&c=ns8LS-y1-jWpJks808sCFeeSP14oyrS-l3Su6FA2_U4=');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding: 0 20px;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.hero-content button {
+  padding: 12px 32px;
+  font-size: 1.2rem;
+}
+
+/* Service Highlights */
+.highlights-section {
+  background: white;
+  padding: 60px 20px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+}
+
+.highlights-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.highlight-card {
+  background: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px);
+}
+
+.highlight-card mat-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: #1a374d;
+  margin-bottom: 20px;
+}
+
+.highlight-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #1a374d;
+}
+
+/* Service Sections */
+.service-sections {
+  padding: 80px 20px;
+}
+
+.service-section {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.service-section.reversed {
+  direction: rtl;
+}
+
+.service-section.reversed .service-content {
+  direction: ltr;
+}
+
+.service-content {
+  padding: 20px;
+}
+
+.service-content h2 {
+  font-size: 2.5rem;
+  color: #1a374d;
+  margin-bottom: 20px;
+}
+
+.service-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #4a5568;
+  margin-bottom: 30px;
+}
+
+.service-bullets {
+  list-style: none;
+  padding: 0;
+}
+
+.service-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.service-bullets mat-icon {
+  color: #1a374d;
+}
+
+.service-image {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.service-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Pricing Section */
+.pricing-section {
+  background: #f8fafc;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.pricing-section h2 {
+  font-size: 2.5rem;
+  color: #1a374d;
+  margin-bottom: 50px;
+}
+
+.pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-10px);
+}
+
+.pricing-header {
+  margin-bottom: 30px;
+}
+
+.pricing-header h3 {
+  font-size: 1.8rem;
+  color: #1a374d;
+  margin-bottom: 15px;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a374d;
+  margin-bottom: 10px;
+}
+
+.description {
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  color: #4a5568;
+}
+
+.pricing-features mat-icon {
+  color: #1a374d;
+}
+
+/* Call to Action Section */
+.cta-section {
+  background: linear-gradient(rgba(26,55,77,0.9), rgba(26,55,77,0.9)),
+    url('https://media.istockphoto.com/id/1392583700/photo/snow-removal-with-snowblower.jpg?s=2048x2048&w=is&k=20&c=Jt7sbXE64lM4y_DJ3nYcVU5Zb_DNb5HRhLptOWfVC7k=');
+  background-size: cover;
+  background-position: center;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.cta-buttons button {
+  padding: 12px 32px;
+  font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .service-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .service-section.reversed {
+    direction: ltr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .pricing-card {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+
+  .highlight-card {
+    padding: 20px;
+  }
+
+  .service-content h2 {
+    font-size: 2rem;
+  }
+
+  .pricing-section h2 {
+    font-size: 2rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+  }
+}

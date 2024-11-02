@@ -111,9 +111,9 @@
 
 /* Service Selection Area */
 .service-selection {
-  position: sticky;
+  position: static;
   top: 0;
-  background: var(--pure-white);
+  background: lightblue;
   padding: 1rem;
   z-index: 10;
   box-shadow: var(--shadow-sm);
@@ -134,8 +134,7 @@
   max-width: 400px;
   padding: 2rem;
   background: var(--off-white);
-  border: none;
-  border-radius: 12px;
+  border-radius: 42px;
   cursor: pointer;
   transition: all var(--transition-normal);
   position: relative;
@@ -309,7 +308,7 @@
   border-radius: 8px;
   border: none;
   font-weight: 500;
-  color: white;
+  color: black;
   cursor: pointer;
   transition: all var(--transition-normal);
 }
