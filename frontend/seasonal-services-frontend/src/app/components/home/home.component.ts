@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,15 +8,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { WeatherService } from '../../services/weather.service';
-
-interface ServiceCard {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-  features: string[];
-  icon: string;
-}
+import { Subject, fromEvent } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface WeatherAlertSeverity {
   label: string;
@@ -24,6 +17,20 @@ interface WeatherAlertSeverity {
   icon: string;
   bgColor: string;
   pulseColor: string;
+}
+
+interface ServiceFeature {
+  icon: string;
+  text: string;
+}
+
+interface ServiceCard {
+  icon: string;
+  title: string;
+  description: string;
+  features: string[];
+  link: string;
+  buttonText: string;
 }
 
 @Component({
@@ -38,40 +45,298 @@ interface WeatherAlertSeverity {
     MatTooltipModule,
     MatBadgeModule
   ],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  template: `
+    <div class="homepage-container" [attr.data-season]="activeSeason">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="seasonal-effects"></div>
+        <div class="hero-content" [@fadeInOut]>
+          <h1>Professional Snow & Lawn Services in Iowa City</h1>
+          <p class="hero-subtitle">Year-Round Property Excellence Since 2010</p>
+          <div class="hero-cta">
+            <button mat-raised-button color="primary" routerLink="/quote">
+              <mat-icon>calculate</mat-icon>
+              Get a Free Quote
+            </button>
+            <button mat-stroked-button (click)="scrollToSection('services')" class="explore-btn">
+              <mat-icon>explore</mat-icon>
+              Explore Services
+            </button>
+          </div>
+        </div>
+        <div class="scroll-indicator">
+          <div class="mouse"></div>
+          <span>Scroll to explore</span>
+        </div>
+      </section>
+
+      <!-- Service Selection -->
+      <section class="service-selection">
+        <div class="toggle-container">
+          <button
+            class="service-button winter"
+            [class.active]="activeSeason === 'winter'"
+            (click)="setActiveSeason('winter')"
+          >
+            <div class="button-content">
+              <mat-icon class="season-icon">ac_unit</mat-icon>
+              <h3>Snow Removal Services</h3>
+              <p>Professional snow management for Iowa winters</p>
+            </div>
+            <div class="snow-overlay"></div>
+          </button>
+
+          <button
+            class="service-button summer"
+            [class.active]="activeSeason === 'summer'"
+            (click)="setActiveSeason('summer')"
+          >
+            <div class="button-content">
+              <mat-icon class="season-icon">grass</mat-icon>
+              <h3>Lawn Care Services</h3>
+              <p>Complete lawn maintenance solutions</p>
+            </div>
+            <div class="leaf-overlay"></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Service Content -->
+      <section class="services-showcase" [ngClass]="activeSeason">
+        <!-- Winter Services -->
+        <div *ngIf="activeSeason === 'winter'" class="service-content winter-content" [@contentAnimation]>
+          <h2 class="section-title">Professional Snow Management</h2>
+          <div class="service-grid">
+            <div class="service-card" *ngFor="let service of snowServices">
+              <mat-icon class="service-icon">{{service.icon}}</mat-icon>
+              <h3>{{service.title}}</h3>
+              <p>{{service.description}}</p>
+              <ul class="feature-list">
+                <li *ngFor="let feature of service.features">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>{{feature}}</span>
+                </li>
+              </ul>
+              <button mat-raised-button color="primary" [routerLink]="service.link">
+                {{service.buttonText}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summer Services -->
+        <div *ngIf="activeSeason === 'summer'" class="service-content summer-content" [@contentAnimation]>
+          <h2 class="section-title">Complete Lawn Care Solutions</h2>
+          <div class="service-grid">
+            <div class="service-card" *ngFor="let service of lawnServices">
+              <mat-icon class="service-icon">{{service.icon}}</mat-icon>
+              <h3>{{service.title}}</h3>
+              <p>{{service.description}}</p>
+              <ul class="feature-list">
+                <li *ngFor="let feature of service.features">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>{{feature}}</span>
+                </li>
+              </ul>
+              <button mat-raised-button color="accent" [routerLink]="service.link">
+                {{service.buttonText}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Weather Alert Button -->
+      <div class="floating-alert" *ngIf="!hasError">
+        <button
+          class="alert-fab"
+          [class.has-alerts]="weatherAlerts.length > 0"
+          [class.is-loading]="isLoading"
+          [ngClass]="getAlertSeverityClass(weatherAlerts[0]?.severity)"
+          (click)="toggleAlerts()"
+          [matTooltip]="getAlertTooltip()"
+        >
+          <div class="alert-icon-wrapper">
+            <mat-icon class="alert-icon">{{ getAlertIcon(weatherAlerts[0]?.severity) }}</mat-icon>
+            <span class="alert-pulse" *ngIf="weatherAlerts.length > 0"></span>
+          </div>
+          <span class="alert-count" *ngIf="weatherAlerts.length > 0">{{ weatherAlerts.length }}</span>
+        </button>
+
+        <!-- Alert Panel -->
+        <div class="floating-alerts-panel" *ngIf="showAlerts && weatherAlerts.length > 0" [@expandCollapse]>
+          <div class="panel-header">
+            <h3>Active Weather Alerts</h3>
+            <button mat-icon-button (click)="toggleAlerts()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div class="alerts-list">
+            <div *ngFor="let alert of weatherAlerts"
+                 class="alert-item"
+                 [ngClass]="getAlertSeverityClass(alert.severity)">
+              <div class="alert-item-header">
+                <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+                <div class="alert-item-title">
+                  <h4>{{ alert.event }}</h4>
+                  <span class="alert-severity-badge">{{ alert.severity }}</span>
+                </div>
+              </div>
+              <p class="alert-headline">{{ alert.headline }}</p>
+              <div class="alert-details">
+                <span class="alert-timing">
+                  Expires: {{ formatDate(alert.expires) }}
+                </span>
+                <button mat-button color="primary" (click)="showAlertDetails(alert)">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
   animations: [
-    trigger('expandCollapse', [
-      transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'translateY(20px) scale(0.95)'
-        }),
-        animate('200ms ease-out', style({
-          opacity: 1,
-          transform: 'translateY(0) scale(1)'
-        }))
-      ]),
-      transition(':leave', [
-        animate('200ms ease-in', style({
-          opacity: 0,
-          transform: 'translateY(20px) scale(0.95)'
-        }))
-      ])
-    ]),
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
         animate('0.5s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
       ])
+    ]),
+    trigger('contentAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('0.5s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('0.5s ease-in', style({ opacity: 0, transform: 'translateY(-20px)' }))
+      ])
+    ]),
+    trigger('expandCollapse', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }))
+      ])
     ])
-  ]
+  ],
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   weatherAlerts: any[] = [];
+  activeSeason: 'winter' | 'summer' = 'winter';
   isLoading = true;
   hasError = false;
   showAlerts = false;
+  scrollY = 0;
+  snowflakes: Array<{ id: number; left: number; animationDuration: number; }> = [];
+  private destroy$ = new Subject<void>();
+
+  // Service Data
+  snowServices: ServiceCard[] = [
+    {
+      icon: 'home',
+      title: 'Residential Snow Removal',
+      description: 'Serving Iowa City neighborhoods with advanced snow clearing technology. Our efficient equipment and experienced team ensure your driveway and walkways are clear and safe, typically completing most residential jobs in under 15 minutes.',
+      features: [
+        'Quick response during snowfall',
+        'Property-safe snow removal techniques',
+        'Walkway and entrance clearing'
+      ],
+      link: '/quote',
+      buttonText: 'Get Started'
+    },
+    {
+      icon: 'business',
+      title: 'Commercial Snow Management',
+      description: 'Comprehensive snow removal solutions for Iowa City businesses. We understand the importance of maintaining safe, accessible premises for your customers and employees throughout winter.',
+      features: [
+        '24/7 snow monitoring and response',
+        'Parking lot clearing and maintenance',
+        'Snow hauling services available'
+      ],
+      link: '/commercial',
+      buttonText: 'Learn More'
+    },
+    {
+      icon: 'road',
+      title: 'HOA & Private Road Services',
+      description: 'Specialized service for homeowners associations and private roads in the Iowa City area. We maintain clear, safe roadways throughout the winter season.',
+      features: [
+        'Full-width road clearing',
+        'Driveway entrance maintenance',
+        'Custom service schedules'
+      ],
+      link: '/hoa',
+      buttonText: 'Request Service'
+    },
+    {
+      icon: 'ac_unit',
+      title: 'Ice Management & Prevention',
+      description: 'Proactive ice control solutions to keep your property safe during Iowa winters. We use environmentally conscious de-icing methods and materials.',
+      features: [
+        'Pre-treatment services',
+        'Premium ice melt application',
+        '24/7 ice monitoring'
+      ],
+      link: '/ice-control',
+      buttonText: 'Learn More'
+    }
+  ];
+
+  lawnServices: ServiceCard[] = [
+    {
+      icon: 'grass',
+      title: 'Regular Lawn Maintenance',
+      description: 'Comprehensive lawn care services tailored to Iowa City\'s climate. We maintain your lawn\'s health and appearance throughout the growing season.',
+      features: [
+        'Weekly mowing services',
+        'Edge trimming & cleanup',
+        'Flexible service schedules'
+      ],
+      link: '/lawn-care',
+      buttonText: 'Schedule Service'
+    },
+    {
+      icon: 'event',
+      title: 'Seasonal Lawn Services',
+      description: 'Comprehensive seasonal care to keep your lawn healthy year-round. From spring cleanup to fall preparation, we\'ve got you covered.',
+      features: [
+        'Spring/Fall cleanup',
+        'Fertilization programs',
+        'Weed control services'
+      ],
+      link: '/seasonal',
+      buttonText: 'View Programs'
+    },
+    {
+      icon: 'yard',
+      title: 'Professional Landscaping',
+      description: 'Transform your outdoor space with our professional landscaping services. We create beautiful, sustainable landscapes suited to Iowa\'s climate.',
+      features: [
+        'Custom design services',
+        'Native plant installation',
+        'Hardscape features'
+      ],
+      link: '/landscaping',
+      buttonText: 'Start Planning'
+    },
+    {
+      icon: 'storefront',
+      title: 'Commercial Property Maintenance',
+      description: 'Professional grounds maintenance for Iowa City businesses. Keep your commercial property looking its best year-round.',
+      features: [
+        'Custom maintenance plans',
+        'Large area management',
+        'Professional appearance guarantee'
+      ],
+      link: '/commercial',
+      buttonText: 'Request Quote'
+    }
+  ];
 
   private readonly severityConfig: { [key: string]: WeatherAlertSeverity } = {
     extreme: {
@@ -104,53 +369,50 @@ export class HomeComponent implements OnInit {
     }
   };
 
-  services: ServiceCard[] = [
-    {
-      title: 'Snow Plowing',
-      description: '24/7 Professional Snow Removal Services',
-      image: 'https://media.istockphoto.com/id/536778097/photo/highway-snow-plow.jpg?s=2048x2048&w=is&k=20&c=ns8LS-y1-jWpJks808sCFeeSP14oyrS-l3Su6FA2_U4=',
-      link: '/snow-plowing',
-      features: ['24/7 Emergency Service', 'Commercial & Residential', 'De-icing Available'],
-      icon: 'ac_unit'
-    },
-    {
-      title: 'Lawn Care',
-      description: 'Complete Lawn Maintenance Services',
-      image: 'https://media.istockphoto.com/id/2044312647/photo/professional-latino-man-using-a-riding-lawnmower-caring-for-a-park-with-a-landscaping-company.jpg?s=2048x2048&w=is&k=20&c=Ael-VrEpwZbobzfnGj8V7HBShBPVB81I7reWtxVcZ6o=',
-      link: '/lawn-care',
-      features: ['Weekly Mowing', 'Fertilization', 'Weed Control'],
-      icon: 'grass'
-    }
-  ];
-
-  testimonials = [
-    {
-      quote: "Alex Services has been maintaining our property for years. Their reliability and professionalism are unmatched!",
-      author: "Sarah Johnson",
-      role: "Homeowner",
-      rating: 5
-    },
-    {
-      quote: "The best snow removal service in Iowa City. They're always here when we need them most.",
-      author: "Mike Thompson",
-      role: "Business Owner",
-      rating: 5
-    }
-  ];
-
-  currentTestimonialIndex = 0;
-
-  constructor(private weatherService: WeatherService, private router: Router) {}
+  constructor(
+    private weatherService: WeatherService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadWeatherAlerts();
-    this.rotateTestimonials();
-    // Refresh weather alerts every 5 minutes
+    this.initScrollListener();
+    this.generateSnowflakes();
     setInterval(() => this.loadWeatherAlerts(), 300000);
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private initScrollListener(): void {
+    fromEvent(window, 'scroll')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.scrollY = window.scrollY;
+      });
+  }
+
+  setActiveSeason(season: 'winter' | 'summer'): void {
+    this.activeSeason = season;
+    if (season === 'winter') {
+      this.generateSnowflakes();
+    } else {
+      this.snowflakes = [];
+    }
+  }
+
+  private generateSnowflakes(): void {
+    this.snowflakes = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      animationDuration: 3 + Math.random() * 5
+    }));
+  }
+
   loadWeatherAlerts(): void {
-    const lat = 61.1043; // Iowa City coordinates
+    const lat = 61.1043;
     const lon = -149.8173;
 
     this.weatherService.getWeatherAlerts(lat, lon).subscribe({
@@ -168,7 +430,6 @@ export class HomeComponent implements OnInit {
             instruction: feature.properties.instruction,
             parameters: feature.properties.parameters
           }));
-          // Sort alerts by severity
           this.weatherAlerts.sort((a, b) =>
             this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
           );
@@ -232,13 +493,6 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/snow-plowing-calendar']);
   }
 
-  private rotateTestimonials(): void {
-    setInterval(() => {
-      this.currentTestimonialIndex =
-        (this.currentTestimonialIndex + 1) % this.testimonials.length;
-    }, 5000);
-  }
-
   scrollToSection(elementId: string): void {
     const element = document.getElementById(elementId);
     if (element) {
@@ -246,7 +500,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getStarArray(rating: number): number[] {
-    return Array(rating).fill(0);
+  setActiveService(service: 'snow' | 'lawn'): void {
+    const container = document.querySelector('.homepage-container');
+    container?.setAttribute('data-active-service', service);
   }
 }
