@@ -1,38 +1,39 @@
 /* Modern Variables */
 :root {
-  /* Core Colors */
-  --winter-primary: #1e90ff;
-  --winter-secondary: #87cefa;
-  --summer-primary: #ffd700;
-  --summer-secondary: #ffa500;
-  --text-light: #ffffff;
-  --text-dark: #2d3748;
-  --card-bg: rgba(255, 255, 255, 1);
+  /* Theme Colors */
+  --winter-primary: #1e3c72;
+  --winter-secondary: #2a5298;
+  --summer-primary: #2d5a27;
+  --summer-secondary: #3d7a33;
+
+  /* UI Colors */
+  --pure-white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1f2937;
 
   /* Shadows */
-  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-  --hover-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
 
   /* Transitions */
-  --bounce: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Core Styles */
+/* Core Layout */
 .homepage-container {
   min-height: 100vh;
-  color: var(--text-dark);
-  overflow-x: hidden;
-  background-color: #f0f0f0;
+  background-color: var(--off-white);
 }
 
-/* Hero Section */
+/* Enhanced Hero Section */
 .hero-section {
   position: relative;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
   overflow: hidden;
 }
 
@@ -43,183 +44,228 @@
   background: url('https://media.istockphoto.com/id/172685391/photo/plowing-the-road.jpg?s=2048x2048&w=is&k=20&c=8pdXKpm6bJoXT7IfTSbBMuAfUCwZtvjae1-hAIylmt4=') center/cover;
   filter: brightness(0.5);
   transform: scale(1.1);
-  transition: transform 0.3s var(--bounce);
+  transition: transform 0.6s ease-out;
   z-index: 1;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 2rem;
-  max-width: 800px;
-  width: 100%;
+  text-align: center;
+  max-width: 1200px;
+  padding: 0 2rem;
 }
 
 .hero-content h1 {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: 4.5rem;
   font-weight: 700;
+  color: white;
   margin-bottom: 1.5rem;
-  color: #ffffff;
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(17, 174, 252, 0.3);
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
-  opacity: 1;
-  color: #ffffff;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  color: white;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+  font-weight: 400;
 }
 
 .hero-cta {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
-  margin-top: 2rem;
 }
 
-/* Service Selection Section */
+.hero-cta button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all var(--transition-normal);
+}
+
+.hero-cta button:first-child {
+  background: var(--pure-white);
+  color: whitesmoke;
+  border: none;
+}
+
+.hero-cta button:last-child {
+  background: transparent;
+  color: whitesmoke;
+  border: 2px solid var(--pure-white);
+}
+
+.hero-cta button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+
+/* Service Selection Area */
 .service-selection {
-  padding: 4rem 2rem;
-  position: relative;
-  z-index: 2;
-  text-align: center;
+  position: sticky;
+  top: 0;
+  background: var(--pure-white);
+  padding: 1rem;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
 }
 
 .toggle-container {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   gap: 2rem;
+  padding: 1rem;
 }
 
+/* Enhanced Service Toggle Buttons */
 .service-button {
-  position: relative;
+  flex: 1;
+  max-width: 400px;
   padding: 2rem;
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: var(--text-light);
+  background: var(--off-white);
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s var(--bounce);
-  text-align: center;
-  width: 300px;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Winter Button Styles */
 .service-button.winter {
-  background: rgba(30, 144, 255, 1);
+  border-left: 4px solid var(--winter-primary);
 }
 
-.service-button.summer {
-  background: rgba(255, 215, 0, 1);
-}
-
-.service-button.winter:hover,
 .service-button.winter.active {
-  background: rgba(30, 144, 255, 1);
-  color: var(--text-light);
-  box-shadow: var(--hover-shadow);
+  background: linear-gradient(to right, var(--winter-primary), var(--winter-secondary));
+  color: var(--pure-white);
 }
 
-.service-button.summer:hover,
+/* Summer Button Styles */
+.service-button.summer {
+  border-left: 4px solid var(--summer-primary);
+}
+
 .service-button.summer.active {
-  background: rgba(255, 215, 0, 1);
-  color: var(--text-dark);
-  box-shadow: var(--hover-shadow);
+  background: linear-gradient(to right, var(--summer-primary), var(--summer-secondary));
+  color: var(--pure-white);
+}
+
+.button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .season-icon {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
-/* Service Content Area */
+.service-button:hover .season-icon {
+  transform: scale(1.1);
+}
+
+.button-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.button-content p {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Service Content Areas */
 .services-showcase {
-  padding: 4rem 2rem;
   min-height: 100vh;
-  position: relative;
-  color: var(--text-dark);
+  padding: 4rem 2rem;
+  transition: background 0.3s ease;
 }
 
-.winter .services-showcase {
-  background: linear-gradient(135deg, var(--winter-primary), var(--winter-secondary));
+/* Winter Theme */
+.winter-content {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e6f3ff 100%);
 }
 
-.summer .services-showcase {
-  background: linear-gradient(135deg, var(--summer-primary), var(--summer-secondary));
+/* Summer Theme */
+.summer-content {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
 }
 
-/* Service Cards */
+/* Service Grid */
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
+/* Enhanced Service Cards */
 .service-card {
-  background: var(--card-bg);
-  border-radius: 20px;
+  background: var(--pure-white);
+  border-radius: 12px;
   padding: 2rem;
-  box-shadow: var(--card-shadow);
-  transition: all 0.3s var(--bounce);
-  height: 100%;
+  transition: all var(--transition-normal);
+  position: relative;
   display: flex;
   flex-direction: column;
-  text-align: center;
-  align-items: center;
-  justify-content: space-between;
 }
 
-.winter .service-card {
-  border: 2px solid var(--winter-primary);
+.winter-content .service-card {
+  border-top: 4px solid var(--winter-primary);
+  box-shadow: 0 4px 20px rgba(30, 60, 114, 0.1);
 }
 
-.summer .service-card {
-  border: 2px solid var(--summer-primary);
+.summer-content .service-card {
+  border-top: 4px solid var(--summer-primary);
+  box-shadow: 0 4px 20px rgba(45, 90, 39, 0.1);
 }
 
 .service-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--hover-shadow);
 }
 
 .service-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.winter-content .service-icon {
+  color: var(--winter-primary);
+}
+
+.summer-content .service-icon {
+  color: var(--summer-primary);
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 1rem;
   color: var(--text-dark);
 }
 
-.winter .service-icon {
-  color: var(--winter-primary);
-}
-
-.summer .service-icon {
-  color: var(--summer-primary);
-}
-
-.service-card button {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 30px;
-  background: var(--winter-primary);
-  color: #ffffff;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.summer .service-card button {
-  background: var(--summer-primary);
-}
-
-.service-card button:hover {
-  background: darken(var(--winter-primary), 10%);
-  transform: translateY(-3px);
-}
-
-.summer .service-card button:hover {
-  background: darken(var(--summer-primary), 10%);
+.service-card p {
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
 }
 
 /* Feature List */
@@ -236,22 +282,85 @@
   gap: 0.75rem;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
-  background: rgba(240, 240, 240, 1);
+  background: var(--off-white);
   border-radius: 8px;
-  transition: transform 0.3s var(--bounce);
+  transition: transform 0.3s ease;
 }
 
 .feature-list li:hover {
   transform: translateX(5px);
-  background: rgba(230, 230, 230, 1);
 }
 
-/* Weather Alert */
+.feature-list mat-icon {
+  font-size: 1.25rem;
+}
+
+.winter-content .feature-list mat-icon {
+  color: var(--winter-primary);
+}
+
+.summer-content .feature-list mat-icon {
+  color: var(--summer-primary);
+}
+
+/* Service Card Buttons */
+.service-card button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.winter-content .service-card button {
+  background: var(--winter-primary);
+}
+
+.summer-content .service-card button {
+  background: var(--summer-primary);
+}
+
+/* Section Title */
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: var(--text-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .toggle-container {
+    flex-direction: column;
+  }
+
+  .service-button {
+    width: 100%;
+    max-width: none;
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Original Weather Alert Styles Preserved */
 .floating-alert {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .alert-fab {
@@ -259,77 +368,57 @@
   height: 70px;
   border-radius: 50%;
   background: white;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.3s var(--bounce);
+  transition: all var(--transition-normal);
+  border: none;
+  cursor: pointer;
 }
 
 .alert-fab:hover {
   transform: translateY(-5px);
-  box-shadow: var(--hover-shadow);
 }
 
-.alert-icon-wrapper {
-  position: relative;
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Preserve Original Weather Alert Styles */
+.floating-alert {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
 }
 
-.alert-pulse {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 20px;
-  height: 20px;
+.alert-fab {
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: red;
-  animation: pulse 1.5s infinite;
-}
-
-.alert-count {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: red;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  background: white;
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  position: relative;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-  .toggle-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .hero-content {
-    padding: 1rem;
-  }
-
-  .service-grid {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
+.alert-fab:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
 }
