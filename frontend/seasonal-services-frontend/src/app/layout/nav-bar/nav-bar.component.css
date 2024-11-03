@@ -29,7 +29,7 @@
 }
 
 .navbar.scrolled .logo-image {
-  height: 55px; /* Significantly reduce logo height */
+  height: 65px; /* Significantly reduce logo height */
 }
 
 /* Navigation Items */
@@ -76,7 +76,7 @@
 }
 
 .logo-image {
-  height: 110px;
+  height: 100px;
   transition: all 1s ease;
 }
 

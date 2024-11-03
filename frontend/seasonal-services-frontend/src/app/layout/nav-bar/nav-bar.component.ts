@@ -48,7 +48,7 @@ interface NavMenuItem {
       <!-- Logo Section -->
       <div class="logo-section">
         <a routerLink="/" class="logo-link" #logoLink>
-          <img src="assets/logo.png" alt="Logo" class="logo-image" />
+          <img src="assets/Logo_transparent.png" alt="Logo" class="logo-image" />
         </a>
       </div>
 
