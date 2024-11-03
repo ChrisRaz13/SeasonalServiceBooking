@@ -30,7 +30,7 @@ body {
 /* Hero Section */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 75vh;
   background: url('https://media.istockphoto.com/id/163640968/photo/man-shovelling-after-a-snow-storm.jpg?s=2048x2048&w=is&k=20&c=jxsvr5ppkHnlpjlJT2WpHzu3x_4ouUmPEruiVUrkmeQ=') center/cover, linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   display: flex;
   align-items: center;

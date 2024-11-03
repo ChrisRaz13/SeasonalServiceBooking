@@ -48,7 +48,7 @@ export class FooterComponent implements OnInit {
   quickLinks = [
     { label: 'Schedule Service', route: '/schedule' },
     { label: 'Get Quote', route: '/quote' },
-    { label: 'Snow Plowing', route: '/snow-plowing' },
+    { label: 'Snow Plowing', route: '/snowplowing-service-page' },
     { label: 'Lawn Care', route: '/lawn-care' }
   ];
 
