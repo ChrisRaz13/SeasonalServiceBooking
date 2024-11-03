@@ -1,15 +1,9 @@
 <div class="homepage-container">
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-content" @fadeInOut>
+    <div class="hero-content">
       <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
       <p class="hero-subtitle">Professional Services for Every Season</p>
-      <div class="weather-widget" matTooltip="Current Weather Conditions">
-        <div class="weather-info">
-          <mat-icon>{{ weatherAlerts[0]?.description?.toLowerCase().includes('snow') ? 'ac_unit' : 'wb_sunny' }}</mat-icon>
-          <span class="temp">{{ weatherAlerts[0]?.temperature || '--' }}°F</span>
-        </div>
-      </div>
       <div class="hero-cta">
         <button mat-raised-button color="primary" routerLink="/quote">
           <mat-icon>calculate</mat-icon>
@@ -21,39 +15,29 @@
         </button>
       </div>
     </div>
-    <div class="scroll-indicator" (click)="scrollToSection('services')">
-      <div class="mouse"></div>
-      <span>Scroll to explore</span>
-    </div>
   </section>
 
   <!-- Services Section -->
   <section id="services" class="services-section">
     <h2>Our Services</h2>
     <div class="service-cards">
-      <mat-card *ngFor="let service of services" class="service-card" @fadeInOut>
-        <div class="service-image">
-          <img [src]="service.image" [alt]="service.title">
-          <div class="service-overlay">
-            <mat-icon>{{ service.icon }}</mat-icon>
-          </div>
-        </div>
-        <mat-card-content>
-          <h3>{{ service.title }}</h3>
-          <p>{{ service.description }}</p>
-          <ul class="feature-list">
-            <li *ngFor="let feature of service.features">
-              <mat-icon>check_circle</mat-icon>
-              {{ feature }}
-            </li>
-          </ul>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" [routerLink]="service.link">
-            Learn More
-          </button>
-        </mat-card-actions>
-      </mat-card>
+      <!-- Replace with Angular looping if dynamic content is used -->
+      <div class="service-card">
+        <h3>Sample Service</h3>
+        <p>Description of the service.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weather Info Promo Section -->
+  <section class="weather-info-promo">
+    <div class="promo-content">
+      <h3>Stay Ahead of the Weather!</h3>
+      <p>
+        Our team keeps you updated with the latest weather forecasts to help you plan for snow removal and lawn care.
+        Get real-time updates on snowfall, temperature changes, and more to ensure your property is always prepared.
+      </p>
+      <a href="/weather-dashboard" class="promo-button">View Weather Dashboard</a>
     </div>
   </section>
 
@@ -61,32 +45,15 @@
   <section class="testimonials-section">
     <h2>What Our Clients Say</h2>
     <div class="testimonial-carousel">
-      <div class="testimonial-slide"
-           *ngFor="let testimonial of testimonials; let i = index"
-           [@fadeInOut]
-           [class.active]="i === currentTestimonialIndex">
-        <div class="testimonial-content">
-          <div class="quote-marks">"</div>
-          <p>{{ testimonial.quote }}</p>
-          <div class="author-info">
-            <div class="author-details">
-              <h4>{{ testimonial.author }}</h4>
-              <p>{{ testimonial.role }}</p>
-              <div class="rating">
-                <mat-icon *ngFor="let star of getStarArray(testimonial.rating)">
-                  star
-                </mat-icon>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="testimonial-slide">
+        <p>Sample testimonial text.</p>
       </div>
     </div>
   </section>
 
   <!-- CTA Section -->
   <section class="cta-section">
-    <div class="cta-content" @fadeInOut>
+    <div class="cta-content">
       <h2>Ready to Get Started?</h2>
       <p>Contact us today for a free consultation and estimate!</p>
       <div class="cta-buttons">
@@ -101,52 +68,4 @@
       </div>
     </div>
   </section>
-
-  <!-- Floating Weather Alert -->
-  <div class="floating-alert" *ngIf="!hasError">
-    <button
-      class="alert-fab"
-      [class.has-alerts]="weatherAlerts.length > 0"
-      [class.is-loading]="isLoading"
-      [ngClass]="getAlertSeverityClass(weatherAlerts[0]?.severity)"
-      (click)="toggleAlerts()"
-      [matTooltip]="getAlertTooltip()"
-    >
-      <div class="alert-icon-wrapper">
-        <mat-icon class="alert-icon">{{ getAlertIcon(weatherAlerts[0]?.severity) }}</mat-icon>
-        <span class="alert-pulse" *ngIf="weatherAlerts.length > 0"></span>
-      </div>
-      <span class="alert-count" *ngIf="weatherAlerts.length > 0">{{ weatherAlerts.length }}</span>
-    </button>
-
-    <!-- Alert Panel -->
-    <div class="floating-alerts-panel" *ngIf="showAlerts && weatherAlerts.length > 0" @expandCollapse>
-      <div class="panel-header">
-        <h3>Active Weather Alerts</h3>
-        <button mat-icon-button (click)="toggleAlerts()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-      <div class="alerts-list">
-        <div *ngFor="let alert of weatherAlerts" class="alert-item" [ngClass]="getAlertSeverityClass(alert.severity)">
-          <div class="alert-item-header">
-            <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
-            <div class="alert-item-title">
-              <h4>{{ alert.event }}</h4>
-              <span class="alert-severity-badge">{{ alert.severity }}</span>
-            </div>
-          </div>
-          <p class="alert-headline">{{ alert.headline }}</p>
-          <div class="alert-details">
-            <span class="alert-timing">
-              Expires: {{ formatDate(alert.expires) }}
-            </span>
-            <button mat-button color="primary" (click)="showAlertDetails(alert)">
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

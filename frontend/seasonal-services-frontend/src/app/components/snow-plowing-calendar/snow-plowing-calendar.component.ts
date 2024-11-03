@@ -280,8 +280,8 @@ export class SnowPlowingCalendarComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.hasError = false;
 
-    const lat = 61.1043; // Example coordinates (Anchorage)
-    const lon = -149.8173;
+    const lat = 42.032974;
+    const lon = -93.581543;
 
     this.weatherService.getAllWeatherData(lat, lon).subscribe({
       next: (data) => {

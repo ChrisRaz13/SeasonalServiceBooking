@@ -146,6 +146,19 @@ interface ServiceCard {
         </div>
       </section>
 
+       <!-- Weather Info Promo Section -->
+       <section class="weather-info-promo">
+        <div class="promo-content">
+          <h3>Stay Ahead of the Weather!</h3>
+          <p>
+            Our team keeps you updated with the latest weather forecasts to help you plan for snow removal and lawn care.
+            Get real-time updates on snowfall, temperature changes, and more to ensure your property is always prepared.
+            <br><br>The corner icon provides any important weather alert warnings in the area
+          </p>
+          <a href="/weather-dashboard" class="promo-button">View Weather Dashboard</a>
+        </div>
+      </section>
+
       <!-- Weather Alert Button -->
       <div class="floating-alert" *ngIf="!hasError">
         <button
@@ -412,8 +425,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadWeatherAlerts(): void {
-    const lat = 61.1043;
-    const lon = -149.8173;
+    const lat = 42.032974;
+    const lon = -93.581543;
 
     this.weatherService.getWeatherAlerts(lat, lon).subscribe({
       next: (data) => {
