@@ -16,7 +16,7 @@ body {
   color: white;
 }
 
-/* Blizzard Animation Canvas for Hero */
+/* Blizzard Animation Canvas */
 .blizzard-canvas {
   position: fixed;
   top: 0;
@@ -109,42 +109,9 @@ body {
   transform: translateY(-2px);
 }
 
-/* Blizzard Effect */
-.snow-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Snowflakes */
-.snowflake {
-  position: absolute;
-  top: 0;
-  width: 10px;
-  height: 10px;
-  background: white;
-  opacity: 0.8;
-  animation: fall linear infinite;
-}
-
-@keyframes fall {
-  from {
-    transform: translateY(-100vh);
-    opacity: 0.8;
-  }
-  to {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
-}
-
 /* Emergency Services Section */
 .emergency-services-section {
+  position: relative;
   padding: 4rem 2rem;
   background-color: #1a2a3f;
   color: white;
@@ -200,20 +167,36 @@ body {
   margin-top: 1rem;
 }
 
-/* Form Section */
+/* Form Section with Blizzard Mask */
 .form-section {
   padding: 6rem 2rem;
   background-color: rgba(15, 28, 45, 0.95);
   text-align: center;
+  position: relative;
 }
 
 .form-card {
+  position: relative;
   max-width: 600px;
   margin: 0 auto;
   padding: 3rem;
   background-color: var(--deep-blue);
   border-radius: 10px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  color: white;
+  z-index: 3; /* Ensure the form card is above the blizzard */
+}
+
+/* Set all text inside form card to white */
+.form-card,
+.form-card h2,
+.form-card p,
+.form-card label,
+.form-card input,
+.form-card textarea,
+.form-card select,
+.form-card .mat-form-field-label {
+  color: white !important;
 }
 
 .form-title {
@@ -222,7 +205,7 @@ body {
   color: white;
 }
 
-.form-subtitle {
+.response-note {
   font-size: 1.2rem;
   color: var(--light-blue);
   margin-bottom: 2rem;
@@ -239,6 +222,10 @@ body {
 }
 
 /* Custom Form Field Styles */
+.frost-input .mat-form-field-label {
+  color: white !important;
+}
+
 .form-input {
   width: 100%;
   padding: 0.75rem;
