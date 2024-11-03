@@ -1,0 +1,355 @@
+/* Winter Theme Colors */
+:root {
+  --dark-blue: #0a1929;
+  --light-blue: #a8d8ff;
+  --deep-blue: #2c5c8f;
+  --emergency-red: #ff4444;
+  --ice-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --glow-shadow: 0 0 20px rgba(168, 216, 255, 0.5);
+}
+
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--dark-blue);
+  color: white;
+}
+
+/* Blizzard Animation Canvas for Hero */
+.blizzard-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: url('https://media.istockphoto.com/id/163640968/photo/man-shovelling-after-a-snow-storm.jpg?s=2048x2048&w=is&k=20&c=jxsvr5ppkHnlpjlJT2WpHzu3x_4ouUmPEruiVUrkmeQ=') center/cover, linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 2rem;
+  color: white;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  text-align: center;
+  padding: 3rem;
+}
+
+.hero h1 {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.hero-subtitle {
+  font-size: 1.75rem;
+  color: var(--light-blue);
+  margin-bottom: 3rem;
+}
+
+/* Emergency Badge - 24/7 EMERGENCY SNOW REMOVAL */
+.emergency-badge {
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  background: var(--emergency-red);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  margin-bottom: 2rem;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Ice Button Effect */
+.ice-button {
+  background: var(--deep-blue);
+  color: var(--light-blue);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ice-button:hover {
+  box-shadow: 0 0 20px var(--light-blue);
+  transform: translateY(-2px);
+}
+
+/* Blizzard Effect */
+.snow-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Snowflakes */
+.snowflake {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background: white;
+  opacity: 0.8;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-100vh);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Emergency Services Section */
+.emergency-services-section {
+  padding: 4rem 2rem;
+  background-color: #1a2a3f;
+  color: white;
+  text-align: center;
+}
+
+.emergency-services-section h2 {
+  font-size: 2.5rem;
+  color: var(--light-blue);
+  margin-bottom: 2rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.service-card {
+  background-color: #23395d;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.icon-container {
+  font-size: 2.5rem;
+  color: var(--light-blue);
+  margin-bottom: 1rem;
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin: 1rem 0;
+}
+
+.service-card p {
+  font-size: 1rem;
+  color: #d0e1f0;
+}
+
+.response-time {
+  font-weight: bold;
+  color: var(--emergency-red);
+  margin-top: 1rem;
+}
+
+/* Form Section */
+.form-section {
+  padding: 6rem 2rem;
+  background-color: rgba(15, 28, 45, 0.95);
+  text-align: center;
+}
+
+.form-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 3rem;
+  background-color: var(--deep-blue);
+  border-radius: 10px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.form-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.form-subtitle {
+  font-size: 1.2rem;
+  color: var(--light-blue);
+  margin-bottom: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Custom Form Field Styles */
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--light-blue);
+  border-radius: 5px;
+  background-color: #0a1929;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--emergency-red);
+  box-shadow: 0 0 8px var(--emergency-red);
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  background: var(--emergency-red);
+  color: white;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #d12f2f;
+}
+
+/* Footer */
+.emergency-footer {
+  background: #1a2a3f;
+  padding: 4rem 2rem;
+  color: white;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer-section {
+  max-width: 300px;
+}
+
+.footer-phone {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--light-blue);
+  text-decoration: none;
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+.footer-section h3 {
+  font-size: 1.5rem;
+  color: var(--light-blue);
+}
+
+.footer-section p {
+  color: #d0e1f0;
+  font-size: 1rem;
+}
+
+/* Float Button */
+.float-emergency-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--emergency-red);
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.float-emergency-btn:hover {
+  background: #d12f2f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+}

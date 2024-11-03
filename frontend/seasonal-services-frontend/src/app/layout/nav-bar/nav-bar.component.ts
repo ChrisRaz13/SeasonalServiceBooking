@@ -108,7 +108,7 @@ interface NavMenuItem {
         </ng-container>
 
         <!-- Emergency Contact Button -->
-        <button class="emergency-button" (mouseenter)="playEmergencyAnimation()">
+        <button class="emergency-button" routerLink="emergency-service-24/7" (mouseenter)="playEmergencyAnimation()">
           <div class="pulse"></div>
           <i class="fas fa-phone-alt"></i>
           <span>24/7 Emergency</span>

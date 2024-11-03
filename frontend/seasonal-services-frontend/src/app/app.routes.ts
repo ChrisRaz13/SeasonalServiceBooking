@@ -6,6 +6,7 @@ import { SnowPlowingCalendarComponent } from './components/snow-plowing-calendar
 import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { AppComponent } from './app.component';
 import { SnowPlowingServicePageComponent } from './components/snow-plowing-service-page/snow-plowing-service-page.component';
+import { EmergencyServiceComponent } from './components/emergency-service/emergency-service.component';
 
 export const routes: Routes = [
   {
@@ -13,8 +14,8 @@ export const routes: Routes = [
     component: HomeComponent // Home as default route
   },
   {
-    path: 'clients',
-    component: ClientListComponent // Clients route
+    path: 'emergency-service-24/7',
+    component: EmergencyServiceComponent // Emergency route
   },
   {
     path: 'snowplowing-service-page',
