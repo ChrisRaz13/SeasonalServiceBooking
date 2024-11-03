@@ -1,5 +1,4 @@
-/* snow-plowing-calendar.component.css */
-
+/* General Styles */
 :host {
   display: block;
   padding: 20px;
@@ -7,6 +6,19 @@
   min-height: 100vh;
   color: #fff;
   font-family: 'Roboto', sans-serif;
+}
+
+/* CSS Variables for Colors */
+:root {
+  --primary-color: #1a237e;
+  --secondary-color: #0a1929;
+  --alert-severity-extreme: rgba(183, 28, 28, 0.95);
+  --alert-severity-severe: rgba(216, 67, 21, 0.95);
+  --alert-severity-moderate: rgba(245, 124, 0, 0.95);
+  --alert-severity-minor: rgba(41, 121, 255, 0.95);
+  --highlight-color: #ff4081;
+  --background-blur: rgba(25, 42, 86, 0.7);
+  --border-blur: rgba(255, 255, 255, 0.1);
 }
 
 /* Alert Banner Styles */
@@ -28,22 +40,22 @@
 }
 
 .severity-extreme {
-  background: linear-gradient(to right, rgba(183, 28, 28, 0.95), rgba(183, 28, 28, 0.8));
+  background: linear-gradient(to right, var(--alert-severity-extreme), rgba(183, 28, 28, 0.8));
   border-left: 4px solid #ff1744;
 }
 
 .severity-severe {
-  background: linear-gradient(to right, rgba(216, 67, 21, 0.95), rgba(216, 67, 21, 0.8));
+  background: linear-gradient(to right, var(--alert-severity-severe), rgba(216, 67, 21, 0.8));
   border-left: 4px solid #ff5722;
 }
 
 .severity-moderate {
-  background: linear-gradient(to right, rgba(245, 124, 0, 0.95), rgba(245, 124, 0, 0.8));
+  background: linear-gradient(to right, var(--alert-severity-moderate), rgba(245, 124, 0, 0.8));
   border-left: 4px solid #ffa726;
 }
 
 .severity-minor {
-  background: linear-gradient(to right, rgba(41, 121, 255, 0.95), rgba(41, 121, 255, 0.8));
+  background: linear-gradient(to right, var(--alert-severity-minor), rgba(41, 121, 255, 0.8));
   border-left: 4px solid #2196f3;
 }
 
@@ -82,11 +94,11 @@
 
 /* Current Conditions Card */
 .current-conditions {
-  background: rgba(25, 42, 86, 0.7);
+  background: var(--background-blur);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-bottom: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .conditions-grid {
@@ -103,7 +115,7 @@
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   transition: transform 0.3s, box-shadow 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .stat-box:hover {
@@ -179,11 +191,11 @@
 
 /* Hourly Forecast */
 .hourly-forecast {
-  background: rgba(25, 42, 86, 0.7);
+  background: var(--background-blur);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-bottom: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .chart-container {
@@ -208,7 +220,7 @@
   border-radius: 12px;
   text-align: center;
   transition: transform 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .hour-card.snow-likely {
@@ -259,11 +271,11 @@
 
 /* Weekly Forecast */
 .weekly-forecast {
-  background: rgba(25, 42, 86, 0.7);
+  background: var(--background-blur);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-bottom: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .weekly-grid {
@@ -278,7 +290,7 @@
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   transition: transform 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-blur);
 }
 
 .day-card.snow-expected {
@@ -424,7 +436,7 @@
 /* Dark Mode Optimizations */
 @media (prefers-color-scheme: dark) {
   .mat-card {
-    background: rgba(25, 42, 86, 0.7);
+    background: var(--background-blur);
   }
 
   .mat-card-title {
@@ -449,15 +461,15 @@
     break-inside: avoid;
   }
 }
-/* Add these styles to your CSS file */
 
+/* Weekly Forecast Timeline */
 .weekly-timeline {
   padding: 20px;
 }
 
 .day-forecast {
   margin-bottom: 32px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-blur);
   padding-bottom: 32px;
 }
 
@@ -628,7 +640,7 @@
 .detailed-forecast {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-blur);
 }
 
 .detailed-forecast p {
