@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: rgba(26, 55, 77, 0.85); /* Navbar color */
+  background:#1a374d; /* Navbar color */
   transition: all 0.3s ease; /* Smooth transition */
 }
 

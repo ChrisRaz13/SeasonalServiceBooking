@@ -30,7 +30,7 @@
 /* Enhanced Hero Section */
 .hero-section {
   position: relative;
-  height: 100vh;
+  height: 75vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +41,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: url('https://media.istockphoto.com/id/172685391/photo/plowing-the-road.jpg?s=2048x2048&w=is&k=20&c=8pdXKpm6bJoXT7IfTSbBMuAfUCwZtvjae1-hAIylmt4=') center/cover;
+  background: url('https://media.istockphoto.com/id/1492754701/photo/iowa-city-iowa.jpg?s=2048x2048&w=is&k=20&c=0kJQiGpJ7-MwCoCZz3GdZg3gG4fimxV7ZorpV30VSMM=') center/cover;
   filter: brightness(0.5);
   transform: scale(1.1);
   transition: transform 0.6s ease-out;
@@ -113,7 +113,7 @@
 .service-selection {
   position: static;
   top: 0;
-  background: lightblue;
+  background: #1a374d;
   padding: 1rem;
   z-index: 10;
   box-shadow: var(--shadow-sm);
@@ -133,13 +133,26 @@
   flex: 1;
   max-width: 400px;
   padding: 2rem;
-  background: var(--off-white);
+  background: #86a0b4;
   border-radius: 42px;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all;
   position: relative;
   overflow: hidden;
 }
+
+
+
+.service-button {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.service-button:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Darker shadow on hover */
+}
+
 
 /* Winter Button Styles */
 .service-button.winter {
@@ -148,7 +161,7 @@
 
 .service-button.winter.active {
   background: linear-gradient(to right, var(--winter-primary), var(--winter-secondary));
-  color: var(--pure-white);
+  color: lightblue;
 }
 
 /* Summer Button Styles */
@@ -158,7 +171,7 @@
 
 .service-button.summer.active {
   background: linear-gradient(to right, var(--summer-primary), var(--summer-secondary));
-  color: var(--pure-white);
+  color: lightgreen;
 }
 
 .button-content {
@@ -197,15 +210,8 @@
   transition: background 0.3s ease;
 }
 
-/* Winter Theme */
-.winter-content {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e6f3ff 100%);
-}
 
-/* Summer Theme */
-.summer-content {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-}
+
 
 /* Service Grid */
 .service-grid {
@@ -312,6 +318,17 @@
   cursor: pointer;
   transition: all var(--transition-normal);
 }
+
+.service-button:active {
+  transform: scale(0.98); /* Slightly smaller on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+}
+
+
+.service-button {
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
 
 .winter-content .service-card button {
   background: var(--winter-primary);

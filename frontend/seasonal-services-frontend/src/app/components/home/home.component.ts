@@ -262,7 +262,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       buttonText: 'Learn More'
     },
     {
-      icon: 'road',
+      icon: 'house',
       title: 'HOA & Private Road Services',
       description: 'Specialized service for homeowners associations and private roads in the Iowa City area. We maintain clear, safe roadways throughout the winter season.',
       features: [
