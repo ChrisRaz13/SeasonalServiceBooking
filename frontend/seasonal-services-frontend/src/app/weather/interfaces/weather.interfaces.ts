@@ -99,7 +99,7 @@ export interface ChartOptions {
 // Service response types
 export interface WeatherApiResponse {
   alerts?: {
-    features: Array<{
+    features?: Array<{
       properties: {
         severity: string;
         event: string;
@@ -110,8 +110,8 @@ export interface WeatherApiResponse {
     }>;
   };
   hourly?: {
-    properties: {
-      periods: Array<{
+    properties?: {
+      periods?: Array<{
         startTime: string;
         temperature: number;
         shortForecast: string;
@@ -120,8 +120,8 @@ export interface WeatherApiResponse {
     };
   };
   forecast?: {
-    properties: {
-      periods: Array<{
+    properties?: {
+      periods?: Array<{
         startTime: string;
         temperature: number;
         windSpeed: string;
@@ -159,4 +159,32 @@ export enum AlertSeverity {
   SEVERE = 'severe',
   MODERATE = 'moderate',
   MINOR = 'minor'
+}
+
+// Helper function to determine snow probability
+export function calculateSnowProbability(shortForecast: string): number {
+  shortForecast = shortForecast.toLowerCase();
+  if (shortForecast.includes('heavy snow')) return 90;
+  if (shortForecast.includes('snow likely')) return 70;
+  if (shortForecast.includes('chance of snow')) return 50;
+  if (shortForecast.includes('slight chance of snow')) return 30;
+  if (shortForecast.includes('snow')) return 40;
+  return 0;
+}
+
+// Helper function to calculate snow accumulation from forecast string
+export function extractSnowAccumulation(forecast: string): number {
+  const matches = forecast.match(/(\d+(?:\.\d+)?)\s*(?:to\s*(\d+(?:\.\d+)?))?\s*inches?/i);
+  if (!matches) return 0;
+
+  if (matches[2]) {
+    return (parseFloat(matches[1]) + parseFloat(matches[2])) / 2;
+  }
+  return parseFloat(matches[1]);
+}
+
+// Helper function to extract wind speed as number
+export function extractWindSpeed(windSpeed: string): number {
+  const matches = windSpeed.match(/(\d+)/);
+  return matches ? parseInt(matches[1]) : 0;
 }

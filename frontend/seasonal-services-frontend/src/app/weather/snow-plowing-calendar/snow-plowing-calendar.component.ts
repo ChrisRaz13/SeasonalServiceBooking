@@ -143,8 +143,8 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   private loadWeatherData(): void {
-    const lat = 42.032974;
-    const lon = -93.581543;
+    const lat = 41.661129;
+    const lon = -91.530167;
 
     this.isLoading = true;
     this.weatherService.getAllWeatherData(lat, lon).subscribe({

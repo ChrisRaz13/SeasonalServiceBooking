@@ -19,6 +19,24 @@ interface WeatherAlertSeverity {
   pulseColor: string;
 }
 
+interface WeatherAlert {
+  event: string;
+  headline: string;
+  description: string;
+  severity: string;
+  expires: string;
+  effective: string;
+  instruction: string | null;
+  areaDesc: string;
+  senderName: string;
+}
+
+interface ProcessedWeatherData {
+  forecast: any;
+  hourly: any;
+  alerts: WeatherAlert[];
+}
+
 interface ServiceFeature {
   icon: string;
   text: string;
@@ -239,6 +257,10 @@ interface ServiceCard {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  private readonly IOWA_CITY_LAT = 41.6611;
+  private readonly IOWA_CITY_LON = -91.5302;
+  private readonly WEATHER_UPDATE_INTERVAL = 300000; // 5 minutes
+  private readonly ERROR_RETRY_INTERVAL = 60000; // 1 minute
   weatherAlerts: any[] = [];
   activeSeason: 'winter' | 'summer' = 'winter';
   isLoading = true;
@@ -391,7 +413,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadWeatherAlerts();
     this.initScrollListener();
     this.generateSnowflakes();
-    setInterval(() => this.loadWeatherAlerts(), 300000);
+    setInterval(() => this.loadWeatherAlerts(), this.WEATHER_UPDATE_INTERVAL);
   }
 
   ngOnDestroy(): void {
@@ -425,27 +447,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadWeatherAlerts(): void {
-    const lat = 42.032974;
-    const lon = -93.581543;
+    this.isLoading = true;
 
-    this.weatherService.getWeatherAlerts(lat, lon).subscribe({
+    this.weatherService.getAllWeatherData(this.IOWA_CITY_LAT, this.IOWA_CITY_LON)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
       next: (data) => {
-        if (data.features && data.features.length > 0) {
-          this.weatherAlerts = data.features.map((feature: any) => ({
-            event: feature.properties.event,
-            headline: feature.properties.headline,
-            description: feature.properties.description,
-            severity: feature.properties.severity,
-            expires: feature.properties.expires,
-            effective: feature.properties.effective,
-            senderName: feature.properties.senderName,
-            areaDesc: feature.properties.areaDesc,
-            instruction: feature.properties.instruction,
-            parameters: feature.properties.parameters
-          }));
-          this.weatherAlerts.sort((a, b) =>
-            this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
-          );
+        if (data.alerts && data.alerts.length > 0) {
+          this.weatherAlerts = data.alerts;
+          console.log('Weather Alerts:', this.weatherAlerts);
         }
         this.isLoading = false;
       },
@@ -453,9 +463,20 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.error('Error loading weather alerts:', error);
         this.hasError = true;
         this.isLoading = false;
+        setTimeout(() => this.loadWeatherAlerts(), this.ERROR_RETRY_INTERVAL);
       }
     });
+
   }
+
+// Add these getter methods
+get hasActiveAlerts(): boolean {
+  return this.weatherAlerts.length > 0;
+}
+
+get currentAlert(): WeatherAlert | null {
+  return this.weatherAlerts[0] || null;
+}
 
   private getSeverityWeight(severity: string): number {
     const weights: Record<string, number> = {
@@ -502,8 +523,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  showAlertDetails(alert: any): void {
-    this.router.navigate(['/snow-plowing-calendar']);
+  showAlertDetails(alert: WeatherAlert): void {
+    this.router.navigate(['/weather/snow-plowing-calendar']);
+    this.showAlerts = false;
   }
 
   scrollToSection(elementId: string): void {
