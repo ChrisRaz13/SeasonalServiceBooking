@@ -29,6 +29,12 @@ mat-card-title {
   gap: 20px;
 }
 
+mat-card {
+  background-color: rgba(0, 0, 0, 0.9); /* Dark background for better contrast */
+  color: #ffffff; /* Ensures text is visible */
+}
+
+
 /* Day Card Styling */
 .day-card {
   background: rgba(255, 255, 255, 0.1); /* Light, semi-transparent background */
