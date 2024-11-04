@@ -1,1 +1,58 @@
-<p>current-conditions works!</p>
+<!-- current-conditions.component.html -->
+<mat-card class="current-conditions">
+  <div class="conditions-grid">
+    <!-- Snow Probability -->
+    <div class="stat-box">
+      <div class="stat-icon snowflake-icon">
+        <mat-icon>ac_unit</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Snow Probability</h3>
+        <div class="stat-value">{{snowProbability}}%</div>
+        <div class="stat-progress">
+          <mat-progress-bar
+            mode="determinate"
+            [value]="snowProbability"
+            [class.high-probability]="snowProbability > 70">
+          </mat-progress-bar>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expected Accumulation -->
+    <div class="stat-box">
+      <div class="stat-icon accumulation-icon">
+        <mat-icon>height</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Expected Accumulation</h3>
+        <div class="stat-value">{{accumulation}}"</div>
+        <div class="accumulation-indicator" [class.service-required]="isServiceRequired">
+          {{serviceStatus}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ground Temperature -->
+    <div class="stat-box">
+      <div class="stat-icon temperature-icon">
+        <mat-icon>thermostat</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Ground Temperature</h3>
+        <div class="stat-value">{{groundTemp}}°F</div>
+      </div>
+    </div>
+
+    <!-- Wind Conditions -->
+    <div class="stat-box">
+      <div class="stat-icon wind-icon">
+        <mat-icon>air</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Wind Conditions</h3>
+        <div class="stat-value">{{windSpeed}} mph</div>
+      </div>
+    </div>
+  </div>
+</mat-card>

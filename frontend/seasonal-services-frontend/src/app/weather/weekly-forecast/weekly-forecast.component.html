@@ -1,1 +1,15 @@
-<p>weekly-forecast works!</p>
+<!-- weekly-forecast.component.html -->
+<mat-card class="weekly-forecast">
+  <mat-card-header>
+    <mat-card-title>7 Day Weather Outlook</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="weekly-grid">
+      <app-day-forecast
+        *ngFor="let day of forecast"
+        [day]="day"
+        (toggleDetails)="togglePeriodDetails($event)">
+      </app-day-forecast>
+    </div>
+  </mat-card-content>
+</mat-card>

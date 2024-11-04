@@ -1,0 +1,116 @@
+/* current-conditions.component.css */
+.current-conditions {
+  background: var(--background-blur, rgba(25, 42, 86, 0.7));
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-blur, rgba(255, 255, 255, 0.1));
+}
+
+.conditions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-right: 16px;
+}
+
+.snowflake-icon {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+}
+
+.accumulation-icon {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+}
+
+.temperature-icon {
+  background: linear-gradient(135deg, #ff5722, #d84315);
+}
+
+.wind-icon {
+  background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 8px 0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.stat-progress {
+  margin-top: 8px;
+}
+
+.high-probability .mat-progress-bar-fill::after {
+  background-color: #2196f3;
+}
+
+.accumulation-indicator {
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  display: inline-block;
+}
+
+.service-required {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff8a80;
+}
+
+.temperature-note,
+.wind-note {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .conditions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-box {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}

@@ -1,1 +1,96 @@
-<p>day-forecast works!</p>
+<!-- day-forecast.component.html -->
+<div class="day-forecast">
+  <!-- Day Header -->
+  <div class="day-header">
+    <div class="date-info">
+      <span class="day-name">{{ day.dayOfWeek }}</span>
+      <span class="date">{{ formatShortDate(day.date) }}</span>
+    </div>
+    <div class="temp-range">
+      <span class="high">{{ day.highTemp }}°</span>
+      <span class="separator">/</span>
+      <span class="low" *ngIf="day.lowTemp">{{ day.lowTemp }}°</span>
+    </div>
+  </div>
+
+  <!-- Day/Night Periods -->
+  <div class="periods-container">
+    <!-- Day Period -->
+    <div class="period-card day-period" [class.snow-expected]="day.dayPeriod.snowProbability > 30">
+      <div class="period-header">
+        <div class="period-icon">
+          <mat-icon>wb_sunny</mat-icon>
+          <span class="period-label">Day</span>
+        </div>
+        <div class="period-temp">{{ day.dayPeriod.temperature }}°</div>
+      </div>
+
+      <div class="period-details">
+        <div class="weather-icon-large">
+          <mat-icon>{{ getWeatherIcon(day.dayPeriod.shortForecast) }}</mat-icon>
+        </div>
+        <div class="weather-description">
+          <p class="primary-condition">{{ day.dayPeriod.shortForecast }}</p>
+          <div class="condition-details">
+            <div class="wind-info">
+              <mat-icon>air</mat-icon>
+              {{ day.dayPeriod.windSpeed }} {{ day.dayPeriod.windDirection }}
+            </div>
+            <div class="precip-info" *ngIf="day.dayPeriod.snowProbability > 0">
+              <mat-icon>ac_unit</mat-icon>
+              <span>{{ day.dayPeriod.snowProbability }}% chance</span>
+              <span *ngIf="day.dayPeriod.snowAmount > 0" class="snow-amount">
+                ({{ day.dayPeriod.snowAmount }}"")
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="detailed-forecast" [class.expanded]="day.dayPeriod.showDetails">
+        <p>{{ day.dayPeriod.detailedForecast }}</p>
+        <button mat-button color="primary" (click)="togglePeriodDetails(day.dayPeriod)">
+          {{ day.dayPeriod.showDetails ? 'Show Less' : 'Show More' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Night Period -->
+    <div class="period-card night-period" *ngIf="day.nightPeriod" [class.snow-expected]="day.nightPeriod.snowProbability > 30">
+      <div class="period-header">
+        <div class="period-icon">
+          <mat-icon>nightlight</mat-icon>
+          <span class="period-label">Night</span>
+        </div>
+        <div class="period-temp">{{ day.nightPeriod.temperature }}°</div>
+      </div>
+
+      <div class="period-details">
+        <div class="weather-icon-large">
+          <mat-icon>{{ getWeatherIcon(day.nightPeriod.shortForecast) }}</mat-icon>
+        </div>
+        <div class="weather-description">
+          <p class="primary-condition">{{ day.nightPeriod.shortForecast }}</p>
+          <div class="condition-details">
+            <div class="wind-info">
+              <mat-icon>air</mat-icon>
+              {{ day.nightPeriod.windSpeed }} {{ day.nightPeriod.windDirection }}
+            </div>
+            <div class="precip-info" *ngIf="day.nightPeriod.snowProbability > 0">
+              <mat-icon>ac_unit</mat-icon>
+              <span>{{ day.nightPeriod.snowProbability }}% chance</span>
+              <span *ngIf="day.nightPeriod.snowAmount > 0" class="snow-amount">
+                ({{ day.nightPeriod.snowAmount }}"")
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="detailed-forecast" [class.expanded]="day.nightPeriod.showDetails">
+        <p>{{ day.nightPeriod.detailedForecast }}</p>
+        <button mat-button color="primary" (click)="togglePeriodDetails(day.nightPeriod)">
+          {{ day.nightPeriod.showDetails ? 'Show Less' : 'Show More' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

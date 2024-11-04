@@ -1,1 +1,27 @@
-<p>hourly-forecast works!</p>
+<!-- hourly-forecast.component.html -->
+<mat-card class="hourly-forecast">
+  <mat-card-header>
+    <mat-card-title>Next 24 Hours</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- Temperature and Snow Probability Chart -->
+    <div class="chart-container">
+      <p-chart type="line" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+    </div>
+
+    <!-- Hourly Timeline -->
+    <div class="hourly-timeline">
+      <div *ngFor="let hour of forecast" class="hour-card" [class.snow-likely]="hour.snowProbability > 50">
+        <div class="hour-time">{{hour.time}}</div>
+        <div class="hour-temp">{{hour.temperature}}°F</div>
+        <div class="snow-chance">
+          <mat-icon [class.active]="hour.snowProbability > 50">ac_unit</mat-icon>
+          {{hour.snowProbability}}%
+        </div>
+        <div class="accumulation" *ngIf="hour.accumulation > 0">
+          +{{hour.accumulation}}"
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

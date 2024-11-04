@@ -1,0 +1,64 @@
+/* Day Forecast Card Styling */
+.day-forecast {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffd54f; /* Soft yellow for better readability */
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.periods-container {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+/* Day/Night Period Cards */
+.period-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.period-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.day-period {
+  color: #ffecb3;
+}
+
+.night-period {
+  color: #b3e5fc;
+}
+
+/* Weather Icon */
+.weather-icon-large mat-icon {
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+/* Condition Details */
+.condition-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.wind-info mat-icon,
+.precip-info mat-icon {
+  color: #ffffff;
+  font-size: 1.2rem;
+}

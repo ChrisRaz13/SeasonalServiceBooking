@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ClientListComponent } from './components/client-list/client-list.component';
 import { BookingFormComponent } from './components/booking-form/booking-form.component';
-import { SnowPlowingCalendarComponent } from './components/snow-plowing-calendar/snow-plowing-calendar.component';
+import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/snow-plowing-calendar.component';
 import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { AppComponent } from './app.component';
 import { SnowPlowingServicePageComponent } from './components/snow-plowing-service-page/snow-plowing-service-page.component';

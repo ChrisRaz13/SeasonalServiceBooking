@@ -1,1 +1,13 @@
-<p>alert-banner works!</p>
+<!-- alert-banner.component.html -->
+<div *ngIf="alerts.length > 0" class="alert-banner" @slideDown>
+  <div *ngFor="let alert of alerts" [class]="'alert-card severity-' + alert.severity">
+    <div class="alert-icon">
+      <mat-icon>warning</mat-icon>
+    </div>
+    <div class="alert-content">
+      <h3>{{alert.event}}</h3>
+      <p>{{alert.headline}}</p>
+      <span class="alert-expires">Expires: {{formatDate(alert.expires)}}</span>
+    </div>
+  </div>
+</div>
