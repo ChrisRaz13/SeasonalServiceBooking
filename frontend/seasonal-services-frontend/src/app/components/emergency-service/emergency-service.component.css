@@ -187,27 +187,17 @@ body {
   z-index: 3; /* Ensure the form card is above the blizzard */
 }
 
-/* Set all text inside form card to white */
-.form-card,
-.form-card h2,
-.form-card p,
-.form-card label,
-.form-card input,
-.form-card textarea,
-.form-card select,
-.form-card .mat-form-field-label {
-  color: white !important;
-}
+
 
 .form-title {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: white;
+  color: rgb(54, 125, 223);
 }
 
 .response-note {
   font-size: 1.2rem;
-  color: var(--light-blue);
+  color: rgb(54, 125, 223);
   margin-bottom: 2rem;
 }
 
@@ -263,7 +253,7 @@ body {
 .emergency-footer {
   background: #1a2a3f;
   padding: 4rem 2rem;
-  color: white;
+  color: lightblue;
   text-align: center;
 }
 
@@ -294,7 +284,7 @@ body {
 }
 
 .footer-section p {
-  color: #d0e1f0;
+  color: lightblue;
   font-size: 1rem;
 }
 
