@@ -94,8 +94,8 @@ body {
 
 /* Ice Button Effect */
 .ice-button {
-  background: darkblue;
-  color: lightblue;
+  background: #ff4444;
+  color: white;
   border: none;
   padding: .5rem 1rem;
   border-radius: 44px;
@@ -146,24 +146,24 @@ body {
 
 .icon-container {
   font-size: 2.5rem;
-  color: var(--light-blue);
+  color: lightblue;
   margin-bottom: 1rem;
 }
 
 .service-card h3 {
   font-size: 1.5rem;
-  color: white;
+  color: lightblue;
   margin: 1rem 0;
 }
 
 .service-card p {
   font-size: 1rem;
-  color: #d0e1f0;
+  color: lightblue;
 }
 
 .response-time {
   font-weight: bold;
-  color: var(--emergency-red);
+  color: #ff4444;
   margin-top: 1rem;
 }
 
@@ -180,7 +180,7 @@ body {
   max-width: 600px;
   margin: 0 auto;
   padding: 3rem;
-  background-color: var(--deep-blue);
+  background-color: lightblue;
   border-radius: 10px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
   color: white;
@@ -282,7 +282,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--light-blue);
+  color: lightblue;
   text-decoration: none;
   font-size: 1.5rem;
   margin: 1rem 0;
@@ -290,7 +290,7 @@ body {
 
 .footer-section h3 {
   font-size: 1.5rem;
-  color: var(--light-blue);
+  color: lightblue;
 }
 
 .footer-section p {
