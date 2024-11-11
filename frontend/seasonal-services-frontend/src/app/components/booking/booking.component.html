@@ -1,0 +1,41 @@
+<h2>Book a Service</h2>
+<form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+  <!-- Service Selection -->
+  <div>
+    <label for="serviceId">Service</label>
+    <select id="serviceId" formControlName="serviceId">
+      <option *ngFor="let service of services" [value]="service.id">
+        {{ service.serviceName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Booking Date -->
+  <div>
+    <label for="bookingDate">Date</label>
+    <input type="date" id="bookingDate" formControlName="bookingDate" />
+  </div>
+
+  <!-- Booking Time -->
+  <div>
+    <label for="bookingTime">Time</label>
+    <input type="time" id="bookingTime" formControlName="bookingTime" />
+  </div>
+
+  <!-- Comments -->
+  <div>
+    <label for="comments">Comments</label>
+    <textarea id="comments" formControlName="comments"></textarea>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" [disabled]="bookingForm.invalid">Submit</button>
+</form>
+
+<!-- Display Validation Errors (Optional) -->
+<div *ngIf="bookingForm.invalid && (bookingForm.dirty || bookingForm.touched)">
+  <p *ngIf="bookingForm.get('serviceId')?.hasError('required')">
+    Service is required.
+  </p>
+  <!-- Add more validation messages as needed -->
+</div>

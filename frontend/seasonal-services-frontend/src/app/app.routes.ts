@@ -1,32 +1,41 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { ClientListComponent } from './components/client-list/client-list.component';
-import { BookingFormComponent } from './components/booking-form/booking-form.component';
-import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/snow-plowing-calendar.component';
-import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
-import { AppComponent } from './app.component';
-import { SnowPlowingServicePageComponent } from './components/snow-plowing-service-page/snow-plowing-service-page.component';
-import { EmergencyServiceComponent } from './components/emergency-service/emergency-service.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent // Home as default route
+    loadComponent: () =>
+      import('./components/home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'emergency-service-24/7',
-    component: EmergencyServiceComponent // Emergency route
+    loadComponent: () =>
+      import('./components/emergency-service/emergency-service.component').then(
+        (m) => m.EmergencyServiceComponent
+      ),
   },
   {
     path: 'snowplowing-service-page',
-    component: SnowPlowingServicePageComponent // Snowplowing service page
+    loadComponent: () =>
+      import(
+        './components/snow-plowing-service-page/snow-plowing-service-page.component'
+      ).then((m) => m.SnowPlowingServicePageComponent),
   },
   {
     path: 'weather-dashboard',
-    component: SnowPlowingCalendarComponent // Weather Dashboard
+    loadComponent: () =>
+      import(
+        './weather/snow-plowing-calendar/snow-plowing-calendar.component'
+      ).then((m) => m.SnowPlowingCalendarComponent),
+  },
+  {
+    path: 'booking',
+    loadComponent: () =>
+      import('./components/booking/booking.component').then(
+        (m) => m.BookingComponent
+      ),
   },
   {
     path: '**',
-    redirectTo: '' // Redirect any unknown route to home
-  }
+    redirectTo: '', // Redirect any unknown route to home
+  },
 ];

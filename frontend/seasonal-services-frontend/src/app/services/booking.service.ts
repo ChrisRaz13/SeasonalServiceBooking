@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Booking } from '../models/booking.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookingService {
-  private apiUrl = 'http://localhost:9080/api/bookings'; // Backend API URL for bookings
+  private apiUrl = 'http://localhost:9080/api/bookings';
 
   constructor(private http: HttpClient) {}
 
-  getAllBookings(): Observable<Booking[]> {
+  getBookings(): Observable<Booking[]> {
     return this.http.get<Booking[]>(this.apiUrl);
   }
 
-  addBooking(booking: Booking): Observable<Booking> {
-    return this.http.post<Booking>(this.apiUrl, booking);
+  getBookingById(id: number): Observable<Booking> {
+    return this.http.get<Booking>(`${this.apiUrl}/${id}`);
   }
 
-  updateBooking(id: number, booking: Booking): Observable<Booking> {
-    return this.http.put<Booking>(`${this.apiUrl}/${id}`, booking);
+  addBooking(booking: Booking): Observable<void> {
+    return this.http.post<void>(this.apiUrl, booking);
+  }
+
+  updateBooking(booking: Booking): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${booking.id}`, booking);
   }
 
   deleteBooking(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
 }
-
-
-

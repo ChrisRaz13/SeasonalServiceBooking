@@ -7,12 +7,15 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ViewportScroller } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterModule,
+    ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
     NavBarComponent,
