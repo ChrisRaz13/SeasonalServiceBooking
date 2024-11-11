@@ -19,60 +19,75 @@ public class BookingRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // RowMapper for Booking to map rows from the database
+    // RowMapper for Booking
     private RowMapper<Booking> bookingRowMapper = (rs, rowNum) -> {
         Booking booking = new Booking();
         booking.setId(rs.getInt("id"));
-        booking.setServiceName(rs.getString("service_name"));
+        booking.setClientId(rs.getInt("client_id"));
+        booking.setServiceId(rs.getInt("service_id"));
         booking.setBookingDate(rs.getDate("booking_date").toLocalDate());
         booking.setBookingTime(rs.getTime("booking_time").toLocalTime());
-        booking.setName(rs.getString("name"));
-        booking.setEmail(rs.getString("email"));
-        booking.setPhone(rs.getString("phone"));
+        booking.setStatus(rs.getString("status"));
+        booking.setComments(rs.getString("comments"));
+
+        booking.setServiceName(rs.getString("service_name"));
+        booking.setClientName(rs.getString("client_name"));
+        booking.setClientEmail(rs.getString("email"));
+        booking.setClientPhone(rs.getString("phone_number"));
+
         return booking;
     };
 
-    // Retrieve all bookings from the database
+    // Retrieve all bookings
     public List<Booking> findAll() {
-        String sql = "SELECT * FROM bookings";
+        String sql = "SELECT b.*, c.name AS client_name, c.email, c.phone_number, s.service_name " +
+                     "FROM bookings b " +
+                     "JOIN clients c ON b.client_id = c.id " +
+                     "JOIN services s ON b.service_id = s.id";
         return jdbcTemplate.query(sql, bookingRowMapper);
     }
 
-    // Find a booking by its ID
+    // Find a booking by ID
     public Booking findById(int id) {
-        String sql = "SELECT * FROM bookings WHERE id = ?";
+        String sql = "SELECT b.*, c.name AS client_name, c.email, c.phone_number, s.service_name " +
+                     "FROM bookings b " +
+                     "JOIN clients c ON b.client_id = c.id " +
+                     "JOIN services s ON b.service_id = s.id " +
+                     "WHERE b.id = ?";
         List<Booking> bookings = jdbcTemplate.query(sql, bookingRowMapper, id);
         return bookings.isEmpty() ? null : bookings.get(0);
     }
 
-    // Save a new booking to the database
+    // Save a new booking
     public int save(Booking booking) {
-        String sql = "INSERT INTO bookings (service_name, booking_date, booking_time, name, email, phone) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bookings (client_id, service_id, booking_date, booking_time, status, comments) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
-                booking.getServiceName(),
+                booking.getClientId(),
+                booking.getServiceId(),
                 Date.valueOf(booking.getBookingDate()),
                 Time.valueOf(booking.getBookingTime()),
-                booking.getName(),
-                booking.getEmail(),
-                booking.getPhone()
+                booking.getStatus(),
+                booking.getComments()
         );
     }
 
-    // Update an existing booking in the database
+    // Update an existing booking
     public int update(Booking booking) {
-        String sql = "UPDATE bookings SET service_name = ?, booking_date = ?, booking_time = ?, name = ?, email = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE bookings SET client_id = ?, service_id = ?, booking_date = ?, booking_time = ?, " +
+                     "status = ?, comments = ? WHERE id = ?";
         return jdbcTemplate.update(sql,
-                booking.getServiceName(),
+                booking.getClientId(),
+                booking.getServiceId(),
                 Date.valueOf(booking.getBookingDate()),
                 Time.valueOf(booking.getBookingTime()),
-                booking.getName(),
-                booking.getEmail(),
-                booking.getPhone(),
+                booking.getStatus(),
+                booking.getComments(),
                 booking.getId()
         );
     }
 
-    // Delete a booking from the database by its ID
+    // Delete a booking
     public int delete(int id) {
         String sql = "DELETE FROM bookings WHERE id = ?";
         return jdbcTemplate.update(sql, id);

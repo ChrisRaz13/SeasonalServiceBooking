@@ -1,60 +1,71 @@
 package com.seasonalservices.entities;
 
 public class Client {
-	private Integer id;
-	private String name;
-	private String email;
-	private String phoneNumber;
-	private String address;
 
-	public Client() {
-	}
+    private Integer id;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private String address;
 
-	public Client(Integer id, String name, String email, String phoneNumber, String address) {
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.address = address;
-	}
+    // Constructors
 
-	public Integer getId() {
-		return id;
-	}
+    public Client() {
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Client(Integer id, String name, String email, String phoneNumber, String address) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
-	public String getName() {
-		return name;
-	}
+    // Getters and Setters
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    // ID
+    public Integer getId() {
+        return id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    // Name
+    public String getName() {
+        return name;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    // Email
+    public String getEmail() {
+        return email;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    // Phone Number
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    // Address
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

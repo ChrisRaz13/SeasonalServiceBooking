@@ -5,24 +5,39 @@ import java.time.LocalTime;
 
 public class Booking {
     private Integer id;
-    private String serviceName;
+    private Integer clientId;
+    private Integer serviceId;
     private LocalDate bookingDate;
     private LocalTime bookingTime;
-    private String name;
-    private String email;
-    private String phone;
+    private String status;
+    private String comments;
+
+    // Additional fields from joined tables
+    private String serviceName;
+    private String clientName;
+    private String clientEmail;
+    private String clientPhone;
+
+    // Constructors
 
     public Booking() {
+        // Default constructor
     }
 
-    public Booking(Integer id, String serviceName, LocalDate bookingDate, LocalTime bookingTime, String name, String email, String phone) {
+    public Booking(Integer id, Integer clientId, Integer serviceId, LocalDate bookingDate, LocalTime bookingTime,
+                   String status, String comments, String serviceName, String clientName,
+                   String clientEmail, String clientPhone) {
         this.id = id;
-        this.serviceName = serviceName;
+        this.clientId = clientId;
+        this.serviceId = serviceId;
         this.bookingDate = bookingDate;
         this.bookingTime = bookingTime;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
+        this.status = status;
+        this.comments = comments;
+        this.serviceName = serviceName;
+        this.clientName = clientName;
+        this.clientEmail = clientEmail;
+        this.clientPhone = clientPhone;
     }
 
 	public Integer getId() {
@@ -33,12 +48,20 @@ public class Booking {
 		this.id = id;
 	}
 
-	public String getServiceName() {
-		return serviceName;
+	public Integer getClientId() {
+		return clientId;
 	}
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(Integer serviceId) {
+		this.serviceId = serviceId;
 	}
 
 	public LocalDate getBookingDate() {
@@ -57,28 +80,51 @@ public class Booking {
 		this.bookingTime = bookingTime;
 	}
 
-	public String getName() {
-		return name;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getComments() {
+		return comments;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getServiceName() {
+		return serviceName;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
-    
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getClientEmail() {
+		return clientEmail;
+	}
+
+	public void setClientEmail(String clientEmail) {
+		this.clientEmail = clientEmail;
+	}
+
+	public String getClientPhone() {
+		return clientPhone;
+	}
+
+	public void setClientPhone(String clientPhone) {
+		this.clientPhone = clientPhone;
+	}
 }

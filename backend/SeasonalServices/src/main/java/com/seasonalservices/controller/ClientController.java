@@ -25,53 +25,50 @@ import com.seasonalservices.service.ClientService;
 @RequestMapping("/api/clients")
 public class ClientController {
 
-	private final ClientService clientService;
+    private final ClientService clientService;
 
-	@Autowired
-	public ClientController(ClientService clientService) {
-		this.clientService = clientService;
-	}
+    @Autowired
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
-	@GetMapping
-	public ResponseEntity<List<Client>> getAllClients() {
-		List<Client> clients = clientService.getAllClients();
-		return new ResponseEntity<>(clients, HttpStatus.OK);
-	}
+    @GetMapping
+    public ResponseEntity<List<Client>> getAllClients() {
+        List<Client> clients = clientService.getAllClients();
+        return new ResponseEntity<>(clients, HttpStatus.OK);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Client> getClientById(@PathVariable int id) {
-		Optional<Client> client = clientService.getClientById(id);
-		if (client.isPresent()) {
-			return new ResponseEntity<>(client.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> getClientById(@PathVariable int id) {
+        Optional<Client> client = clientService.getClientById(id);
+        return client.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
-	@PostMapping
-	public ResponseEntity<Client> addClient(@RequestBody @Validated Client client) {
-		Client savedClient = clientService.addClient(client);
-		return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
-	}
+    @PostMapping
+    public ResponseEntity<Client> addClient(@RequestBody @Validated Client client) {
+        Client savedClient = clientService.addClient(client);
+        return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Client> updateClient(@PathVariable int id, @RequestBody Client client) {
-		client.setId(id);
-		int result = clientService.updateClient(client);
-		if (result > 0) {
-			return ResponseEntity.ok(client);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+    @PutMapping("/{id}")
+    public ResponseEntity<Client> updateClient(@PathVariable int id, @RequestBody Client client) {
+        client.setId(id);
+        int result = clientService.updateClient(client);
+        if (result > 0) {
+            return ResponseEntity.ok(client);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteClient(@PathVariable int id) {
-		int result = clientService.deleteClient(id);
-		if (result > 0) {
-			return ResponseEntity.noContent().build();
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClient(@PathVariable int id) {
+        int result = clientService.deleteClient(id);
+        if (result > 0) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
