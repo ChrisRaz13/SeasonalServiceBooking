@@ -330,3 +330,25 @@ body {
     gap: 2rem;
   }
 }
+.confirmation-message {
+  background-color: #e0f7fa;
+  border: 1px solid #26a69a;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border-radius: 5px;
+  color: #004d40;
+}
+
+.confirmation-message h2 {
+  margin-top: 0;
+  color: #00796b;
+}
+
+.confirmation-message ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.confirmation-message li {
+  margin-bottom: 0.5rem;
+}

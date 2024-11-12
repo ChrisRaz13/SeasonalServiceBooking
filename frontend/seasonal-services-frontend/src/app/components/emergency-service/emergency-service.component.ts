@@ -12,6 +12,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { EmergencyRequest } from '@/app/services/emergency-request.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { EmergencyConfirmationComponent } from '../emergency-confirmation/emergency-confirmation.component';
+
 
 interface ServiceType {
   icon: string;
@@ -34,6 +37,7 @@ interface ServiceType {
     MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
     RouterModule
   ],
   templateUrl: './emergency-service.component.html',
@@ -95,7 +99,8 @@ export class EmergencyServiceComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
-    private emergencyRequestService: EmergencyRequestService
+    private emergencyRequestService: EmergencyRequestService,
+    private dialog: MatDialog
   ) {
     this.emergencyForm = this.fb.group({
       name: ['', Validators.required],
@@ -191,19 +196,21 @@ export class EmergencyServiceComponent implements OnInit, AfterViewInit {
 
       this.emergencyRequestService.submitEmergencyRequest(emergencyRequest).subscribe({
         next: () => {
-          this.showSuccessMessage();
-          this.emergencyForm.reset();
+          this.isSubmitting = false;
+          this.openConfirmationDialog(emergencyRequest);
         },
         error: (error) => {
+          this.isSubmitting = false;
           console.error('Error submitting emergency request:', error);
           this.showErrorMessage();
-        },
-        complete: () => {
-          this.isSubmitting = false;
-        },
+        }
       });
+    } else {
+      this.emergencyForm.markAllAsTouched();
     }
   }
+
+
 
 
   private showSuccessMessage(): void {
@@ -238,11 +245,28 @@ export class EmergencyServiceComponent implements OnInit, AfterViewInit {
 
   isFieldRequired(fieldName: string): boolean {
     const field = this.getFormControl(fieldName);
-    return field?.hasError('required') || false;
+    return field ? field.hasError('required') && (field.dirty || field.touched) : false;
   }
+
 
   isPhoneInvalid(): boolean {
     const phone = this.getFormControl('phone');
     return phone ? phone.hasError('pattern') && (phone.dirty || phone.touched) : false;
   }
+
+
+  openConfirmationDialog(request: EmergencyRequest): void {
+    const dialogRef = this.dialog.open(EmergencyConfirmationComponent, {
+      width: '400px',
+      data: request
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Optionally reset the form after the dialog is closed
+      this.emergencyForm.reset();
+      this.emergencyForm.markAsPristine();
+      this.emergencyForm.markAsUntouched();
+    });
+  }
+
 }
