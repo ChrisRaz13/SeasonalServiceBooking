@@ -1,59 +1,128 @@
-<!-- nav-bar.component.html -->
-<nav #navbar class="navbar" [class.scrolled]="isScrolled" [@fadeSlide]>
+<!-- Desktop Navbar -->
+<nav *ngIf="!isMobile"
+     #navbar
+     class="navbar desktop-navbar"
+     [class.scrolled]="isScrolled"
+     [@slideIn]>
   <!-- Logo Section -->
-  <div class="navbar-logo">
-    <a routerLink="/" class="logo-link">
-      <img src="assets/Logo_transparent.png" alt="Snow and Lawn Services Logo" class="logo-image" />
+  <div class="logo-section">
+    <a routerLink="/" class="logo-link" #logoLink>
+      <img src="assets/Logo_transparent.png" alt="Logo" class="logo-image" />
     </a>
   </div>
 
-  <!-- Mobile Menu Button -->
-  <button class="navbar-toggler" (click)="toggleNavbar()" [class.active]="navbarOpen">
-    <span class="toggler-icon"></span>
-    <span class="toggler-icon"></span>
-    <span class="toggler-icon"></span>
-  </button>
-
-  <!-- Navigation Links -->
-  <div class="navbar-links" [class.active]="navbarOpen">
+  <!-- Navigation Items -->
+  <div class="nav-items">
     <ng-container *ngFor="let item of menuItems; let i = index">
-      <!-- Regular Menu Item -->
+      <!-- Regular Nav Item -->
       <a *ngIf="!item.children"
          [routerLink]="item.route"
-         routerLinkActive="active-link"
-         class="nav-link"
-         [class.animate__fadeInDown]="navbarOpen">
-        <i class="nav-icon" [class]="item.icon"></i>
+         class="nav-item"
+         [class.active]="currentRoute === item.route"
+         (mouseenter)="onItemHover(i)"
+         (mouseleave)="onItemLeave(i)">
+        <i [class]="item.icon"></i>
         <span>{{ item.label }}</span>
       </a>
 
-      <!-- Dropdown Menu Item -->
+      <!-- Dropdown Item -->
       <div *ngIf="item.children"
            class="dropdown-container"
-           [class.show]="dropdownStates[i]"
-           (mouseenter)="toggleDropdown(i, true)"
-           (mouseleave)="toggleDropdown(i, false)">
-        <button class="nav-link dropdown-toggle">
-          <i class="nav-icon" [class]="item.icon"></i>
+           [class.active]="activeDropdown === i"
+           (mouseenter)="openDropdown(i)"
+           (mouseleave)="closeDropdown()">
+        <button class="dropdown-toggle nav-item">
+          <i [class]="item.icon"></i>
           <span>{{ item.label }}</span>
-          <i class="nav-icon chevron" [class.rotate]="dropdownStates[i]">&#x2304;</i>
+          <i class="fas fa-chevron-down ms-2"></i>
         </button>
-        <div class="dropdown-menu" [class.show]="dropdownStates[i]">
+        <div class="dropdown-menu" [class.show]="activeDropdown === i">
           <a *ngFor="let child of item.children"
              [routerLink]="child.route"
-             routerLinkActive="active-link"
-             class="dropdown-item">
-            <i class="nav-icon" [class]="child.icon"></i>
+             class="dropdown-item"
+             (click)="closeDropdown()">
+            <i [class]="child.icon" class="me-2"></i>
             <span>{{ child.label }}</span>
           </a>
         </div>
       </div>
     </ng-container>
 
-    <!-- Emergency Contact Button -->
-    <button class="emergency-btn">
-      <i class="emergency-icon">⚡</i>
-      <span>24/7 Emergency Service</span>
+    <!-- Emergency Button -->
+    <button class="emergency-btn"
+            routerLink="/emergency-service-24-7"
+            (mouseenter)="playEmergencyAnimation()">
+      <i class="fas fa-phone-alt"></i>
+      <span>24/7 Emergency</span>
     </button>
+  </div>
+</nav>
+
+<!-- Mobile Navbar -->
+<nav *ngIf="isMobile" class="mobile-navbar">
+  <div class="logo-section">
+    <a routerLink="/" class="logo-link">
+      <img src="assets/Logo_transparent.png" alt="Logo" class="logo-image" />
+    </a>
+  </div>
+
+  <button class="menu-button"
+          [class.active]="mobileMenuOpen"
+          (click)="toggleMobileMenu()">
+    <div class="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </button>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu-overlay"
+       [class.open]="mobileMenuOpen"
+       (click)="closeMobileMenu()">
+  </div>
+
+  <div class="mobile-menu" [class.open]="mobileMenuOpen">
+    <div class="mobile-menu-content">
+      <ng-container *ngFor="let item of menuItems">
+        <!-- Regular Mobile Item -->
+        <a *ngIf="!item.children"
+           [routerLink]="item.route"
+           class="mobile-nav-item"
+           (click)="closeMobileMenu()">
+          <i [class]="item.icon" class="me-3"></i>
+          <span>{{ item.label }}</span>
+        </a>
+
+        <!-- Mobile Dropdown -->
+        <div *ngIf="item.children" class="mobile-dropdown">
+          <button class="mobile-nav-item"
+                  (click)="toggleMobileDropdown(item)">
+            <i [class]="item.icon" class="me-3"></i>
+            <span>{{ item.label }}</span>
+            <i class="fas fa-chevron-down ms-auto"
+               [class.rotate]="item.open"></i>
+          </button>
+          <div class="mobile-dropdown-content"
+               [class.open]="item.open">
+            <a *ngFor="let child of item.children"
+               [routerLink]="child.route"
+               class="mobile-dropdown-item"
+               (click)="closeMobileMenu()">
+              <i [class]="child.icon" class="me-3"></i>
+              <span>{{ child.label }}</span>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Mobile Emergency Button -->
+      <button class="emergency-btn mt-4"
+              routerLink="/emergency-service-24-7"
+              (click)="closeMobileMenu()">
+        <i class="fas fa-phone-alt"></i>
+        <span>24/7 Emergency</span>
+      </button>
+    </div>
   </div>
 </nav>

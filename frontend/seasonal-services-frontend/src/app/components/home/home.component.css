@@ -398,7 +398,210 @@
   transform: translateY(-5px);
 }
 
+/* Mobile-First Enhancements */
 
+/* Hero Section Mobile Adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 100vh; /* Full height on mobile */
+    padding: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .hero-cta button {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Service Cards Mobile Optimization */
+@media (max-width: 768px) {
+  .service-cards {
+    padding: 1rem;
+  }
+
+  .service-card {
+    margin: 1rem 0;
+    padding: 1.5rem;
+  }
+
+  .feature-list li {
+    padding: 0.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Weather Info Promo Mobile Adjustments */
+@media (max-width: 768px) {
+  .weather-info-promo {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .promo-content {
+    padding: 0;
+  }
+
+  .promo-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .promo-content p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .promo-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Testimonials Section Mobile Optimization */
+@media (max-width: 768px) {
+  .testimonials-section {
+    padding: 2rem 1rem;
+  }
+
+  .testimonial-slide {
+    padding: 1rem;
+  }
+}
+
+/* CTA Section Mobile Enhancements */
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 2rem 1rem;
+  }
+
+  .cta-content {
+    text-align: center;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cta-buttons button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Weather Alert Button Mobile Optimization */
+@media (max-width: 768px) {
+  .weather-alert-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .weather-alert-button {
+    width: 56px;
+    height: 56px;
+  }
+
+  .alert-panel {
+    width: calc(100vw - 2rem);
+    max-height: 80vh;
+    bottom: 5rem;
+    right: 1rem;
+  }
+
+  .alerts-list {
+    max-height: 60vh;
+  }
+
+  .alert-item {
+    padding: 1rem;
+  }
+}
+
+/* Small Device Specific Optimizations */
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .service-button {
+    padding: 1.5rem;
+  }
+
+  .button-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+  .service-card:hover,
+  .hero-cta button:hover,
+  .service-button:hover {
+    transform: none;
+  }
+
+  .feature-list li:hover {
+    transform: none;
+  }
+
+  /* Add touch feedback instead */
+  .service-card:active,
+  .hero-cta button:active,
+  .service-button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Additional Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Improved Tap Targets for Mobile */
+@media (max-width: 768px) {
+  button,
+  .promo-button,
+  .feature-list li,
+  .alert-item-header {
+    min-height: 44px; /* iOS minimum tap target size */
+    min-width: 44px;
+  }
+
+  .mat-icon {
+    font-size: 24px; /* Ensure icons are easily tappable */
+  }
+}
 
 
 
