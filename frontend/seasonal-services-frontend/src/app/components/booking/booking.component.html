@@ -1,41 +1,107 @@
-<h2>Book a Service</h2>
-<form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-  <!-- Service Selection -->
-  <div>
-    <label for="serviceId">Service</label>
-    <select id="serviceId" formControlName="serviceId">
-      <option *ngFor="let service of services" [value]="service.id">
-        {{ service.serviceName }}
-      </option>
-    </select>
-  </div>
+<div class="booking-container">
+  <mat-card class="booking-card">
+    <mat-card-header>
+      <mat-card-title>Schedule Snow Plowing Service</mat-card-title>
+      <mat-card-subtitle>Book your service in a few simple steps</mat-card-subtitle>
+    </mat-card-header>
 
-  <!-- Booking Date -->
-  <div>
-    <label for="bookingDate">Date</label>
-    <input type="date" id="bookingDate" formControlName="bookingDate" />
-  </div>
+    <mat-card-content>
+      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
+        <!-- Service Selection -->
+        <div class="service-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Select Service</mat-label>
+            <mat-select formControlName="serviceId" required>
+              <mat-option *ngFor="let service of services" [value]="service.id">
+                {{ service.serviceName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookingForm.get('serviceId')?.hasError('required')">
+              Please select a service
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-  <!-- Booking Time -->
-  <div>
-    <label for="bookingTime">Time</label>
-    <input type="time" id="bookingTime" formControlName="bookingTime" />
-  </div>
+        <!-- Date Selection -->
+        <div class="date-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="bookingDate"
+                   [min]="minDate" [max]="maxDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">
+              Please select a date
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-  <!-- Comments -->
-  <div>
-    <label for="comments">Comments</label>
-    <textarea id="comments" formControlName="comments"></textarea>
-  </div>
+        <!-- Time Selection -->
+        <div class="time-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Choose a time</mat-label>
+            <mat-select formControlName="bookingTime" required>
+              <mat-option *ngFor="let time of availableTimes" [value]="time.value">
+                {{ time.display }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
+              Please select a time
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="bookingForm.invalid">Submit</button>
-</form>
+        <!-- Comments -->
+        <div class="comments-section">
+          <mat-form-field appearance="fill">
+            <mat-label>Additional Comments</mat-label>
+            <textarea matInput formControlName="comments" rows="4"
+                      placeholder="Enter any special instructions or requirements"></textarea>
+          </mat-form-field>
+        </div>
 
-<!-- Display Validation Errors (Optional) -->
-<div *ngIf="bookingForm.invalid && (bookingForm.dirty || bookingForm.touched)">
-  <p *ngIf="bookingForm.get('serviceId')?.hasError('required')">
-    Service is required.
-  </p>
-  <!-- Add more validation messages as needed -->
+        <!-- Contact Information -->
+        <div class="contact-info">
+          <mat-form-field appearance="fill">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="clientName" required>
+            <mat-error *ngIf="bookingForm.get('clientName')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="clientEmail" required type="email">
+            <mat-error *ngIf="bookingForm.get('clientEmail')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="bookingForm.get('clientEmail')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="clientPhone" required>
+            <mat-error *ngIf="bookingForm.get('clientPhone')?.hasError('required')">
+              Phone number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit"
+                  [disabled]="bookingForm.invalid || isSubmitting">
+            <mat-icon>schedule</mat-icon>
+            {{ isSubmitting ? 'Booking...' : 'Schedule Service' }}
+          </button>
+          <button mat-button type="button" routerLink="/">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>
