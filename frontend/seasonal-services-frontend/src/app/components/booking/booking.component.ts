@@ -99,7 +99,6 @@ export class BookingComponent implements OnInit {
       this.isSubmitting = true;
 
       const booking: Booking = {
-        clientId: 0, // Set appropriately if you have a client system
         serviceId: this.bookingForm.value.serviceId,
         bookingDate: this.bookingForm.value.bookingDate.toISOString().split('T')[0],
         bookingTime: this.bookingForm.value.bookingTime,

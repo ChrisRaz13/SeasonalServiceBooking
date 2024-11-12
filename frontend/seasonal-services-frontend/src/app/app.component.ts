@@ -6,14 +6,15 @@ import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/sn
 import { FooterComponent } from './layout/footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ViewportScroller } from '@angular/common';
+import { ViewportScroller, CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    CommonModule,
     RouterModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -26,33 +27,36 @@ import { ReactiveFormsModule } from '@angular/forms';
   template: `
     <app-nav-bar></app-nav-bar>
     <router-outlet></router-outlet>
-    <app-footer></app-footer>
+    <app-footer *ngIf="!isBookingRoute()"></app-footer>
   `,
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'seasonal-services-frontend';
   private currentUrl: string;
+  currentRoute: string = '';
 
-  constructor(private router: Router, private viewportScroller: ViewportScroller) {
-    // Store the initial URL
+  constructor(
+    private router: Router,
+    private viewportScroller: ViewportScroller
+  ) {
     this.currentUrl = this.router.url;
+    this.currentRoute = this.router.url;
 
-    // Subscribe to router events
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        // Scroll to top if navigating to the same route
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.url;
         if (this.currentUrl === event.url) {
           this.viewportScroller.scrollToPosition([0, 0]);
         }
-        // Update the current URL to the new one
         this.currentUrl = event.url;
       }
-
-      if (event instanceof NavigationEnd) {
-        // Scroll to top on every route change
-        this.viewportScroller.scrollToPosition([0, 0]);
-      }
     });
+  }
+
+  isBookingRoute(): boolean {
+    return this.currentRoute === '/booking';
   }
 }
