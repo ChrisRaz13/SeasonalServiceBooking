@@ -1,3 +1,4 @@
+import { EmergencyRequestService } from './../../services/emergency-request.service';
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { EmergencyRequest } from '@/app/services/emergency-request.service';
 
 interface ServiceType {
   icon: string;
@@ -92,7 +94,8 @@ export class EmergencyServiceComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private emergencyRequestService: EmergencyRequestService
   ) {
     this.emergencyForm = this.fb.group({
       name: ['', Validators.required],
@@ -181,20 +184,27 @@ export class EmergencyServiceComponent implements OnInit, AfterViewInit {
     this.renderer.appendChild(element, frost);
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.emergencyForm.valid) {
       this.isSubmitting = true;
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        this.showSuccessMessage();
-        this.emergencyForm.reset();
-      } catch (error) {
-        this.showErrorMessage();
-      } finally {
-        this.isSubmitting = false;
-      }
+      const emergencyRequest: EmergencyRequest = this.emergencyForm.value;
+
+      this.emergencyRequestService.submitEmergencyRequest(emergencyRequest).subscribe({
+        next: () => {
+          this.showSuccessMessage();
+          this.emergencyForm.reset();
+        },
+        error: (error) => {
+          console.error('Error submitting emergency request:', error);
+          this.showErrorMessage();
+        },
+        complete: () => {
+          this.isSubmitting = false;
+        },
+      });
     }
   }
+
 
   private showSuccessMessage(): void {
     this.snackBar.open('Emergency request submitted successfully!', 'Close', {
