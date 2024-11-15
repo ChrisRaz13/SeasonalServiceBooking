@@ -1,127 +1,116 @@
-<!-- Desktop Navbar -->
-<nav *ngIf="!isMobile"
-     #navbar
-     class="navbar desktop-navbar"
-     [class.scrolled]="isScrolled"
-     [@slideIn]>
-  <!-- Logo Section -->
-  <div class="logo-section">
-    <a routerLink="/" class="logo-link" #logoLink>
-      <img src="assets/Logo_transparent.png" alt="Logo" class="logo-image" />
-    </a>
-  </div>
+<nav #navBar class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container">
+    <!-- Logo -->
+    <div class="nav-start">
+      <a routerLink="/" class="logo-link">
+        <img src="assets/Logo_transparent.png" alt="Company Logo" class="logo-image" #logoImage>
+      </a>
+    </div>
 
-  <!-- Navigation Items -->
-  <div class="nav-items">
-    <ng-container *ngFor="let item of menuItems; let i = index">
-      <!-- Regular Nav Item -->
-      <a *ngIf="!item.children"
-         [routerLink]="item.route"
-         class="nav-item"
-         [class.active]="currentRoute === item.route"
-         (mouseenter)="onItemHover(i)"
-         (mouseleave)="onItemLeave(i)">
-        <i [class]="item.icon"></i>
-        <span>{{ item.label }}</span>
+    <!-- Desktop Navigation -->
+    <div class="nav-middle" [class.hidden]="isMobile">
+      <a routerLink="/" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
       </a>
 
-      <!-- Dropdown Item -->
-      <div *ngIf="item.children"
-           class="dropdown-container"
-           [class.active]="activeDropdown === i"
-           (mouseenter)="openDropdown(i)"
-           (mouseleave)="closeDropdown()">
-        <button class="dropdown-toggle nav-item">
-          <i [class]="item.icon"></i>
-          <span>{{ item.label }}</span>
-          <i class="fas fa-chevron-down ms-2"></i>
-        </button>
-        <div class="dropdown-menu" [class.show]="activeDropdown === i">
-          <a *ngFor="let child of item.children"
-             [routerLink]="child.route"
-             class="dropdown-item"
-             (click)="closeDropdown()">
-            <i [class]="child.icon" class="me-2"></i>
-            <span>{{ child.label }}</span>
+      <div class="nav-item services-dropdown" (click)="toggleServices()" [class.active]="showServices">
+        <i class="fas fa-concierge-bell"></i>
+        <span>Services</span>
+        <i class="fas fa-chevron-down"></i>
+
+        <!-- Services Dropdown Content -->
+        <div class="services-menu" [class.show]="showServices">
+          <a routerLink="/snowplowing-service-page" class="service-option snow">
+            <i class="fas fa-snowflake"></i>
+            <div class="service-details">
+              <span class="service-title">Snow Plowing</span>
+              <span class="service-desc">24/7 Snow Removal Services</span>
+            </div>
+          </a>
+          <a routerLink="/lawn-care" class="service-option lawn">
+            <i class="fas fa-leaf"></i>
+            <div class="service-details">
+              <span class="service-title">Lawn Care</span>
+              <span class="service-desc">Professional Lawn Maintenance</span>
+            </div>
           </a>
         </div>
       </div>
-    </ng-container>
+
+      <a routerLink="/weather-dashboard" class="nav-item" routerLinkActive="active">
+        <i class="fas fa-cloud-sun"></i>
+        <span>Weather</span>
+      </a>
+
+      <a routerLink="/booking" class="nav-item" routerLinkActive="active">
+        <i class="fas fa-calendar-check"></i>
+        <span>Book Now</span>
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle" *ngIf="isMobile" (click)="toggleMobilePanel()">
+      <span>Menu</span>
+      <i class="fas fa-bars"></i>
+    </div>
 
     <!-- Emergency Button -->
-    <button class="emergency-btn"
-            routerLink="/emergency-service-24-7"
-            (mouseenter)="playEmergencyAnimation()">
-      <i class="fas fa-phone-alt"></i>
-      <span>24/7 Emergency</span>
-    </button>
-  </div>
-</nav>
-
-<!-- Mobile Navbar -->
-<nav *ngIf="isMobile" class="mobile-navbar">
-  <div class="logo-section">
-    <a routerLink="/" class="logo-link">
-      <img src="assets/Logo_transparent.png" alt="Logo" class="logo-image" />
-    </a>
-  </div>
-
-  <button class="menu-button"
-          [class.active]="mobileMenuOpen"
-          (click)="toggleMobileMenu()">
-    <div class="menu-icon">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </button>
-
-  <!-- Mobile Menu -->
-  <div class="mobile-menu-overlay"
-       [class.open]="mobileMenuOpen"
-       (click)="closeMobileMenu()">
-  </div>
-
-  <div class="mobile-menu" [class.open]="mobileMenuOpen">
-    <div class="mobile-menu-content">
-      <ng-container *ngFor="let item of menuItems">
-        <!-- Regular Mobile Item -->
-        <a *ngIf="!item.children"
-           [routerLink]="item.route"
-           class="mobile-nav-item"
-           (click)="closeMobileMenu()">
-          <i [class]="item.icon" class="me-3"></i>
-          <span>{{ item.label }}</span>
-        </a>
-
-        <!-- Mobile Dropdown -->
-        <div *ngIf="item.children" class="mobile-dropdown">
-          <button class="mobile-nav-item"
-                  (click)="toggleMobileDropdown(item)">
-            <i [class]="item.icon" class="me-3"></i>
-            <span>{{ item.label }}</span>
-            <i class="fas fa-chevron-down ms-auto"
-               [class.rotate]="item.open"></i>
-          </button>
-          <div class="mobile-dropdown-content"
-               [class.open]="item.open">
-            <a *ngFor="let child of item.children"
-               [routerLink]="child.route"
-               class="mobile-dropdown-item"
-               (click)="closeMobileMenu()">
-              <i [class]="child.icon" class="me-3"></i>
-              <span>{{ child.label }}</span>
-            </a>
-          </div>
-        </div>
-      </ng-container>
-
-      <!-- Mobile Emergency Button -->
-      <button class="emergency-btn mt-4"
-              routerLink="/emergency-service-24-7"
-              (click)="closeMobileMenu()">
+    <div class="nav-end" [class.hidden]="isMobile">
+      <button class="contact-button" (click)="onEmergencyClick()">
         <i class="fas fa-phone-alt"></i>
-        <span>24/7 Emergency</span>
+        <span>24/7 EMERGENCY</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Side Panel -->
+  <div class="mobile-panel" [class.show]="showMobilePanel">
+    <div class="panel-header">
+      <h3>Menu</h3>
+      <button class="close-panel" (click)="toggleMobilePanel()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="panel-content">
+      <a routerLink="/" class="panel-item" (click)="closeMobilePanel()">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+
+      <div class="panel-item" (click)="toggleMobileServices()">
+        <div class="item-header">
+          <i class="fas fa-concierge-bell"></i>
+          <span>Services</span>
+          <i class="fas fa-chevron-down" [class.rotate]="showMobileServices"></i>
+        </div>
+
+        <div class="panel-submenu" [class.show]="showMobileServices">
+          <a routerLink="/snowplowing-service-page" class="panel-subitem" (click)="closeMobilePanel()">
+            <i class="fas fa-snowflake"></i>
+            <span>Snow Plowing</span>
+          </a>
+          <a routerLink="/lawn-care" class="panel-subitem" (click)="closeMobilePanel()">
+            <i class="fas fa-leaf"></i>
+            <span>Lawn Care</span>
+          </a>
+        </div>
+      </div>
+
+      <a routerLink="/weather-dashboard" class="panel-item" (click)="closeMobilePanel()">
+        <i class="fas fa-cloud-sun"></i>
+        <span>Weather</span>
+      </a>
+
+      <a routerLink="/booking" class="panel-item" (click)="closeMobilePanel()">
+        <i class="fas fa-calendar-check"></i>
+        <span>Book Now</span>
+      </a>
+
+      <button class="contact-button mobile" (click)="onEmergencyClick()">
+        <i class="fas fa-phone-alt"></i>
+        <span>24/7 EMERGENCY</span>
       </button>
     </div>
   </div>
