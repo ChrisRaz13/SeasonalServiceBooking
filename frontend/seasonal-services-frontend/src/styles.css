@@ -5,7 +5,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Add to your global styles.css */
 body {
-  padding-top: 100px; /* Match the navbar height */
+  padding-top: 86px !important; /* Match the navbar height */
   margin: 0;
 }
 
