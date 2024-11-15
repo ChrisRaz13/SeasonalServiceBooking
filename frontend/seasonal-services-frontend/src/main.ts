@@ -1,5 +1,3 @@
-/// <reference types="@angular/localize" />
-
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
@@ -8,11 +6,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { routes } from './app/app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomRouteReuseStrategy } from './app/custom-route-reuse-strategy';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     importProvidersFrom(HttpClientModule, BrowserAnimationsModule),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    {
+      provide: RouteReuseStrategy,
+      useClass: CustomRouteReuseStrategy
+    }
   ]
 }).catch(err => console.error(err));
