@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, forkJoin, throwError } from 'rxjs';
+import { Observable, of, forkJoin, throwError, BehaviorSubject } from 'rxjs';
 import { switchMap, catchError, retry, map } from 'rxjs/operators';
 
 interface PointData {
@@ -90,8 +90,71 @@ export class WeatherService {
   private readonly CACHE_DURATION = 300000; // 5 minutes
   private cache: { [key: string]: { data: any; timestamp: number } } = {};
 
-  constructor(private http: HttpClient) {}
+  // UI-related properties
+  private alerts: AlertSummary[] = [];
+  private alertsVisible = false;
+  private alertsSubject = new BehaviorSubject<AlertSummary[]>([]);
+  alerts$ = this.alertsSubject.asObservable();
 
+  constructor(private http: HttpClient) {
+    this.startPeriodicCheck();
+  }
+
+  // UI-related getters
+  get hasAlerts(): boolean {
+    return this.alerts.length > 0;
+  }
+
+  get alertCount(): number {
+    return this.alerts.length;
+  }
+
+  get isSnowAlert(): boolean {
+    return this.alerts.some(alert => this.isHazardousWeather(alert.event));
+  }
+
+  // UI-related methods
+  showAlerts(): void {
+    this.alertsVisible = true;
+  }
+
+  hideAlerts(): void {
+    this.alertsVisible = false;
+  }
+
+  getAlertSeverityClass(severity: string): string {
+    const severityMap: { [key: string]: string } = {
+      'Extreme': 'extreme',
+      'Severe': 'severe',
+      'Moderate': 'moderate',
+      'Minor': 'minor'
+    };
+    return `severity-${severityMap[severity] || 'minor'}`;
+  }
+
+  getAlertIcon(severity: string): string {
+    const iconMap: { [key: string]: string } = {
+      'Extreme': 'warning',
+      'Severe': 'error',
+      'Moderate': 'info',
+      'Minor': 'info_outline'
+    };
+    return iconMap[severity] || 'info_outline';
+  }
+
+  formatAlertDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  // Weather API methods
   getAllWeatherData(lat: number, lon: number): Observable<ProcessedWeatherData> {
     const cacheKey = `weather_${lat}_${lon}`;
     const cachedData = this.getFromCache(cacheKey);
@@ -113,9 +176,12 @@ export class WeatherService {
             const processed: ProcessedWeatherData = {
               forecast: data.forecast,
               hourly: data.hourly,
-              alerts: this.processAlerts(data.alerts) // Process AlertResponse to AlertSummary[]
+              alerts: this.processAlerts(data.alerts)
             };
             this.setCache(cacheKey, processed);
+            // Update alerts for the UI
+            this.alerts = processed.alerts;
+            this.alertsSubject.next(this.alerts);
             return processed;
           }),
           catchError(error => {
@@ -229,5 +295,13 @@ export class WeatherService {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(() => new Error(errorMessage));
+  }
+
+  private startPeriodicCheck(): void {
+    // Check for alerts periodically (every 5 minutes)
+    setInterval(() => {
+      // Use Iowa City coordinates
+      this.getAllWeatherData(41.6611, -91.5302).subscribe();
+    }, this.CACHE_DURATION);
   }
 }

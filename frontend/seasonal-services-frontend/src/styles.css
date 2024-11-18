@@ -1,54 +1,25 @@
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-
-/* Add to your global styles.css */
+/* Global styles for navbar and content */
 body {
-  padding-top: 86px !important; /* Match the navbar height */
   margin: 0;
+  padding-top: 80px;
+  min-height: 100vh;
 }
 
-/* Add specific class for pages that need different padding */
-.no-nav-padding {
-  padding-top: 0 !important;
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 80px; /* Match the navbar height */
+  background-color: #fff; /* Or your desired navbar color */
 }
 
-/* Add this class to pages with hero sections */
-.hero-page {
-  padding-top: 0 !important;
-  margin-top: -100px; /* Negative margin equal to navbar height */
-}
-
-/* Add this to your global styles.css */
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* For your content pages add padding-top to account for fixed navbar */
 .content-wrapper {
-  padding-top: 80px; /* Height of desktop navbar */
+  padding-top: 80px; /* Height of the navbar */
 }
 
 @media (max-width: 768px) {
   .content-wrapper {
-    padding-top: 60px; /* Height of mobile navbar */
+    padding-top: 60px; /* Height of the navbar for mobile */
   }
-}
-
-html {
-  scroll-behavior: smooth;
-  overflow-y: scroll;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-}
-
-* {
-  box-sizing: border-box;
 }

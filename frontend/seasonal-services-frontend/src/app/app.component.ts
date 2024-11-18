@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, RouterModule, Scroll } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { HomeComponent } from './components/home/home.component';
 import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/snow-plowing-calendar.component';
@@ -40,26 +40,25 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        const scrollToTop = () => {
-          window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'instant'
-          });
-        };
-        // Try immediate scroll
-        scrollToTop();
-        // Backup scroll after a brief delay
-        setTimeout(scrollToTop, 100);
+
+        this.scrollToTop();
       });
   }
 
   ngOnInit() {
-    // Set initial route
+
     this.currentRoute = this.router.url;
   }
 
   isBookingRoute(): boolean {
-    return this.currentRoute === '/booking';
+
+    return this.router.url === '/booking';
+  }
+
+  private scrollToTop() {
+    console.log('Scroll to top triggered');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 0);
   }
 }
