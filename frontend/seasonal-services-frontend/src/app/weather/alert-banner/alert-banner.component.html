@@ -1,13 +1,81 @@
 <!-- alert-banner.component.html -->
-<div *ngIf="alerts.length > 0" class="alert-banner" @slideDown>
-  <div *ngFor="let alert of alerts" [class]="'alert-card severity-' + alert.severity">
-    <div class="alert-icon">
-      <mat-icon>warning</mat-icon>
-    </div>
-    <div class="alert-content">
-      <h3>{{alert.event}}</h3>
-      <p>{{alert.headline}}</p>
-      <span class="alert-expires">Expires: {{formatDate(alert.expires)}}</span>
+<div class="alert-banner-container" *ngIf="alerts.length > 0" @slideIn>
+  <div class="alert-banner">
+    <div class="alerts-wrapper" @staggeredFade>
+      <div *ngFor="let alert of alerts; let i = index"
+           class="alert-card"
+           [class]="'severity-' + alert.severity.toLowerCase()"
+           [class.expanded]="isExpanded(i)"
+           [@expansionState]="isExpanded(i) ? 'expanded' : 'collapsed'">
+
+        <div class="alert-header" (click)="toggleAlert(i)">
+          <div class="alert-icon-wrapper">
+            <mat-icon [class]="'severity-icon-' + alert.severity.toLowerCase()">
+              {{ getAlertIcon(alert) }}
+            </mat-icon>
+            <div class="alert-pulse" *ngIf="isHighPriority(alert)"></div>
+          </div>
+
+          <div class="alert-summary">
+            <div class="alert-type">{{ alert.event }}</div>
+            <div class="alert-headline">{{ alert.headline }}</div>
+            <div class="alert-timing">
+              <mat-icon class="timing-icon">schedule</mat-icon>
+              <span class="expires">Expires: {{ formatDate(alert.expires) }}</span>
+              <span class="urgency" *ngIf="alert.urgency === 'Immediate'">
+                <mat-icon class="urgency-icon">priority_high</mat-icon>
+                Immediate Action Required
+              </span>
+            </div>
+          </div>
+
+          <div class="expand-icon" [@rotateIcon]="isExpanded(i) ? 'expanded' : 'collapsed'">
+            <mat-icon>expand_more</mat-icon>
+          </div>
+        </div>
+
+        <div class="alert-details" *ngIf="isExpanded(i)" @fadeIn>
+          <div *ngIf="alert.outlook" class="outlook-content">
+            <div class="outlook-section">
+              <h4>Today's Outlook</h4>
+              <p>{{ alert.outlook.dayOne }}</p>
+            </div>
+            <div class="outlook-section" *ngIf="alert.outlook.extendedOutlook">
+              <h4>Extended Outlook</h4>
+              <p>{{ alert.outlook.extendedOutlook }}</p>
+            </div>
+            <div class="outlook-meta">
+              <span>{{ alert.outlook.issuedBy }}</span>
+              <span>{{ formatDate(alert.outlook.issuedAt) }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="!alert.outlook" class="alert-description">
+            <p>{{ alert.description }}</p>
+            <div class="instruction" *ngIf="alert.instruction">
+              <h4>Instructions:</h4>
+              <p>{{ alert.instruction }}</p>
+            </div>
+          </div>
+
+          <div class="alert-actions">
+            <button mat-button (click)="setReminder(alert); $event.stopPropagation()">
+              <mat-icon>notifications</mat-icon>
+              Set Reminder
+            </button>
+            <button mat-button (click)="shareAlert(alert); $event.stopPropagation()">
+              <mat-icon>share</mat-icon>
+              Share
+            </button>
+            <button mat-button
+                    *ngIf="hasSnowImpact(alert)"
+                    (click)="scheduleService(alert); $event.stopPropagation()">
+              <mat-icon>schedule</mat-icon>
+              Schedule Service
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

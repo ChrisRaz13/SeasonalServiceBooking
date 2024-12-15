@@ -1,142 +1,146 @@
-// src/app/weather/interfaces/weather.interfaces.ts
-
-/**
- * Represents a weather alert with severity and timing information
- */
 export interface WeatherAlert {
-  severity: string;     // The severity level of the alert (extreme, severe, moderate, minor)
-  event: string;        // The type of weather event
-  headline: string;     // Brief description of the alert
-  description: string;  // Detailed description of the alert
-  expires: string;      // Expiration date/time of the alert
+  id?: string;
+  severity: AlertSeverity;
+  event: string;
+  headline: string;
+  description: string;
+  instruction?: string | null;
+  expires: string;
+  onset?: string;
+  status?: string;
+  messageType?: string;
+  category?: string;
+  urgency?: AlertUrgency;
+  certainty?: string;
+  areaDesc?: string;
+  response?: string;
+  outlook?: WeatherOutlook;
 }
 
-/**
- * Represents hourly weather forecast data
- */
+export interface WeatherOutlook {
+  issuedBy: string;
+  issuedAt: string;
+  regions: string[];
+  dayOne: string;
+  extendedOutlook: string;
+  spotterInfo: string;
+}
+
 export interface HourlyForecast {
-  time: string;           // Time of the forecast hour
-  temperature: number;    // Temperature in degrees
-  snowProbability: number;// Probability of snow (0-100)
-  accumulation: number;   // Expected snow accumulation in inches
-  windSpeed: number;      // Wind speed in mph
+  time: string;
+  temperature: number;
+  temperatureUnit: string;
+  snowProbability: number;
+  accumulation: number;
+  windSpeed: number;
+  windDirection?: string;
+  shortForecast: string;
+  precipitation?: number;
+  relativeHumidity?: number;
+  isDaytime: boolean;
 }
 
-/**
- * Represents detailed weather conditions for a time period
- */
 export interface WeatherPeriod {
-  temperature: number;      // Temperature in degrees
-  windSpeed: string;       // Wind speed with units (e.g., "10 mph")
-  windDirection: string;   // Wind direction (e.g., "NW")
-  shortForecast: string;   // Brief forecast description
-  detailedForecast: string;// Detailed forecast description
-  snowProbability: number; // Probability of snow (0-100)
-  snowAmount: number;      // Expected snow accumulation in inches
-  showDetails: boolean;    // UI state for showing/hiding detailed forecast
-  timeOfDay: string;       // Label for the time period (e.g., "Tonight", "Monday")
-  isDaytime: boolean;      // Whether this period is during daytime
-  temperatureUnit: string; // Temperature unit (F or C)
+  temperature: number;
+  temperatureUnit: string;
+  windSpeed: string;
+  windDirection: string;
+  shortForecast: string;
+  detailedForecast: string;
+  snowProbability: number;
+  snowAmount: number;
+  showDetails: boolean;
+  timeOfDay: string;
+  isDaytime: boolean;
+  icon?: string;
+  startTime?: string;
+  endTime?: string;
+  name?: string;
+}
+
+export interface DayForecast {
+  date: string;
+  dayOfWeek: string;
+  highTemp: number;
+  lowTemp: number | null;
+  dayPeriod: WeatherPeriod;
+  nightPeriod?: WeatherPeriod;
+  precipitation?: number;
+  snowChance?: number;
 }
 
 /**
- * Represents a full day's forecast including day and night periods
+ * After processing, we're returning arrays of processed data rather than raw responses.
  */
-export interface DayForecast {
-  date: string;            // Full date string
-  dayOfWeek: string;       // Day of week (e.g., "Monday")
-  highTemp: number;        // Day's high temperature
-  lowTemp: number | null;  // Day's low temperature (null if not available)
-  dayPeriod: WeatherPeriod;// Daytime forecast details
-  nightPeriod?: WeatherPeriod;// Nighttime forecast details (optional)
-}
-
-// Utility type for chart data
-export interface ChartData {
-  labels: string[];
-  datasets: Array<{
-    label: string;
-    data: number[];
-    borderColor: string;
-    tension: number;
-    yAxisID?: string;
-    fill?: boolean;
-    backgroundColor?: string;
-  }>;
-}
-
-// Type for chart options
-export interface ChartOptions {
-  plugins: {
-    legend: {
-      display: boolean;
-      labels?: { color: string; }
-    }
-  };
-  scales: {
-    [key: string]: {
-      type?: string;
-      display?: boolean;
-      position?: string;
-      grid?: {
-        color?: string;
-        display?: boolean;
-      };
-      ticks?: {
-        color?: string;
-      };
-      title?: {
-        display?: boolean;
-        text?: string;
-        color?: string;
-      };
-    };
-  };
-  responsive?: boolean;
-  maintainAspectRatio?: boolean;
-}
-
-// Service response types
 export interface WeatherApiResponse {
-  alerts?: {
-    features?: Array<{
-      properties: {
-        severity: string;
-        event: string;
-        headline: string;
-        description: string;
-        expires: string;
-      };
-    }>;
-  };
-  hourly?: {
-    properties?: {
-      periods?: Array<{
-        startTime: string;
-        temperature: number;
-        shortForecast: string;
-        windSpeed: string;
-      }>;
-    };
-  };
-  forecast?: {
-    properties?: {
-      periods?: Array<{
-        startTime: string;
-        temperature: number;
-        windSpeed: string;
-        windDirection: string;
-        shortForecast: string;
-        detailedForecast: string;
-        isDaytime: boolean;
-        name: string;
-        temperatureUnit: string;
-      }>;
-    };
+  alerts?: WeatherAlert[];
+  hourly?: HourlyForecast[];
+  forecast?: DayForecast[];
+}
+
+/**
+ * Raw API Responses
+ */
+export interface AlertsResponse {
+  features: Array<{
+    properties: AlertProperties;
+  }>;
+  title?: string;
+  updated?: string;
+}
+
+export interface AlertProperties {
+  severity: AlertSeverity;
+  event: string;
+  headline: string;
+  description: string;
+  instruction: string | null;
+  expires: string;
+  onset?: string;
+  status?: string;
+  messageType?: string;
+  category?: string;
+  urgency?: AlertUrgency;
+  certainty?: string;
+  areaDesc?: string;
+  response?: string;
+}
+
+export interface ForecastResponse {
+  properties: {
+    periods: Array<ForecastPeriod>;
   };
 }
 
-// Constants for weather conditions
+export interface ForecastPeriod {
+  startTime: string;
+  endTime: string;
+  temperature: number;
+  temperatureUnit: string;
+  windSpeed: string;
+  windDirection: string;
+  shortForecast: string;
+  detailedForecast: string;
+  isDaytime: boolean;
+  name: string;
+  icon?: string;
+}
+
+export enum AlertSeverity {
+  EXTREME = 'extreme',
+  SEVERE = 'severe',
+  MODERATE = 'moderate',
+  MINOR = 'minor'
+}
+
+export enum AlertUrgency {
+  IMMEDIATE = 'Immediate',
+  EXPECTED = 'Expected',
+  FUTURE = 'Future',
+  PAST = 'Past',
+  UNKNOWN = 'Unknown'
+}
+
 export enum WeatherCondition {
   SNOW = 'SNOW',
   RAIN = 'RAIN',
@@ -146,45 +150,137 @@ export enum WeatherCondition {
   THUNDERSTORM = 'THUNDERSTORM'
 }
 
-// Service status types
 export enum ServiceStatus {
   REQUIRED = 'Service Required',
   MONITORING = 'Monitor Conditions',
   NOT_NEEDED = 'No Service Needed'
 }
 
-// Alert severity levels
-export enum AlertSeverity {
-  EXTREME = 'extreme',
-  SEVERE = 'severe',
-  MODERATE = 'moderate',
-  MINOR = 'minor'
-}
-
-// Helper function to determine snow probability
-export function calculateSnowProbability(shortForecast: string): number {
-  shortForecast = shortForecast.toLowerCase();
-  if (shortForecast.includes('heavy snow')) return 90;
-  if (shortForecast.includes('snow likely')) return 70;
-  if (shortForecast.includes('chance of snow')) return 50;
-  if (shortForecast.includes('slight chance of snow')) return 30;
-  if (shortForecast.includes('snow')) return 40;
-  return 0;
-}
-
-// Helper function to calculate snow accumulation from forecast string
-export function extractSnowAccumulation(forecast: string): number {
-  const matches = forecast.match(/(\d+(?:\.\d+)?)\s*(?:to\s*(\d+(?:\.\d+)?))?\s*inches?/i);
-  if (!matches) return 0;
-
-  if (matches[2]) {
-    return (parseFloat(matches[1]) + parseFloat(matches[2])) / 2;
+export class WeatherUtils {
+  static calculateSnowProbability(shortForecast: string): number {
+    const forecast = shortForecast.toLowerCase();
+    if (forecast.includes('heavy snow')) return 90;
+    if (forecast.includes('snow likely')) return 70;
+    if (forecast.includes('chance of snow')) return 50;
+    if (forecast.includes('slight chance of snow')) return 30;
+    if (forecast.includes('snow')) return 40;
+    return 0;
   }
-  return parseFloat(matches[1]);
+
+  static extractSnowAccumulation(forecast: string): number {
+    const matches = forecast.match(/(\d+(?:\.\d+)?)\s*(?:to\s*(\d+(?:\.\d+)?))?\s*inches?/i);
+    if (!matches) return 0;
+    if (matches[2]) {
+      return (parseFloat(matches[1]) + parseFloat(matches[2])) / 2;
+    }
+    return parseFloat(matches[1]);
+  }
+
+  static extractWindSpeed(windSpeed: string): number {
+    const matches = windSpeed.match(/(\d+)/);
+    return matches ? parseInt(matches[1]) : 0;
+  }
+
+  static formatDate(date: string | Date): string {
+    if (!date) return '';
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  static getAlertSeverityColor(severity: AlertSeverity): string {
+    const colors = {
+      [AlertSeverity.EXTREME]: '#ff1744',
+      [AlertSeverity.SEVERE]: '#ff5722',
+      [AlertSeverity.MODERATE]: '#ffa726',
+      [AlertSeverity.MINOR]: '#2196f3'
+    };
+    return colors[severity] || '#2196f3';
+  }
+
+  static parseWeatherOutlook(text: string): WeatherOutlook {
+    // Implement parsing logic for Hazardous Weather Outlook if needed.
+    return {
+      issuedBy: '',
+      issuedAt: '',
+      regions: [],
+      dayOne: text,
+      extendedOutlook: '',
+      spotterInfo: ''
+    };
+  }
 }
 
-// Helper function to extract wind speed as number
-export function extractWindSpeed(windSpeed: string): number {
-  const matches = windSpeed.match(/(\d+)/);
-  return matches ? parseInt(matches[1]) : 0;
+export interface WeatherComponentProps {
+  alerts?: WeatherAlert[];
+  forecast?: HourlyForecast[];
+  currentConditions?: WeatherPeriod;
+  serviceStatus?: ServiceStatus;
+  isLoading?: boolean;
+  error?: string | null;
+}
+export interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
+}
+
+export interface ChartDataset {
+  label: string;
+  data: number[];
+  borderColor?: string;
+  tension?: number;
+  yAxisID?: string;
+  fill?: boolean;
+  backgroundColor?: string;
+}
+
+export interface ChartOptions {
+  plugins?: {
+    legend?: {
+      display?: boolean;
+      labels?: {
+        color?: string;
+      };
+    };
+    tooltip?: {
+      enabled?: boolean;
+      mode?: string;
+      callbacks?: {
+        [key: string]: (context: any) => string;
+      };
+    };
+  };
+  scales?: {
+    [key: string]: {
+      type?: string;
+      display?: boolean;
+      position?: string;
+      grid?: {
+        color?: string;
+        display?: boolean;
+        drawBorder?: boolean;
+      };
+      ticks?: {
+        color?: string;
+        callback?: (value: any) => string;
+      };
+      title?: {
+        display?: boolean;
+        text?: string;
+        color?: string;
+        font?: {
+          size?: number;
+          weight?: string;
+        };
+      };
+    };
+  };
+  responsive?: boolean;
+  maintainAspectRatio?: boolean;
 }

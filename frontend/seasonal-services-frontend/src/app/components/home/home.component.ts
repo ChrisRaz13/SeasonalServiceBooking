@@ -425,37 +425,55 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadWeatherAlerts(): void {
-    const lat = 42.032974;
-    const lon = -93.581543;
+  const lat = 42.032974;
+  const lon = -93.581543;
 
-    this.weatherService.getWeatherAlerts(lat, lon).subscribe({
-      next: (data) => {
-        if (data.features && data.features.length > 0) {
-          this.weatherAlerts = data.features.map((feature: any) => ({
-            event: feature.properties.event,
-            headline: feature.properties.headline,
-            description: feature.properties.description,
-            severity: feature.properties.severity,
-            expires: feature.properties.expires,
-            effective: feature.properties.effective,
-            senderName: feature.properties.senderName,
-            areaDesc: feature.properties.areaDesc,
-            instruction: feature.properties.instruction,
-            parameters: feature.properties.parameters
-          }));
-          this.weatherAlerts.sort((a, b) =>
-            this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
-          );
+  this.isLoading = true;
+  this.hasError = false;
+
+  this.weatherService.getPointData(lat, lon).subscribe({
+    next: (pointData: any) => {
+      const gridId = pointData.properties.gridId;
+
+      this.weatherService.getWeatherAlerts(lat, lon, gridId).subscribe({
+        next: (data: any) => {
+          if (data.features && data.features.length > 0) {
+            this.weatherAlerts = data.features.map((feature: any) => ({
+              event: feature.properties.event,
+              headline: feature.properties.headline,
+              description: feature.properties.description,
+              severity: feature.properties.severity,
+              expires: feature.properties.expires,
+              effective: feature.properties.effective,
+              senderName: feature.properties.senderName,
+              areaDesc: feature.properties.areaDesc,
+              instruction: feature.properties.instruction,
+              parameters: feature.properties.parameters
+            }));
+
+            this.weatherAlerts.sort((a, b) =>
+              this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
+            );
+          } else {
+            this.weatherAlerts = [];
+          }
+          this.isLoading = false;
+        },
+        error: (error: any) => {
+          console.error('Error loading weather alerts:', error);
+          this.hasError = true;
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading weather alerts:', error);
-        this.hasError = true;
-        this.isLoading = false;
-      }
-    });
-  }
+      });
+    },
+    error: (error: any) => {
+      console.error('Error fetching point data:', error);
+      this.hasError = true;
+      this.isLoading = false;
+    }
+  });
+}
+
 
   private getSeverityWeight(severity: string): number {
     const weights: Record<string, number> = {

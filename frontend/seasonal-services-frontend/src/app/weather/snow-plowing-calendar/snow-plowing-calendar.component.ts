@@ -17,10 +17,10 @@ import {
   WeatherAlert,
   HourlyForecast,
   DayForecast,
-  WeatherPeriod,
   ChartData,
   ChartOptions,
-  ServiceStatus
+  ServiceStatus,
+  WeatherApiResponse
 } from '../interfaces/weather.interfaces';
 
 @Component({
@@ -148,92 +148,26 @@ export class SnowPlowingCalendarComponent implements OnInit {
 
     this.isLoading = true;
     this.weatherService.getAllWeatherData(lat, lon).subscribe({
-      next: (data) => {
-        this.processWeatherData(data);
+      next: (data: WeatherApiResponse) => {
+        // Since WeatherService returns processed data arrays
+        this.weatherAlerts = data.alerts || [];
+        this.hourlyForecast = data.hourly || [];
+        this.dailyForecast = data.forecast || [];
+
+        // Update current conditions
+        if (this.hourlyForecast.length > 0) {
+          this.currentGroundTemp = this.hourlyForecast[0].temperature;
+          this.currentWindSpeed = this.hourlyForecast[0].windSpeed || 0;
+        }
+
         this.updateCharts();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading weather data', error);
         this.isLoading = false;
       }
     });
-  }
-
-  private processWeatherData(data: any): void {
-    // Process alerts
-    if (data.alerts?.features) {
-      this.weatherAlerts = data.alerts.features.map((feature: any) => ({
-        severity: feature.properties.severity,
-        event: feature.properties.event,
-        headline: feature.properties.headline,
-        description: feature.properties.description,
-        expires: feature.properties.expires
-      }));
-    }
-
-    // Process hourly forecast
-    if (data.hourly?.properties?.periods) {
-      this.hourlyForecast = data.hourly.properties.periods
-        .slice(0, 24)
-        .map((period: any) => ({
-          time: new Date(period.startTime).toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            hour12: true
-          }),
-          temperature: period.temperature,
-          snowProbability: this.calculateSnowProbability(period.shortForecast),
-          accumulation: this.extractSnowAccumulation(period.shortForecast),
-          windSpeed: this.extractWindSpeed(period.windSpeed)
-        }));
-    }
-
-    // Update current conditions
-    if (this.hourlyForecast.length > 0) {
-      this.currentGroundTemp = this.hourlyForecast[0].temperature;
-      this.currentWindSpeed = this.hourlyForecast[0].windSpeed;
-    }
-
-    // Process daily forecast
-    this.processWeeklyForecast(data.forecast?.properties?.periods || []);
-  }
-
-  private processWeeklyForecast(periods: any[]): void {
-    this.dailyForecast = [];
-    for (let i = 0; i < periods.length; i += 2) {
-      const dayPeriod = periods[i];
-      const nightPeriod = periods[i + 1];
-
-      if (dayPeriod) {
-        const forecast: DayForecast = {
-          date: dayPeriod.startTime,
-          dayOfWeek: new Date(dayPeriod.startTime).toLocaleDateString('en-US', {
-            weekday: 'short'
-          }),
-          highTemp: dayPeriod.temperature,
-          lowTemp: nightPeriod ? nightPeriod.temperature : null,
-          dayPeriod: this.createWeatherPeriod(dayPeriod),
-          nightPeriod: nightPeriod ? this.createWeatherPeriod(nightPeriod) : undefined
-        };
-        this.dailyForecast.push(forecast);
-      }
-    }
-  }
-
-  private createWeatherPeriod(period: any): WeatherPeriod {
-    return {
-      temperature: period.temperature,
-      windSpeed: period.windSpeed,
-      windDirection: period.windDirection,
-      shortForecast: period.shortForecast,
-      detailedForecast: period.detailedForecast,
-      snowProbability: this.calculateSnowProbability(period.shortForecast),
-      snowAmount: this.extractSnowAccumulation(period.detailedForecast),
-      showDetails: false,
-      timeOfDay: period.name,
-      isDaytime: period.isDaytime,
-      temperatureUnit: period.temperatureUnit
-    };
   }
 
   private updateCharts(): void {
@@ -258,38 +192,12 @@ export class SnowPlowingCalendarComponent implements OnInit {
     };
   }
 
-  private calculateSnowProbability(forecast: string): number {
-    forecast = forecast.toLowerCase();
-    if (forecast.includes('heavy snow')) return 90;
-    if (forecast.includes('snow likely')) return 70;
-    if (forecast.includes('chance of snow')) return 50;
-    if (forecast.includes('slight chance of snow')) return 30;
-    if (forecast.includes('snow')) return 40;
-    return 0;
-  }
-
-  private extractSnowAccumulation(forecast: string): number {
-    const matches = forecast.match(/(\d+(?:\.\d+)?)\s*(?:to\s*(\d+(?:\.\d+)?))?\s*inches?/i);
-    if (!matches) return 0;
-
-    if (matches[2]) {
-      return (parseFloat(matches[1]) + parseFloat(matches[2])) / 2;
-    }
-    return parseFloat(matches[1]);
-  }
-
-  private extractWindSpeed(windSpeed: string): number {
-    const matches = windSpeed.match(/(\d+)/);
-    return matches ? parseInt(matches[1]) : 0;
-  }
-
   getCurrentSnowProbability(): number {
     return this.hourlyForecast[0]?.snowProbability || 0;
   }
 
   getExpectedAccumulation(): number {
-    return this.hourlyForecast
-      .reduce((acc, hour) => acc + hour.accumulation, 0);
+    return this.hourlyForecast.reduce((acc, hour) => acc + hour.accumulation, 0);
   }
 
   isServiceRequired(): boolean {
@@ -303,7 +211,7 @@ export class SnowPlowingCalendarComponent implements OnInit {
     return ServiceStatus.NOT_NEEDED;
   }
 
-  togglePeriodDetails(period: WeatherPeriod): void {
+  togglePeriodDetails(period: any): void {
     period.showDetails = !period.showDetails;
   }
 }
