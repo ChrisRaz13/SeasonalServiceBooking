@@ -1,102 +1,163 @@
-/* Weekly Forecast Component Styles */
-:host {
-  display: block;
-  background: rgba(0, 0, 0, 0.8); /* Darker background for better contrast */
-  color: #ffffff; /* White text for readability */
-  backdrop-filter: blur(15px); /* Stronger blur for a frosted effect */
+.weekly-forecast-card {
+  background: #1c2a3e;
+  margin: 20px 0;
   border-radius: 12px;
-  margin-bottom: 20px;
+}
+
+.forecast-timeline {
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Header Styling */
-mat-card-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 10px;
+.forecast-day {
+  margin-bottom: 24px;
 }
 
-mat-card-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #ffecb3; /* Soft yellow for a warm contrast */
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-/* Weekly Grid */
-.weekly-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+.day-info {
+  display: flex;
+  flex-direction: column;
 }
 
-mat-card {
-  background-color: rgba(0, 0, 0, 0.9); /* Dark background for better contrast */
-  color: #ffffff; /* Ensures text is visible */
-}
-
-
-/* Day Card Styling */
-.day-card {
-  background: rgba(255, 255, 255, 0.1); /* Light, semi-transparent background */
-  border-radius: 12px;
-  padding: 16px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.day-card:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.15); /* Darken on hover */
-}
-
-.day-card.snow-expected {
-  border: 1px solid #40c4ff; /* Blue border to indicate snow expected */
-}
-
-/* Text Styling */
-.day-name, .date {
-  font-size: 1.1rem;
+.day-name {
+  font-size: 1.2em;
   font-weight: 500;
+  color: #ff9800;
+}
+
+.full-date {
+  color: #90a4ae;
+  font-size: 0.9em;
 }
 
 .temp-range {
-  font-size: 1.3rem;
+  display: flex;
+  gap: 12px;
+}
+
+.temp-range .high {
+  color: #ff7043;
+  font-weight: bold;
+}
+
+.temp-range .low {
+  color: #42a5f5;
+  font-weight: bold;
+}
+
+.periods-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.period-card {
+  background: rgba(20, 30, 48, 0.75);
+  padding: 20px;
+  border-radius: 12px;
+  flex: 1 1 calc(50% - 20px);
+  transition: background-color 0.3s ease;
+}
+
+.period-card:hover {
+  background: rgba(26, 40, 60, 0.85);
+}
+
+.period-header {
   display: flex;
   justify-content: space-between;
-  font-family: 'Roboto Mono', monospace;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.high {
-  color: #ff6e40; /* Warm color for high temperature */
-}
-
-.low {
-  color: #40c4ff; /* Cool color for low temperature */
-}
-
-.primary-condition {
-  font-size: 1rem;
+.time-label {
   font-weight: 500;
-  margin-top: 10px;
-  color: #b3e5fc; /* Light blue for weather description */
+  color: #e1f5fe;
 }
 
-/* Icon Styling */
-.period-icon mat-icon {
-  font-size: 1.5rem;
-  color: #fff;
+.temp-value {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #ffeb3b;
 }
 
-/* Responsive Adjustments */
+.period-weather {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.weather-emoji {
+  font-size: 1.5em;
+}
+
+.condition {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.snow-info {
+  background: rgba(144, 202, 249, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.snow-chance,
+.snow-amount {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.snow-info .label {
+  color: #90caf9;
+}
+
+.snow-info .value {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.wind-info {
+  color: #9bb2c3;
+  margin-bottom: 16px;
+}
+
+.details-button {
+  width: 100%;
+  color: #29b6f6;
+}
+
+.detailed-forecast {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  color: #e1f5fe;
+  line-height: 1.6;
+}
+
+.day-period {
+  border-left: 4px solid #ff9800;
+}
+
+.night-period {
+  border-left: 4px solid #42a5f5;
+}
+
 @media (max-width: 768px) {
-  .weekly-grid {
-    grid-template-columns: 1fr;
+  .periods-container {
+    flex-direction: column;
   }
 
-  .temp-range {
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 1.1rem;
+  .period-card {
+    flex: 1 1 100%;
   }
 }

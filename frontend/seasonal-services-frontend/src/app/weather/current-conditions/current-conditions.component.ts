@@ -10,63 +10,7 @@ import { ServiceStatus } from '../interfaces/weather.interfaces.js';
   selector: 'app-current-conditions',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatProgressBarModule, MatCardModule],
-  template: `
-    <mat-card class="current-conditions">
-      <div class="conditions-grid">
-        <div class="stat-box">
-          <div class="stat-icon snowflake-icon">
-            <mat-icon>ac_unit</mat-icon>
-          </div>
-          <div class="stat-content">
-            <h3>Snow Probability</h3>
-            <div class="stat-value">{{snowProbability}}%</div>
-            <div class="stat-progress">
-              <mat-progress-bar mode="determinate"
-                [value]="snowProbability"
-                [class.high-probability]="snowProbability > 70">
-              </mat-progress-bar>
-            </div>
-          </div>
-        </div>
-
-        <div class="stat-box">
-          <div class="stat-icon accumulation-icon">
-            <mat-icon>height</mat-icon>
-          </div>
-          <div class="stat-content">
-            <h3>Expected Accumulation</h3>
-            <div class="stat-value">{{accumulation}}"</div>
-            <div class="accumulation-indicator"
-                 [class.service-required]="isServiceRequired">
-              {{serviceStatus}}
-            </div>
-          </div>
-        </div>
-
-        <div class="stat-box">
-          <div class="stat-icon temperature-icon">
-            <mat-icon>thermostat</mat-icon>
-          </div>
-          <div class="stat-content">
-            <h3>Ground Temperature</h3>
-            <div class="stat-value">{{groundTemp}}°F</div>
-            <div class="temperature-note">{{temperatureNote}}</div>
-          </div>
-        </div>
-
-        <div class="stat-box">
-          <div class="stat-icon wind-icon">
-            <mat-icon>air</mat-icon>
-          </div>
-          <div class="stat-content">
-            <h3>Wind Conditions</h3>
-            <div class="stat-value">{{windSpeed}} mph</div>
-            <div class="wind-note">{{windNote}}</div>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  `,
+  templateUrl: './current-conditions.component.html',
   styleUrls: ['./current-conditions.component.css']
 })
 export class CurrentConditionsComponent {

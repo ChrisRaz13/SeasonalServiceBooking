@@ -1,15 +1,98 @@
-<!-- weekly-forecast.component.html -->
-<mat-card class="weekly-forecast">
+<mat-card class="weekly-forecast-card">
   <mat-card-header>
-    <mat-card-title>7 Day Weather Outlook</mat-card-title>
+    <mat-card-title>7-Day Weather Forecast</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="weekly-grid">
-      <app-day-forecast
-        *ngFor="let day of forecast"
-        [day]="day"
-        (toggleDetails)="togglePeriodDetails($event)">
-      </app-day-forecast>
+    <div class="forecast-timeline">
+      <div *ngFor="let day of forecast" class="forecast-day">
+        <!-- Day Header -->
+        <div class="day-header">
+          <div class="day-info">
+            <span class="day-name">{{ formatDate(day.date, 'EEE') }}</span>
+            <span class="full-date">{{ formatDate(day.date, 'MMM d') }}</span>
+          </div>
+          <div class="temp-range">
+            <span class="high">{{ day.highTemp }}°</span>
+            <span *ngIf="day.lowTemp" class="low">{{ day.lowTemp }}°</span>
+          </div>
+        </div>
+
+        <!-- Day Period -->
+        <div class="periods-container">
+          <div class="period-card day-period">
+            <div class="period-header">
+              <span class="time-label">{{ day.dayPeriod.timeOfDay }}</span>
+              <span class="temp-value">{{ day.dayPeriod.temperature }}°{{ day.dayPeriod.temperatureUnit }}</span>
+            </div>
+
+            <div class="period-weather">
+              <span class="weather-emoji">{{ getWeatherEmoji(day.dayPeriod.shortForecast) }}</span>
+              <span class="condition">{{ day.dayPeriod.shortForecast }}</span>
+            </div>
+
+            <div *ngIf="hasSnowInfo(day.dayPeriod)" class="snow-info">
+              <div class="snow-chance">
+                <span class="label">Chance of Snow:</span>
+                <span class="value">{{ day.dayPeriod.snowProbability }}%</span>
+              </div>
+              <div *ngIf="day.dayPeriod.snowAmount > 0" class="snow-amount">
+                <span class="label">Expected:</span>
+                <span class="value">{{ day.dayPeriod.snowAmount }}"</span>
+              </div>
+            </div>
+
+            <div class="wind-info">
+              <span class="wind-speed">{{ day.dayPeriod.windSpeed }}</span>
+              <span class="wind-direction">{{ day.dayPeriod.windDirection }}</span>
+            </div>
+
+            <button mat-button (click)="onToggleDetails(day.dayPeriod)" class="details-button">
+              {{ day.dayPeriod.showDetails ? 'Less Details' : 'More Details' }}
+            </button>
+
+            <div *ngIf="day.dayPeriod.showDetails" class="detailed-forecast">
+              {{ day.dayPeriod.detailedForecast }}
+            </div>
+          </div>
+
+          <!-- Night Period -->
+          <div *ngIf="day.nightPeriod" class="period-card night-period">
+            <div class="period-header">
+              <span class="time-label">{{ day.nightPeriod.timeOfDay }}</span>
+              <span class="temp-value">{{ day.nightPeriod.temperature }}°{{ day.nightPeriod.temperatureUnit }}</span>
+            </div>
+
+            <div class="period-weather">
+              <span class="weather-emoji">{{ getWeatherEmoji(day.nightPeriod.shortForecast) }}</span>
+              <span class="condition">{{ day.nightPeriod.shortForecast }}</span>
+            </div>
+
+            <div *ngIf="hasSnowInfo(day.nightPeriod)" class="snow-info">
+              <div class="snow-chance">
+                <span class="label">Chance of Snow:</span>
+                <span class="value">{{ day.nightPeriod.snowProbability }}%</span>
+              </div>
+              <div *ngIf="day.nightPeriod.snowAmount > 0" class="snow-amount">
+                <span class="label">Expected:</span>
+                <span class="value">{{ day.nightPeriod.snowAmount }}"</span>
+              </div>
+            </div>
+
+            <div class="wind-info">
+              <span class="wind-speed">{{ day.nightPeriod.windSpeed }}</span>
+              <span class="wind-direction">{{ day.nightPeriod.windDirection }}</span>
+            </div>
+
+            <button mat-button (click)="onToggleDetails(day.nightPeriod)" class="details-button">
+              {{ day.nightPeriod.showDetails ? 'Less Details' : 'More Details' }}
+            </button>
+
+            <div *ngIf="day.nightPeriod.showDetails" class="detailed-forecast">
+              {{ day.nightPeriod.detailedForecast }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>
