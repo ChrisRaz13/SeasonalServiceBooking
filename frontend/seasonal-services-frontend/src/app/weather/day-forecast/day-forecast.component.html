@@ -1,9 +1,12 @@
-<div class="forecast-container">
+<div class="forecast-container" [class.high-impact]="isHighImpactWeather(forecast.dayPeriod)">
   <!-- Day Period -->
   <div class="forecast-period" *ngIf="forecast.dayPeriod">
     <div class="period-header" [class.today]="isToday">
       <div class="header-main">
-        <h3>{{ formatPeriodHeader(forecast.dayPeriod) }}</h3>
+        <div class="header-title">
+          <mat-icon>{{ forecast.dayPeriod.isDaytime ? 'wb_sunny' : 'nights_stay' }}</mat-icon>
+          <h3>{{ formatPeriodHeader(forecast.dayPeriod) }}</h3>
+        </div>
         <div class="temp-display">{{ formatTemperature(forecast.dayPeriod.temperature) }}</div>
       </div>
       <div class="header-sub">
@@ -16,13 +19,17 @@
 
     <div class="period-details">
       <!-- Wind Info -->
-      <div class="detail-item" [class.highlight]="shouldHighlightWind(forecast.dayPeriod.windSpeed)">
+      <div class="detail-item wind-info"
+           [class.highlight]="shouldHighlightWind(forecast.dayPeriod.windSpeed)"
+           [matTooltip]="shouldHighlightWind(forecast.dayPeriod.windSpeed) ? 'High winds expected' : ''">
         <mat-icon>air</mat-icon>
         <span>{{ getWindDescription(forecast.dayPeriod.windSpeed, forecast.dayPeriod.windDirection) }}</span>
       </div>
 
       <!-- Precipitation Info -->
-      <div class="detail-item precipitation" *ngIf="getPrecipitationDetails(forecast.dayPeriod)">
+      <div class="detail-item precipitation"
+           *ngIf="getPrecipitationDetails(forecast.dayPeriod)"
+           [class.snow-expected]="forecast.dayPeriod.snowProbability > 0">
         <mat-icon>{{ forecast.dayPeriod.snowProbability > 0 ? 'ac_unit' : 'water_drop' }}</mat-icon>
         <span>{{ getPrecipitationDetails(forecast.dayPeriod) }}</span>
       </div>
@@ -47,10 +54,14 @@
   <mat-divider *ngIf="forecast.nightPeriod"></mat-divider>
 
   <!-- Night Period -->
-  <div class="forecast-period night" *ngIf="forecast.nightPeriod">
+  <div class="forecast-period night" *ngIf="forecast.nightPeriod" [class.high-impact]="isHighImpactWeather(forecast.nightPeriod)">
+    <!-- Same structure as day period, with night-specific styling -->
     <div class="period-header">
       <div class="header-main">
-        <h3>{{ formatPeriodHeader(forecast.nightPeriod) }}</h3>
+        <div class="header-title">
+          <mat-icon>nights_stay</mat-icon>
+          <h3>{{ formatPeriodHeader(forecast.nightPeriod) }}</h3>
+        </div>
         <div class="temp-display">{{ formatTemperature(forecast.nightPeriod.temperature) }}</div>
       </div>
       <div class="header-sub">
@@ -63,13 +74,17 @@
 
     <div class="period-details">
       <!-- Wind Info -->
-      <div class="detail-item" [class.highlight]="shouldHighlightWind(forecast.nightPeriod.windSpeed)">
+      <div class="detail-item wind-info"
+           [class.highlight]="shouldHighlightWind(forecast.nightPeriod.windSpeed)"
+           [matTooltip]="shouldHighlightWind(forecast.nightPeriod.windSpeed) ? 'High winds expected' : ''">
         <mat-icon>air</mat-icon>
         <span>{{ getWindDescription(forecast.nightPeriod.windSpeed, forecast.nightPeriod.windDirection) }}</span>
       </div>
 
       <!-- Precipitation Info -->
-      <div class="detail-item precipitation" *ngIf="getPrecipitationDetails(forecast.nightPeriod)">
+      <div class="detail-item precipitation"
+           *ngIf="getPrecipitationDetails(forecast.nightPeriod)"
+           [class.snow-expected]="forecast.nightPeriod.snowProbability > 0">
         <mat-icon>{{ forecast.nightPeriod.snowProbability > 0 ? 'ac_unit' : 'water_drop' }}</mat-icon>
         <span>{{ getPrecipitationDetails(forecast.nightPeriod) }}</span>
       </div>

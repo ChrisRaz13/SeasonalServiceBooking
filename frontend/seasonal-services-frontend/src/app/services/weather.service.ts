@@ -16,7 +16,8 @@ import {
   ForecastResponse,
   AlertsResponse,
   AlertProperties,
-  WeatherComponentProps
+  WeatherComponentProps,
+  ForecastPeriod
 } from '../weather/interfaces/weather.interfaces';
 
 interface WeatherCache {
@@ -146,19 +147,62 @@ export class WeatherService {
   private processHourlyData(hourly: ForecastResponse): HourlyForecast[] {
     if (!hourly?.properties?.periods) return [];
 
-    return hourly.properties.periods.map(period => ({
-      time: new Date(period.startTime).toLocaleTimeString('en-US', {
-        hour: 'numeric', hour12: true
-      }),
-      temperature: period.temperature,
-      temperatureUnit: period.temperatureUnit,
-      snowProbability: WeatherUtils.calculateSnowProbability(period.shortForecast),
-      accumulation: WeatherUtils.extractSnowAccumulation(period.detailedForecast),
-      windSpeed: WeatherUtils.extractWindSpeed(period.windSpeed),
-      windDirection: period.windDirection,
-      shortForecast: period.shortForecast,
-      isDaytime: period.isDaytime
-    }));
+    return hourly.properties.periods.map(period => {
+      // Pass the entire period object to WeatherUtils
+      const snowProb = WeatherUtils.calculateSnowProbability(period);
+      const accumulation = WeatherUtils.extractSnowAccumulation(period.detailedForecast);
+
+      console.log('Processing period:', {
+        time: period.startTime,
+        forecast: period.shortForecast,
+        snowProb,
+        accumulation
+      });
+
+      return {
+        time: new Date(period.startTime).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          hour12: true
+        }),
+        temperature: period.temperature,
+        temperatureUnit: period.temperatureUnit,
+        snowProbability: snowProb,
+        accumulation: accumulation,
+        windSpeed: WeatherUtils.extractWindSpeed(period.windSpeed),
+        windDirection: period.windDirection,
+        shortForecast: period.shortForecast,
+        isDaytime: period.isDaytime
+      };
+    });
+  }
+
+  private calculateSnowProbability(period: any): number {
+    if (period.probabilityOfPrecipitation?.value) {
+      const forecast = period.shortForecast.toLowerCase();
+      if (forecast.includes('snow')) {
+        return period.probabilityOfPrecipitation.value;
+      }
+    }
+
+    // Fallback to text analysis
+    const shortForecast = period.shortForecast.toLowerCase();
+    const detailedForecast = period.detailedForecast.toLowerCase();
+
+    // Check for explicit percentages
+    const percentMatch = detailedForecast.match(/(\d+)\s*percent\s*(?:chance|probability)\s*of\s*(?:snow|precipitation)/i);
+    if (percentMatch) {
+      return parseInt(percentMatch[1]);
+    }
+
+    // Check forecast descriptions
+    if (shortForecast.includes('snow') || detailedForecast.includes('snow')) {
+      if (shortForecast.includes('likely') || detailedForecast.includes('likely')) return 70;
+      if (shortForecast.includes('chance') || detailedForecast.includes('chance')) return 50;
+      if (shortForecast.includes('slight chance') || detailedForecast.includes('slight chance')) return 30;
+      return 40; // Default if snow is mentioned but no probability given
+    }
+
+    return 0;
   }
 
   private processAlerts(alertResponse: AlertsResponse): WeatherAlert[] {
@@ -193,7 +237,7 @@ export class WeatherService {
     };
   }
 
-  private createWeatherPeriod(period: any): WeatherPeriod {
+  private createWeatherPeriod(period: ForecastPeriod): WeatherPeriod {
     return {
       temperature: period.temperature,
       temperatureUnit: period.temperatureUnit,
@@ -201,7 +245,7 @@ export class WeatherService {
       windDirection: period.windDirection,
       shortForecast: period.shortForecast,
       detailedForecast: period.detailedForecast,
-      snowProbability: WeatherUtils.calculateSnowProbability(period.shortForecast),
+      snowProbability: WeatherUtils.calculateSnowProbability(period),  // Use static method
       snowAmount: WeatherUtils.extractSnowAccumulation(period.detailedForecast),
       showDetails: false,
       timeOfDay: period.name,

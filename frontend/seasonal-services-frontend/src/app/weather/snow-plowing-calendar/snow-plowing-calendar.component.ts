@@ -6,13 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { WeatherService } from '../../services/weather.service';
 
-// Component imports
+
 import { AlertBannerComponent } from '../alert-banner/alert-banner.component';
 import { CurrentConditionsComponent } from '../current-conditions/current-conditions.component';
 import { HourlyForecastComponent } from '../hourly-forecast/hourly-forecast.component';
 import { WeeklyForecastComponent } from '../weekly-forecast/weekly-forecast.component';
 
-// Interfaces
+
 import {
   WeatherAlert,
   HourlyForecast,
@@ -37,50 +37,68 @@ import {
     WeeklyForecastComponent
   ],
   template: `
-    <div class="dashboard-container">
-      <!-- Loading State -->
-      <div *ngIf="isLoading" class="loading-container" @fadeSlideInOut>
-        <mat-spinner></mat-spinner>
-        <p class="loading-text">Loading weather data...</p>
+  <div class="dashboard-container">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container" @fadeSlideInOut>
+      <mat-spinner></mat-spinner>
+      <p class="loading-text">Loading weather data...</p>
+    </div>
+
+    <!-- Main Content -->
+    <ng-container *ngIf="!isLoading">
+      <app-alert-banner
+        [alerts]="weatherAlerts">
+      </app-alert-banner>
+
+
+      <app-current-conditions
+  [snowProbability]="getCurrentSnowProbability()"
+  [accumulation]="getExpectedAccumulation()"
+  [groundTemp]="currentGroundTemp"
+  [windSpeed]="currentWindSpeed"
+  [serviceStatus]="getServiceStatus()"
+  [isServiceRequired]="isServiceRequired()"
+  [hourlyForecast]="hourlyForecast"
+></app-current-conditions>
+
+      <app-hourly-forecast
+        [forecast]="hourlyForecast"
+        [chartData]="hourlyChartData"
+        [chartOptions]="hourlyChartOptions">
+      </app-hourly-forecast>
+
+      <app-weekly-forecast
+        [forecast]="dailyForecast"
+        (toggleDetails)="togglePeriodDetails($event)">
+      </app-weekly-forecast>
+
+      <!-- Debug Button -->
+      <div style="padding: 20px; text-align: center;">
+        <button mat-raised-button color="warn" (click)="debugWeatherData()">
+          <mat-icon>bug_report</mat-icon>
+          Debug Weather Data
+        </button>
       </div>
 
-      <!-- Main Content -->
-      <ng-container *ngIf="!isLoading">
-        <app-alert-banner
-          [alerts]="weatherAlerts">
-        </app-alert-banner>
+      <button mat-raised-button
+        color="primary"
+        (click)="refreshData()"
+        [disabled]="isLoading">
+                <mat-icon>refresh</mat-icon>
+            Refresh Data
+        </button>
 
-        <app-current-conditions
-          [snowProbability]="getCurrentSnowProbability()"
-          [accumulation]="getExpectedAccumulation()"
-          [groundTemp]="currentGroundTemp"
-          [windSpeed]="currentWindSpeed"
-          [serviceStatus]="getServiceStatus()"
-          [isServiceRequired]="isServiceRequired()">
-        </app-current-conditions>
-
-        <app-hourly-forecast
-          [forecast]="hourlyForecast"
-          [chartData]="hourlyChartData"
-          [chartOptions]="hourlyChartOptions">
-        </app-hourly-forecast>
-
-        <app-weekly-forecast
-          [forecast]="dailyForecast"
-          (toggleDetails)="togglePeriodDetails($event)">
-        </app-weekly-forecast>
-
-        <!-- Service Status Footer -->
-        <div class="service-status-footer" *ngIf="isServiceRequired()">
-          <div class="status-content">
-            <mat-icon>warning</mat-icon>
-            <span>Snow accumulation expected to exceed 2". Service recommended.</span>
-          </div>
-          <button mat-raised-button color="primary">Schedule Service</button>
+      <!-- Service Status Footer -->
+      <div class="service-status-footer" *ngIf="isServiceRequired()">
+        <div class="status-content">
+          <mat-icon>warning</mat-icon>
+          <span>Snow accumulation expected to exceed 2". Service recommended.</span>
         </div>
-      </ng-container>
-    </div>
-  `,
+        <button mat-raised-button color="primary">Schedule Service</button>
+      </div>
+    </ng-container>
+  </div>
+`,
   styleUrls: ['./snow-plowing-calendar.component.css'],
   animations: [
     trigger('fadeSlideInOut', [
@@ -149,10 +167,14 @@ export class SnowPlowingCalendarComponent implements OnInit {
     this.isLoading = true;
     this.weatherService.getAllWeatherData(lat, lon).subscribe({
       next: (data: WeatherApiResponse) => {
-        // Since WeatherService returns processed data arrays
+        console.log('Raw Weather Data:', data);
+
         this.weatherAlerts = data.alerts || [];
         this.hourlyForecast = data.hourly || [];
         this.dailyForecast = data.forecast || [];
+
+        // Log the processed data
+        console.log('Processed Hourly Forecast:', this.hourlyForecast);
 
         // Update current conditions
         if (this.hourlyForecast.length > 0) {
@@ -171,25 +193,34 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   private updateCharts(): void {
-    this.hourlyChartData = {
-      labels: this.hourlyForecast.map(h => h.time),
-      datasets: [
-        {
-          label: 'Temperature (°F)',
-          data: this.hourlyForecast.map(h => h.temperature),
-          borderColor: '#ff4081',
-          tension: 0.4,
-          yAxisID: 'y-temp'
-        },
-        {
-          label: 'Snow Probability (%)',
-          data: this.hourlyForecast.map(h => h.snowProbability),
-          borderColor: '#2196f3',
-          tension: 0.4,
-          yAxisID: 'y-prob'
-        }
-      ]
-    };
+    try {
+      if (!this.hourlyForecast.length) {
+        console.warn('No hourly forecast data available for charts');
+        return;
+      }
+
+      this.hourlyChartData = {
+        labels: this.hourlyForecast.map(h => h.time),
+        datasets: [
+          {
+            label: 'Temperature (°F)',
+            data: this.hourlyForecast.map(h => h.temperature),
+            borderColor: '#ff4081',
+            tension: 0.4,
+            yAxisID: 'y-temp'
+          },
+          {
+            label: 'Snow Probability (%)',
+            data: this.hourlyForecast.map(h => h.snowProbability),
+            borderColor: '#2196f3',
+            tension: 0.4,
+            yAxisID: 'y-prob'
+          }
+        ]
+      };
+    } catch (error) {
+      console.error('Error updating charts:', error);
+    }
   }
 
   getCurrentSnowProbability(): number {
@@ -214,4 +245,63 @@ export class SnowPlowingCalendarComponent implements OnInit {
   togglePeriodDetails(period: any): void {
     period.showDetails = !period.showDetails;
   }
+
+
+debugWeatherData(): void {
+  const lat = 41.661129;
+  const lon = -91.530167;
+
+  this.weatherService.getAllWeatherData(lat, lon).subscribe({
+    next: (data) => {
+      console.log('Full Weather Response:', data);
+
+      // Log specific data points
+      if (data.hourly && data.hourly.length > 0) {
+        console.log('Next 24 hours forecast:', data.hourly.slice(0, 24));
+        console.log('Current Snow Probability:', data.hourly[0].snowProbability);
+        console.log('Current Conditions:', this.getCurrentSnowProbability());
+      }
+    },
+    error: (error) => {
+      console.error('Debug Error:', error);
+    }
+  });
+}
+
+
+debugPrecipitationData(): void {
+  const lat = 41.661129;
+  const lon = -91.530167;
+
+  this.weatherService.getAllWeatherData(lat, lon).subscribe({
+    next: (data) => {
+      console.log('Current Period Details:', data.hourly?.[0]);
+      console.log('Next 24 Hours Snow Probabilities:',
+        data.hourly?.slice(0, 24).map(hour => ({
+          time: hour.time,
+          snowProb: hour.snowProbability,
+          shortForecast: hour.shortForecast
+        }))
+      );
+    }
+  });
+}
+
+refreshData(): void {
+  this.isLoading = true;
+  this.weatherService.forceUpdate().subscribe({
+    next: (data) => {
+      // Update your data
+      this.weatherAlerts = data.alerts || [];
+      this.hourlyForecast = data.hourly || [];
+      this.dailyForecast = data.forecast || [];
+      this.updateCharts();
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error refreshing data:', error);
+      this.isLoading = false;
+    }
+  });
+}
 }

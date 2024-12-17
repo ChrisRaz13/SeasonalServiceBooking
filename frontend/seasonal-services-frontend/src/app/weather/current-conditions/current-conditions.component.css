@@ -1,42 +1,74 @@
-/* current-conditions.component.css */
 .current-conditions {
-  background: var(--background-blur, rgba(25, 42, 86, 0.7));
+  background: linear-gradient(135deg, rgba(25, 42, 86, 0.8), rgba(25, 42, 86, 0.9));
   backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border-blur, rgba(255, 255, 255, 0.1));
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+mat-card-header {
+  padding: 20px 20px 0;
+}
+
+mat-card-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .conditions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
   padding: 20px;
 }
 
 .stat-box {
   display: flex;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start;
+  padding: 24px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  transition: transform 0.3s, box-shadow 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background-color 0.3s ease;
 }
 
 .stat-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  margin-right: 16px;
+  border-radius: 14px;
+  margin-right: 20px;
+  transition: all 0.3s ease;
+}
+
+.stat-icon mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: white;
 }
 
 .snowflake-icon {
@@ -61,56 +93,245 @@
 
 .stat-content h3 {
   margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: bold;
-  margin: 8px 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 12px 0;
   font-family: 'Roboto Mono', monospace;
+  color: white;
+  line-height: 1;
 }
 
 .stat-progress {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
-.high-probability .mat-progress-bar-fill::after {
-  background-color: #2196f3;
+.severity-low .mat-progress-bar-fill::after {
+  background-color: #4caf50;
 }
 
-.accumulation-indicator {
+.severity-moderate .mat-progress-bar-fill::after {
+  background-color: #ff9800;
+}
+
+.severity-high .mat-progress-bar-fill::after {
+  background-color: #f44336;
+}
+
+.severity-extreme .mat-progress-bar-fill::after {
+  background-color: #d32f2f;
+}
+
+.status-indicator {
   font-size: 0.9rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 8px;
   display: inline-block;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-.service-required {
+.status-required {
   background: rgba(244, 67, 54, 0.2);
   color: #ff8a80;
 }
 
-.temperature-note,
-.wind-note {
-  font-size: 0.9rem;
-  opacity: 0.8;
-  margin-top: 4px;
+.status-monitoring {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ffcc80;
 }
 
+.status-normal {
+  background: rgba(76, 175, 80, 0.2);
+  color: #a5d6a7;
+}
+
+.condition-note {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.stat-box.alert::before {
+  background: #f44336;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .conditions-grid {
     grid-template-columns: 1fr;
-  }
-
-  .stat-box {
+    gap: 16px;
     padding: 16px;
   }
 
-  .stat-value {
-    font-size: 1.5rem;
+  .stat-box {
+    padding: 20px;
   }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  mat-card-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* High Resolution Displays */
+@media (min-width: 1920px) {
+  .conditions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat-box {
+    padding: 32px;
+  }
+
+  .stat-value {
+    font-size: 3rem;
+  }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .current-conditions {
+    background: linear-gradient(135deg, rgba(18, 30, 62, 0.8), rgba(18, 30, 62, 0.9));
+  }
+
+  .stat-box {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .current-conditions {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .stat-value {
+    color: black !important;
+  }
+
+  .condition-note {
+    color: #666 !important;
+  }
+}
+
+
+.snow-forecast-section {
+  margin-top: 32px;
+  padding: 20px;
+}
+
+.chart-container {
+  height: 300px;
+  margin: 20px 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.legend-color.probability {
+  background: #2196f3;
+}
+
+.legend-color.accumulation {
+  background: #4caf50;
+}
+
+.service-recommendation {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(244, 67, 54, 0.1);
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.service-recommendation mat-icon {
+  color: #f44336;
+}
+
+.recommendation-content h4 {
+  margin: 0 0 8px 0;
+  color: #f44336;
+}
+
+.timing-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.snow-forecast-section {
+  margin-top: 32px;
+  padding: 20px;
+  background: rgba(238, 238, 238, 0.05);
+  border-radius: 12px;
+}
+
+.chart-container {
+  height: 400px; /* Increased height */
+  width: 100%;
+  position: relative;
+  margin: 20px 0;
+}
+.snow-forecast-section {
+  margin-top: 32px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.chart-container {
+  height: 500px;
+  width: 100%;
+  position: relative;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+h3 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }

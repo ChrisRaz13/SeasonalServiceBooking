@@ -31,72 +31,65 @@ export class DayForecastComponent {
   @Input() isToday = false;
   @Output() toggleDetails = new EventEmitter<WeatherPeriod>();
 
-  // Add ServiceStatus enum for template access
   ServiceStatus = ServiceStatus;
 
   formatPeriodHeader(period: WeatherPeriod): string {
-    if (this.isToday) {
-      return period.isDaytime ? 'Today' : 'Tonight';
-    }
-    return period.isDaytime ? this.forecast.dayOfWeek : `${this.forecast.dayOfWeek} Night`;
+    return this.isToday
+      ? period.isDaytime ? 'Today' : 'Tonight'
+      : period.isDaytime ? this.forecast.dayOfWeek : `${this.forecast.dayOfWeek} Night`;
   }
 
   getPrecipitationDetails(period: WeatherPeriod): string {
-    const forecast = period.detailedForecast.toLowerCase();
-    let details = '';
-
     if (period.snowProbability > 0) {
-      details = `${period.snowProbability}% chance of snow`;
-      if (period.snowAmount > 0) {
-        details += ` (${period.snowAmount}" expected)`;
-      }
-    } else if (forecast.includes('rain')) {
-      const chance = this.extractPrecipitationChance(period.detailedForecast);
-      if (chance > 0) {
-        details = `${chance}% chance of rain`;
-      }
+        return this.getSnowDetails(period);
     }
 
-    return details;
-  }
+    // Instead of checking period.precipitation, we'll check the forecast text
+    const forecast = period.detailedForecast.toLowerCase();
+    if (forecast.includes('rain')) {
+        const chance = this.extractPrecipitationChance(period.detailedForecast);
+        if (chance > 0) {
+            return `${chance}% chance of rain`;
+        }
+    }
+    return '';
+}
 
-  private extractPrecipitationChance(forecast: string): number {
-    const match = forecast.match(/chance of precipitation is (\d+)%/i);
+private extractPrecipitationChance(forecast: string): number {
+    const match = forecast.match(/(\d+)\s*%\s*chance/i);
     return match ? parseInt(match[1]) : 0;
-  }
+}
+
+private getSnowDetails(period: WeatherPeriod): string {
+    const details = [`${period.snowProbability}% chance of snow`];
+    if (period.snowAmount > 0) {
+        details.push(`${period.snowAmount}" accumulation expected`);
+    }
+    return details.join(' - ');
+}
 
   getServiceStatus(period: WeatherPeriod): ServiceStatus {
-    if (period.snowProbability > 30) {
-      return ServiceStatus.MONITORING;
-    }
-    if (period.snowAmount >= 2) {
-      return ServiceStatus.REQUIRED;
-    }
+    if (period.snowAmount >= 2) return ServiceStatus.REQUIRED;
+    if (period.snowProbability > 30 || period.snowAmount >= 1) return ServiceStatus.MONITORING;
     return ServiceStatus.NOT_NEEDED;
   }
 
   getWindDescription(speed: string, direction: string): string {
     const windSpeed = WeatherUtils.extractWindSpeed(speed);
-    if (windSpeed === 0) {
-      return 'Calm';
-    }
-    return `${direction} ${speed}`;
+    return windSpeed === 0 ? 'Calm' : `${direction} ${speed}`;
   }
 
   shouldHighlightWind(speed: string): boolean {
-    const windSpeed = WeatherUtils.extractWindSpeed(speed);
-    return windSpeed > 15; // Highlight strong winds
+    return WeatherUtils.extractWindSpeed(speed) > 15;
   }
 
   getStatusColor(status: ServiceStatus): string {
-    switch (status) {
-      case ServiceStatus.REQUIRED:
-        return 'service-required';
-      case ServiceStatus.MONITORING:
-        return 'service-monitoring';
-      default:
-        return '';
-    }
+    const statusColors = {
+      [ServiceStatus.REQUIRED]: 'service-required',
+      [ServiceStatus.MONITORING]: 'service-monitoring',
+      [ServiceStatus.NOT_NEEDED]: ''
+    };
+    return statusColors[status];
   }
 
   formatTemperature(temp: number): string {
@@ -104,14 +97,30 @@ export class DayForecastComponent {
   }
 
   getWeatherIcon(forecast: string): string {
-    const f = forecast.toLowerCase();
-    if (f.includes('snow')) return 'ac_unit';
-    if (f.includes('rain')) return 'water_drop';
-    if (f.includes('cloud')) return 'cloud';
-    if (f.includes('sun') || f.includes('clear')) return 'wb_sunny';
-    if (f.includes('wind') || f.includes('gust')) return 'air';
-    if (f.includes('fog')) return 'cloud';
-    if (f.includes('thunder')) return 'thunderstorm';
+    const lowercaseForecast = forecast.toLowerCase();
+    const iconMap: { [key: string]: string } = {
+      snow: 'ac_unit',
+      rain: 'water_drop',
+      cloud: 'cloud',
+      sun: 'wb_sunny',
+      clear: 'wb_sunny',
+      wind: 'air',
+      gust: 'air',
+      fog: 'cloud',
+      thunder: 'thunderstorm'
+    };
+
+    for (const [condition, icon] of Object.entries(iconMap)) {
+      if (lowercaseForecast.includes(condition)) {
+        return icon;
+      }
+    }
     return 'wb_sunny';
+  }
+
+  isHighImpactWeather(period: WeatherPeriod): boolean {
+    return period.snowProbability > 50 ||
+           WeatherUtils.extractWindSpeed(period.windSpeed) > 20 ||
+           period.snowAmount >= 2;
   }
 }

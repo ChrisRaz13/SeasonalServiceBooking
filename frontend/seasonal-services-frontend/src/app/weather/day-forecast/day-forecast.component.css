@@ -1,21 +1,21 @@
 .forecast-container {
   background: #1a2634;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   margin: 16px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.forecast-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.1);
+.forecast-container.high-impact {
+  border: 2px solid #ff9800;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
 }
 
 .forecast-period {
-  padding: 16px;
+  padding: 20px;
   background: #1a2634;
+  transition: background-color 0.3s ease;
 }
 
 .forecast-period.night {
@@ -23,7 +23,7 @@
 }
 
 .period-header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .period-header.today h3 {
@@ -35,19 +35,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .header-title h3 {
   margin: 0;
   font-size: 1.25rem;
   color: #ffffff;
+  font-weight: 500;
 }
 
 .header-title mat-icon {
@@ -55,31 +56,35 @@
 }
 
 .temp-display {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
   color: #ffffff;
 }
 
 .header-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: #b0bec5;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .period-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin: 16px 0;
+  gap: 10px;
+  margin: 20px 0;
 }
 
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 12px;
+  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  border-radius: 8px;
   color: #ffffff;
+  transition: all 0.3s ease;
 }
 
 .detail-item mat-icon {
@@ -104,39 +109,52 @@
   border-left: 3px solid #ff9800;
 }
 
-.precipitation mat-icon {
-  color: #81d4fa;
+.precipitation.snow-expected {
+  background: rgba(129, 212, 250, 0.15);
+  border-left: 3px solid #81d4fa;
 }
 
-.service-status mat-icon {
-  color: #ff8a65;
+.wind-info.highlight {
+  background: rgba(255, 152, 0, 0.15);
+  border-left: 3px solid #ff9800;
 }
 
 .detailed-forecast {
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  padding: 12px;
-  margin-top: 16px;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
   color: #b0bec5;
+  transition: all 0.3s ease;
+}
+
+.detailed-forecast.expanded {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .detailed-forecast p {
-  margin: 0 0 12px 0;
-  line-height: 1.5;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
 }
 
 .detailed-forecast button {
   color: #64b5f6;
+  transition: color 0.3s ease;
 }
 
-/* Mobile Responsive Styles */
-@media (max-width: 768px) {
-  .forecast-group {
-    grid-template-columns: 1fr;
-  }
+.detailed-forecast button:hover {
+  color: #90caf9;
+}
 
+mat-divider {
+  margin: 0;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .forecast-period {
-    padding: 12px;
+    padding: 16px;
   }
 
   .header-main {
@@ -149,20 +167,25 @@
   }
 
   .temp-display {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
   .period-details {
-    gap: 6px;
+    gap: 8px;
   }
 
   .detail-item {
-    padding: 6px 10px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .detailed-forecast {
+    padding: 12px;
     font-size: 0.9rem;
   }
 }
 
-/* High-resolution Display Support */
+/* Large Screens */
 @media (min-width: 1920px) {
   .forecast-container {
     max-width: 1200px;
@@ -178,11 +201,68 @@
   }
 
   .temp-display {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .detail-item {
-    padding: 12px 16px;
+    padding: 16px 20px;
     font-size: 1.1rem;
+  }
+
+  .detailed-forecast {
+    padding: 20px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Dark Mode Enhancement */
+@media (prefers-color-scheme: dark) {
+  .forecast-container {
+    background: #0d1520;
+  }
+
+  .forecast-period {
+    background: #0d1520;
+  }
+
+  .forecast-period.night {
+    background: #080f17;
+  }
+
+  .detail-item {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .detailed-forecast {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .forecast-container {
+    box-shadow: none;
+    margin: 0;
+    page-break-inside: avoid;
+  }
+
+  .detail-item {
+    border: 1px solid #ddd;
+  }
+
+  .detailed-forecast button {
+    display: none;
+  }
+
+  .temp-display {
+    color: #000;
+  }
+
+  .header-title h3 {
+    color: #000;
+  }
+
+  .header-sub {
+    color: #333;
   }
 }
