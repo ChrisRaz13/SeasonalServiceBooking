@@ -1,17 +1,25 @@
-// alert-banner.component.ts
 import { Component, OnInit, OnDestroy, Input, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { WeatherService } from '../../services/weather.service';
 import {
   WeatherAlert,
   AlertSeverity,
   WeatherUtils
 } from '../interfaces/weather.interfaces';
-import { trigger, transition, style, animate, state, query, stagger } from '@angular/animations';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  state,
+  query,
+  stagger
+} from '@angular/animations';
 
 @Component({
   selector: 'app-alert-banner',
@@ -29,12 +37,10 @@ import { trigger, transition, style, animate, state, query, stagger } from '@ang
     trigger('slideIn', [
       transition(':enter', [
         style({ transform: 'translateY(-100%)', opacity: 0 }),
-        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)',
-          style({ transform: 'translateY(0)', opacity: 1 }))
+        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)',
-          style({ transform: 'translateY(-100%)', opacity: 0 }))
+        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)', style({ transform: 'translateY(-100%)', opacity: 0 }))
       ])
     ]),
     trigger('expansionState', [
@@ -74,12 +80,13 @@ export class AlertBannerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.weatherService.alerts$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(alerts => {
-        if (!this.alerts || this.alerts.length === 0) {
-          this.alerts = alerts;
-        }
-      });
+  .pipe(takeUntil(this.destroy$))
+  .subscribe(alerts => {
+    if (!this.alerts || this.alerts.length === 0) {
+      this.alerts = this.alerts.length > 0 ? this.alerts : alerts;
+    }
+  });
+
   }
 
   ngOnDestroy(): void {

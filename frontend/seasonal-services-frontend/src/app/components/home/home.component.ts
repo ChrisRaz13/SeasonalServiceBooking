@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,28 +10,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { WeatherService } from '../../services/weather.service';
 import { Subject, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-interface WeatherAlertSeverity {
-  label: string;
-  color: string;
-  icon: string;
-  bgColor: string;
-  pulseColor: string;
-}
-
-interface ServiceFeature {
-  icon: string;
-  text: string;
-}
-
-interface ServiceCard {
-  icon: string;
-  title: string;
-  description: string;
-  features: string[];
-  link: string;
-  buttonText: string;
-}
+import {
+  WeatherAlert,
+  AlertSeverity,
+  ServiceCard,
+  WeatherUtils
+} from '../../weather/interfaces/weather.interfaces';
 
 @Component({
   selector: 'app-home',
@@ -103,7 +87,6 @@ interface ServiceCard {
 
       <!-- Service Content -->
       <section class="services-showcase" [ngClass]="activeSeason">
-        <!-- Winter Services -->
         <div *ngIf="activeSeason === 'winter'" class="service-content winter-content" [@contentAnimation]>
           <h2 class="section-title">Professional Snow Management</h2>
           <div class="service-grid">
@@ -124,7 +107,6 @@ interface ServiceCard {
           </div>
         </div>
 
-        <!-- Summer Services -->
         <div *ngIf="activeSeason === 'summer'" class="service-content summer-content" [@contentAnimation]>
           <h2 class="section-title">Complete Lawn Care Solutions</h2>
           <div class="service-grid">
@@ -146,63 +128,121 @@ interface ServiceCard {
         </div>
       </section>
 
-       <!-- Weather Info Promo Section -->
-       <section class="weather-info-promo">
-        <div class="promo-content">
-          <h3>Stay Ahead of the Weather!</h3>
-          <p>
-            Our team keeps you updated with the latest weather forecasts to help you plan for snow removal and lawn care.
-            Get real-time updates on snowfall, temperature changes, and more to ensure your property is always prepared.
-            <br><br>The corner icon provides any important weather alert warnings in the area
-          </p>
-          <a href="/weather-dashboard" class="promo-button">View Weather Dashboard</a>
-        </div>
-      </section>
-
       <!-- Weather Alert Button -->
       <div class="floating-alert" *ngIf="!hasError">
         <button
           class="alert-fab"
-          [class.has-alerts]="weatherAlerts.length > 0"
+          [class.has-alerts]="hasActiveAlerts()"
           [class.is-loading]="isLoading"
-          [ngClass]="getAlertSeverityClass(weatherAlerts[0]?.severity)"
+          [ngClass]="getAlertSeverityClass(getHighestSeverityAlert()?.severity)"
           (click)="toggleAlerts()"
           [matTooltip]="getAlertTooltip()"
         >
           <div class="alert-icon-wrapper">
-            <mat-icon class="alert-icon">{{ getAlertIcon(weatherAlerts[0]?.severity) }}</mat-icon>
-            <span class="alert-pulse" *ngIf="weatherAlerts.length > 0"></span>
+            <mat-icon class="alert-icon">{{ getAlertIcon(getHighestSeverityAlert()?.severity) }}</mat-icon>
+            <span class="alert-pulse" *ngIf="hasActiveAlerts()"></span>
           </div>
-          <span class="alert-count" *ngIf="weatherAlerts.length > 0">{{ weatherAlerts.length }}</span>
+          <span class="alert-count" *ngIf="hasActiveAlerts()">
+            {{ getActiveAlertCount() }}
+          </span>
         </button>
 
         <!-- Alert Panel -->
-        <div class="floating-alerts-panel" *ngIf="showAlerts && weatherAlerts.length > 0" [@expandCollapse]>
+        <div class="floating-alerts-panel" *ngIf="showAlerts && hasActiveAlerts()" [@expandCollapse]>
           <div class="panel-header">
             <h3>Active Weather Alerts</h3>
             <button mat-icon-button (click)="toggleAlerts()">
               <mat-icon>close</mat-icon>
             </button>
           </div>
-          <div class="alerts-list">
-            <div *ngFor="let alert of weatherAlerts"
-                 class="alert-item"
-                 [ngClass]="getAlertSeverityClass(alert.severity)">
-              <div class="alert-item-header">
-                <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
-                <div class="alert-item-title">
-                  <h4>{{ alert.event }}</h4>
-                  <span class="alert-severity-badge">{{ alert.severity }}</span>
+
+          <!-- Weather Statements Section -->
+          <div class="alert-section" *ngIf="getSpecialWeatherStatements().length > 0">
+            <h4 class="section-title">Special Weather Statements</h4>
+            <div class="alerts-list">
+              <div *ngFor="let alert of getSpecialWeatherStatements()"
+                   class="alert-item"
+                   [ngClass]="getAlertSeverityClass(alert.severity)">
+                <div class="alert-item-header">
+                  <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+                  <div class="alert-item-title">
+                    <h4>{{ alert.event }}</h4>
+                    <span class="alert-severity-badge">{{ alert.severity }}</span>
+                  </div>
+                </div>
+                <p class="alert-headline">{{ alert.headline }}</p>
+                <p class="alert-description">{{ alert.description }}</p>
+                <div class="alert-instruction" *ngIf="alert.instruction">
+                  <strong>Instructions:</strong>
+                  <p>{{ alert.instruction }}</p>
+                </div>
+                <div class="alert-details">
+                  <span class="alert-timing">
+                    Effective: {{ formatDate(alert.onset || '') }}<br>
+                    Expires: {{ formatDate(alert.expires) }}
+                  </span>
                 </div>
               </div>
-              <p class="alert-headline">{{ alert.headline }}</p>
-              <div class="alert-details">
-                <span class="alert-timing">
-                  Expires: {{ formatDate(alert.expires) }}
-                </span>
-                <button mat-button color="primary" (click)="showAlertDetails(alert)">
-                  View Details
-                </button>
+            </div>
+          </div>
+
+          <!-- Hazardous Weather Outlooks -->
+          <div class="alert-section" *ngIf="getHazardousWeatherOutlooks().length > 0">
+            <h4 class="section-title">Hazardous Weather Outlook</h4>
+            <div class="alerts-list">
+              <div *ngFor="let alert of getHazardousWeatherOutlooks()"
+                   class="alert-item outlook-item"
+                   [ngClass]="getAlertSeverityClass(alert.severity)">
+                <div class="alert-item-header">
+                  <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+                  <div class="alert-item-title">
+                    <h4>{{ alert.event }}</h4>
+                    <span class="alert-severity-badge">{{ alert.severity }}</span>
+                  </div>
+                </div>
+                <div class="outlook-content" *ngIf="alert.outlook">
+                  <p class="outlook-day-one">{{ alert.outlook.dayOne }}</p>
+                  <p class="outlook-extended" *ngIf="alert.outlook.extendedOutlook">
+                    <strong>Extended Outlook:</strong><br>
+                    {{ alert.outlook.extendedOutlook }}
+                  </p>
+                  <p class="spotter-info" *ngIf="alert.outlook.spotterInfo">
+                    <strong>Spotter Information:</strong><br>
+                    {{ alert.outlook.spotterInfo }}
+                  </p>
+                </div>
+                <div class="alert-details">
+                  <span class="alert-timing">
+                    Issued: {{ formatDate(alert.onset || '') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Other Alerts -->
+          <div class="alert-section" *ngIf="getOtherAlerts().length > 0">
+            <h4 class="section-title">Other Active Alerts</h4>
+            <div class="alerts-list">
+              <div *ngFor="let alert of getOtherAlerts()"
+                   class="alert-item"
+                   [ngClass]="getAlertSeverityClass(alert.severity)">
+                <div class="alert-item-header">
+                  <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+                  <div class="alert-item-title">
+                    <h4>{{ alert.event }}</h4>
+                    <span class="alert-severity-badge">{{ alert.severity }}</span>
+                  </div>
+                </div>
+                <p class="alert-headline">{{ alert.headline }}</p>
+                <div class="alert-details">
+                  <span class="alert-timing">
+                    Expires: {{ formatDate(alert.expires) }}
+                  </span>
+                  <button mat-button color="primary" (click)="showAlertDetails(alert)">
+                    View Details
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -239,13 +279,11 @@ interface ServiceCard {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  weatherAlerts: any[] = [];
+  weatherAlerts: WeatherAlert[] = [];
   activeSeason: 'winter' | 'summer' = 'winter';
   isLoading = true;
   hasError = false;
   showAlerts = false;
-  scrollY = 0;
-  snowflakes: Array<{ id: number; left: number; animationDuration: number; }> = [];
   private destroy$ = new Subject<void>();
 
   // Service Data
@@ -351,37 +389,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   ];
 
-  private readonly severityConfig: { [key: string]: WeatherAlertSeverity } = {
-    extreme: {
-      label: 'Extreme',
-      color: '#ff1744',
-      icon: 'warning',
-      bgColor: 'rgba(255, 23, 68, 0.95)',
-      pulseColor: 'rgba(255, 23, 68, 0.6)'
-    },
-    severe: {
-      label: 'Severe',
-      color: '#f50057',
-      icon: 'error',
-      bgColor: 'rgba(245, 0, 87, 0.95)',
-      pulseColor: 'rgba(245, 0, 87, 0.6)'
-    },
-    moderate: {
-      label: 'Moderate',
-      color: '#ff9100',
-      icon: 'info',
-      bgColor: 'rgba(255, 145, 0, 0.95)',
-      pulseColor: 'rgba(255, 145, 0, 0.6)'
-    },
-    minor: {
-      label: 'Minor',
-      color: '#00b0ff',
-      icon: 'info_outline',
-      bgColor: 'rgba(0, 176, 255, 0.95)',
-      pulseColor: 'rgba(0, 176, 255, 0.6)'
-    }
-  };
-
   constructor(
     private weatherService: WeatherService,
     private router: Router
@@ -390,8 +397,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadWeatherAlerts();
     this.initScrollListener();
-    this.generateSnowflakes();
-    setInterval(() => this.loadWeatherAlerts(), 300000);
+    setInterval(() => this.loadWeatherAlerts(), 300000); // Refresh every 5 minutes
   }
 
   ngOnDestroy(): void {
@@ -403,124 +409,148 @@ export class HomeComponent implements OnInit, OnDestroy {
     fromEvent(window, 'scroll')
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.scrollY = window.scrollY;
+        // Handle scroll events if needed
       });
   }
 
   setActiveSeason(season: 'winter' | 'summer'): void {
     this.activeSeason = season;
-    if (season === 'winter') {
-      this.generateSnowflakes();
-    } else {
-      this.snowflakes = [];
-    }
-  }
-
-  private generateSnowflakes(): void {
-    this.snowflakes = Array.from({ length: 50 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      animationDuration: 3 + Math.random() * 5
-    }));
   }
 
   loadWeatherAlerts(): void {
-  const lat = 42.032974;
-  const lon = -93.581543;
+    const lat = 42.032974;
+    const lon = -93.581543;
 
-  this.isLoading = true;
-  this.hasError = false;
+    this.isLoading = true;
+    this.hasError = false;
 
-  this.weatherService.getPointData(lat, lon).subscribe({
-    next: (pointData: any) => {
-      const gridId = pointData.properties.gridId;
+    this.weatherService.getPointData(lat, lon).subscribe({
+      next: (pointData: any) => {
+        const gridId = pointData.properties.gridId;
 
-      this.weatherService.getWeatherAlerts(lat, lon, gridId).subscribe({
-        next: (data: any) => {
-          if (data.features && data.features.length > 0) {
-            this.weatherAlerts = data.features.map((feature: any) => ({
-              event: feature.properties.event,
-              headline: feature.properties.headline,
-              description: feature.properties.description,
-              severity: feature.properties.severity,
-              expires: feature.properties.expires,
-              effective: feature.properties.effective,
-              senderName: feature.properties.senderName,
-              areaDesc: feature.properties.areaDesc,
-              instruction: feature.properties.instruction,
-              parameters: feature.properties.parameters
-            }));
-
-            this.weatherAlerts.sort((a, b) =>
-              this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity)
-            );
-          } else {
-            this.weatherAlerts = [];
+        this.weatherService.getWeatherAlerts(lat, lon, gridId).subscribe({
+          next: (data: any) => {
+            if (data.features && data.features.length > 0) {
+              this.processAlerts(data.features);
+            } else {
+              this.weatherAlerts = [];
+            }
+            this.isLoading = false;
+          },
+          error: (error: any) => {
+            console.error('Error loading weather alerts:', error);
+            this.hasError = true;
+            this.isLoading = false;
           }
-          this.isLoading = false;
-        },
-        error: (error: any) => {
-          console.error('Error loading weather alerts:', error);
-          this.hasError = true;
-          this.isLoading = false;
-        }
-      });
-    },
-    error: (error: any) => {
-      console.error('Error fetching point data:', error);
-      this.hasError = true;
-      this.isLoading = false;
-    }
-  });
-}
+        });
+      },
+      error: (error: any) => {
+        console.error('Error fetching point data:', error);
+        this.hasError = true;
+        this.isLoading = false;
+      }
+    });
+  }
 
+  private processAlerts(features: any[]): void {
+    this.weatherAlerts = features.map(feature => ({
+      severity: feature.properties.severity as AlertSeverity,
+      event: feature.properties.event,
+      headline: feature.properties.headline,
+      description: feature.properties.description,
+      instruction: feature.properties.instruction,
+      expires: feature.properties.expires,
+      onset: feature.properties.onset,
+      status: feature.properties.status,
+      messageType: feature.properties.messageType,
+      category: feature.properties.category,
+      urgency: feature.properties.urgency,
+      certainty: feature.properties.certainty,
+      areaDesc: feature.properties.areaDesc,
+      response: feature.properties.response,
+      outlook: feature.properties.description.includes('Hazardous Weather Outlook')
+        ? WeatherUtils.parseWeatherOutlook(feature.properties.description)
+        : undefined
+    }));
 
-  private getSeverityWeight(severity: string): number {
-    const weights: Record<string, number> = {
-      'extreme': 4,
-      'severe': 3,
-      'moderate': 2,
-      'minor': 1
+    // Sort alerts by severity
+    this.weatherAlerts.sort((a, b) => this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity));
+  }
+
+  private getSeverityWeight(severity: AlertSeverity): number {
+    const weights: Record<AlertSeverity, number> = {
+      [AlertSeverity.EXTREME]: 4,
+      [AlertSeverity.SEVERE]: 3,
+      [AlertSeverity.MODERATE]: 2,
+      [AlertSeverity.MINOR]: 1
     };
-    return weights[severity.toLowerCase()] || 0;
+    return weights[severity] || 0;
   }
 
-  getAlertSeverityClass(severity: string): string {
-    const severityLower = severity?.toLowerCase() || 'minor';
-    return `severity-${severityLower}`;
+  getSpecialWeatherStatements(): WeatherAlert[] {
+    return this.weatherAlerts.filter(alert =>
+      alert.event.toLowerCase().includes('special weather statement'));
   }
 
-  getAlertIcon(severity: string): string {
-    const severityLower = severity?.toLowerCase() || 'minor';
-    return this.severityConfig[severityLower]?.icon || 'info_outline';
+  getHazardousWeatherOutlooks(): WeatherAlert[] {
+    return this.weatherAlerts.filter(alert =>
+      alert.event.toLowerCase().includes('hazardous weather outlook'));
+  }
+
+  getOtherAlerts(): WeatherAlert[] {
+    return this.weatherAlerts.filter(alert =>
+      !alert.event.toLowerCase().includes('special weather statement') &&
+      !alert.event.toLowerCase().includes('hazardous weather outlook'));
+  }
+
+  hasActiveAlerts(): boolean {
+    return this.weatherAlerts.length > 0;
+  }
+
+  getActiveAlertCount(): number {
+    return this.weatherAlerts.length;
+  }
+
+  getHighestSeverityAlert(): WeatherAlert | undefined {
+    return this.weatherAlerts[0];
+  }
+
+  getAlertSeverityClass(severity: AlertSeverity | undefined): string {
+    return severity ? `severity-${severity.toLowerCase()}` : 'severity-minor';
+  }
+
+  getAlertIcon(severity: AlertSeverity | undefined): string {
+    switch (severity) {
+      case AlertSeverity.EXTREME:
+        return 'warning';
+      case AlertSeverity.SEVERE:
+        return 'error';
+      case AlertSeverity.MODERATE:
+        return 'info';
+      case AlertSeverity.MINOR:
+      default:
+        return 'info_outline';
+    }
   }
 
   getAlertTooltip(): string {
     if (this.isLoading) return 'Checking weather alerts...';
-    if (this.weatherAlerts.length === 0) return 'No active alerts';
+    if (!this.hasActiveAlerts()) return 'No active alerts';
     if (this.weatherAlerts.length === 1) return this.weatherAlerts[0].event;
     return `${this.weatherAlerts.length} Active Weather Alerts`;
   }
 
   toggleAlerts(): void {
-    if (this.weatherAlerts.length > 0) {
+    if (this.hasActiveAlerts()) {
       this.showAlerts = !this.showAlerts;
     }
   }
 
   formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+    return WeatherUtils.formatDate(dateString);
   }
 
-  showAlertDetails(alert: any): void {
+  showAlertDetails(alert: WeatherAlert): void {
     this.router.navigate(['/snow-plowing-calendar']);
   }
 
@@ -529,10 +559,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  }
-
-  setActiveService(service: 'snow' | 'lawn'): void {
-    const container = document.querySelector('.homepage-container');
-    container?.setAttribute('data-active-service', service);
   }
 }

@@ -373,6 +373,7 @@
   }
 }
 /* Original Weather Alert Styles */
+/* Alert Button Styles */
 .floating-alert {
   position: fixed;
   bottom: 2rem;
@@ -385,7 +386,7 @@
   height: 70px;
   border-radius: 50%;
   background: white;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -397,198 +398,255 @@
 
 .alert-fab:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Weather Info Promo Section */
-.weather-info-promo {
-  background: linear-gradient(to right, #1a374d, #406882);
-  color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  max-width: 600px;
-  margin: 2rem auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.promo-button {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: #4a90e2;
-  color: #ffffff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.promo-button:hover {
-  background: #357ab7;
-  transform: translateY(-2px);
-}
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
+/* Enhanced Alert Panel Styles */
 .floating-alerts-panel {
-  position: absolute;
-  bottom: 120px;
-  right: 20px;
-  z-index: 9999;
-  max-width: 700px; /* Increased width for more horizontal space */
-  background: linear-gradient(to bottom right, #323232, #1c1c1c);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 900px;
+  max-height: 80vh;
+  background: linear-gradient(145deg, #1a2942, #2c445e);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   color: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  animation: fadeInScale 0.3s ease-out forwards;
-  font-family: 'Roboto', sans-serif;
+  z-index: 1001;
   overflow: hidden;
+  animation: panelFadeIn 0.3s ease-out;
 }
 
-.floating-alerts-panel .panel-header {
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Panel Header */
+.panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
 }
 
-.floating-alerts-panel .panel-header h3 {
-  margin: 0;
-  font-size: 1.4rem; /* Slightly larger heading */
+.panel-header h3 {
+  font-size: 1.8rem;
   font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 0.5px;
-}
-
-.floating-alerts-panel .panel-header button {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 1.4rem;
-  padding: 4px;
-  transition: color 0.3s ease;
-}
-
-.floating-alerts-panel .panel-header button:hover {
-  color: #ff4081;
-}
-
-.floating-alerts-panel .alerts-list {
-  max-height: 350px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #444 #323232;
-  padding-right: 8px;
-}
-
-.floating-alerts-panel .alerts-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.floating-alerts-panel .alerts-list::-webkit-scrollbar-track {
-  background: #323232;
-}
-
-.floating-alerts-panel .alerts-list::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 3px;
-}
-
-.floating-alerts-panel .alert-item {
-  background: #2a2a2a;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 16px;
-  color: #ffffff;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.floating-alerts-panel .alert-item:hover {
-  background: #333333;
-  transform: translateX(3px);
-}
-
-.floating-alerts-panel .alert-item-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.floating-alerts-panel .alert-item-header mat-icon {
-  color: #ffffff;
-  margin-right: 10px;
-  font-size: 1.1rem;
-}
-
-.floating-alerts-panel .alert-item-title h4 {
+  color: #fff;
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #ffffff;
-  line-height: 1.4;
 }
 
-.floating-alerts-panel .alert-item-title .alert-severity-badge {
-  font-size: 0.85rem;
-  background: #444444;
-  border-radius: 4px;
-  padding: 2px 6px;
-  margin-left: 10px;
-  color: #ffffff;
-}
-
-.floating-alerts-panel .alert-headline {
-  margin: 12px 0;
-  font-size: 1rem;
-  color: #e0e0e0;
-  line-height: 1.5;
-}
-
-.floating-alerts-panel .alert-details {
+.panel-header button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #c0c0c0;
-  margin-top: 12px;
-}
-
-.floating-alerts-panel .alert-details button {
-  background: #444444;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
+  justify-content: center;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.floating-alerts-panel .alert-details button:hover {
-  background: #555555;
+.panel-header button:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.floating-alerts-panel .alert-item p,
-.floating-alerts-panel .alert-item span {
+/* Alert Sections */
+.alert-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  color: #64b5f6;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(100, 181, 246, 0.3);
+}
+
+/* Alert Items */
+.alerts-list {
+  max-height: calc(80vh - 200px);
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.alert-item {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.alert-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(5px);
+}
+
+.alert-item-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-item-title {
+  flex: 1;
+}
+
+.alert-item-title h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #fff;
+}
+
+.alert-severity-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Severity-specific styles */
+.severity-extreme .alert-severity-badge {
+  background: #ff1744;
+  color: white;
+}
+
+.severity-severe .alert-severity-badge {
+  background: #ff5722;
+  color: white;
+}
+
+.severity-moderate .alert-severity-badge {
+  background: #ffa726;
+  color: #1a1a1a;
+}
+
+.severity-minor .alert-severity-badge {
+  background: #29b6f6;
+  color: #1a1a1a;
+}
+
+/* Alert Content */
+.alert-headline {
+  font-size: 1.1rem;
   line-height: 1.6;
-  font-size: 0.95rem;
+  margin: 1rem 0;
+  color: #e3f2fd;
 }
 
-.floating-alerts-panel .alert-item .alert-headline strong {
-  color: #ff4081;
+.alert-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #b3e5fc;
+  margin-bottom: 1rem;
+}
+
+.alert-instruction {
+  background: rgba(33, 150, 243, 0.1);
+  border-left: 4px solid #2196f3;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.alert-instruction strong {
+  display: block;
+  color: #64b5f6;
+  margin-bottom: 0.5rem;
+}
+
+.alert-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-timing {
+  font-size: 0.9rem;
+  color: #90caf9;
+}
+
+/* Outlook specific styles */
+.outlook-item {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.outlook-content {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.outlook-day-one {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #e3f2fd;
+}
+
+/* Scrollbar Styling */
+.alerts-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alerts-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.alerts-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.alerts-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .floating-alerts-panel {
+    width: 95%;
+    max-height: 90vh;
+    padding: 1rem;
+  }
+
+  .panel-header h3 {
+    font-size: 1.5rem;
+  }
+
+  .alert-item {
+    padding: 1rem;
+  }
+
+  .alert-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

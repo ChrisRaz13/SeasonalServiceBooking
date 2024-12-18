@@ -1,71 +1,150 @@
-<div class="homepage-container">
+<div class="homepage-container" [attr.data-season]="activeSeason">
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-content">
-      <h1>Your Trusted Experts in Snow Plowing & Lawn Care</h1>
-      <p class="hero-subtitle">Professional Services for Every Season</p>
+    <div class="seasonal-effects"></div>
+    <div class="hero-content" [@fadeInOut]>
+      <h1>Professional Snow & Lawn Services in Iowa City</h1>
+      <p class="hero-subtitle">Year-Round Property Excellence Since 2010</p>
       <div class="hero-cta">
         <button mat-raised-button color="primary" routerLink="/quote">
           <mat-icon>calculate</mat-icon>
           Get a Free Quote
         </button>
-        <button mat-stroked-button color="accent" (click)="scrollToSection('services')">
+        <button mat-stroked-button (click)="scrollToSection('services')" class="explore-btn">
           <mat-icon>explore</mat-icon>
           Explore Services
         </button>
       </div>
     </div>
+    <div class="scroll-indicator">
+      <div class="mouse"></div>
+      <span>Scroll to explore</span>
+    </div>
   </section>
 
-  <!-- Services Section -->
-  <section id="services" class="services-section">
-    <h2>Our Services</h2>
-    <div class="service-cards">
-      <!-- Replace with Angular looping if dynamic content is used -->
-      <div class="service-card">
-        <h3>Sample Service</h3>
-        <p>Description of the service.</p>
+  <!-- Service Selection -->
+  <section class="service-selection">
+    <div class="toggle-container">
+      <button
+        class="service-button winter"
+        [class.active]="activeSeason === 'winter'"
+        (click)="setActiveSeason('winter')"
+      >
+        <div class="button-content">
+          <mat-icon class="season-icon">ac_unit</mat-icon>
+          <h3>Snow Removal Services</h3>
+          <p>Professional snow management for Iowa winters</p>
+        </div>
+        <div class="snow-overlay"></div>
+      </button>
+
+      <button
+        class="service-button summer"
+        [class.active]="activeSeason === 'summer'"
+        (click)="setActiveSeason('summer')"
+      >
+        <div class="button-content">
+          <mat-icon class="season-icon">grass</mat-icon>
+          <h3>Lawn Care Services</h3>
+          <p>Complete lawn maintenance solutions</p>
+        </div>
+        <div class="leaf-overlay"></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- Service Content -->
+  <section class="services-showcase" [ngClass]="activeSeason">
+    <!-- Winter Services -->
+    <div *ngIf="activeSeason === 'winter'" class="service-content winter-content" [@contentAnimation]>
+      <h2 class="section-title">Professional Snow Management</h2>
+      <div class="service-grid">
+        <div class="service-card" *ngFor="let service of snowServices">
+          <mat-icon class="service-icon">{{service.icon}}</mat-icon>
+          <h3>{{service.title}}</h3>
+          <p>{{service.description}}</p>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{feature}}</span>
+            </li>
+          </ul>
+          <button mat-raised-button color="primary" [routerLink]="service.link">
+            {{service.buttonText}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summer Services -->
+    <div *ngIf="activeSeason === 'summer'" class="service-content summer-content" [@contentAnimation]>
+      <h2 class="section-title">Complete Lawn Care Solutions</h2>
+      <div class="service-grid">
+        <div class="service-card" *ngFor="let service of lawnServices">
+          <mat-icon class="service-icon">{{service.icon}}</mat-icon>
+          <h3>{{service.title}}</h3>
+          <p>{{service.description}}</p>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{feature}}</span>
+            </li>
+          </ul>
+          <button mat-raised-button color="accent" [routerLink]="service.link">
+            {{service.buttonText}}
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Weather Info Promo Section -->
-  <section class="weather-info-promo">
+   <!-- Weather Info Promo Section -->
+   <section class="weather-info-promo">
     <div class="promo-content">
       <h3>Stay Ahead of the Weather!</h3>
       <p>
         Our team keeps you updated with the latest weather forecasts to help you plan for snow removal and lawn care.
         Get real-time updates on snowfall, temperature changes, and more to ensure your property is always prepared.
+        <br><br>The corner icon provides any important weather alert warnings in the area
       </p>
       <a href="/weather-dashboard" class="promo-button">View Weather Dashboard</a>
     </div>
   </section>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials-section">
-    <h2>What Our Clients Say</h2>
-    <div class="testimonial-carousel">
-      <div class="testimonial-slide">
-        <p>Sample testimonial text.</p>
-      </div>
-    </div>
-  </section>
+  <!-- Weather Alert Button -->
+  <app-alert-banner *ngIf="weatherAlerts && weatherAlerts.length > 0" [alerts]="weatherAlerts"></app-alert-banner>
 
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="cta-content">
-      <h2>Ready to Get Started?</h2>
-      <p>Contact us today for a free consultation and estimate!</p>
-      <div class="cta-buttons">
-        <button mat-raised-button color="primary" routerLink="/quote">
-          <mat-icon>schedule</mat-icon>
-          Schedule Service
-        </button>
-        <button mat-stroked-button color="accent" routerLink="/contact">
-          <mat-icon>phone</mat-icon>
-          Contact Us
+
+
+    <!-- Alert Panel -->
+    <div class="floating-alerts-panel" *ngIf="showAlerts && weatherAlerts.length > 0" [@expandCollapse]>
+      <div class="panel-header">
+        <h3>Active Weather Alerts</h3>
+        <button mat-icon-button (click)="toggleAlerts()">
+          <mat-icon>close</mat-icon>
         </button>
       </div>
+      <div class="alerts-list">
+        <div *ngFor="let alert of weatherAlerts"
+             class="alert-item"
+             [ngClass]="getAlertSeverityClass(alert.severity)">
+          <div class="alert-item-header">
+            <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+            <div class="alert-item-title">
+              <h4>{{ alert.event }}</h4>
+              <span class="alert-severity-badge">{{ alert.severity }}</span>
+            </div>
+          </div>
+          <p class="alert-headline">{{ alert.headline }}</p>
+          <div class="alert-details">
+            <span class="alert-timing">
+              Expires: {{ formatDate(alert.expires) }}
+            </span>
+            <button mat-button color="primary" (click)="showAlertDetails(alert)">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
-</div>
+  </div>

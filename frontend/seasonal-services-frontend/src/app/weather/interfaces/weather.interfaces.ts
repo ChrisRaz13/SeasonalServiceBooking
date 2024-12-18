@@ -17,6 +17,15 @@ export interface WeatherAlert {
   outlook?: WeatherOutlook;
 }
 
+export interface ServiceCard {
+  icon: string;
+  title: string;
+  description: string;
+  features: string[];
+  link: string;
+  buttonText: string;
+}
+
 export interface WeatherOutlook {
   issuedBy: string;
   issuedAt: string;

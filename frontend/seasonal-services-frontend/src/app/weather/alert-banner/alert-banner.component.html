@@ -1,4 +1,3 @@
-<!-- alert-banner.component.html -->
 <div class="alert-banner-container" *ngIf="alerts.length > 0" @slideIn>
   <div class="alert-banner">
     <div class="alerts-wrapper" @staggeredFade>
@@ -8,6 +7,7 @@
            [class.expanded]="isExpanded(i)"
            [@expansionState]="isExpanded(i) ? 'expanded' : 'collapsed'">
 
+        <!-- Alert Header -->
         <div class="alert-header" (click)="toggleAlert(i)">
           <div class="alert-icon-wrapper">
             <mat-icon [class]="'severity-icon-' + alert.severity.toLowerCase()">
@@ -34,6 +34,7 @@
           </div>
         </div>
 
+        <!-- Alert Details -->
         <div class="alert-details" *ngIf="isExpanded(i)" @fadeIn>
           <div *ngIf="alert.outlook" class="outlook-content">
             <div class="outlook-section">
@@ -58,6 +59,7 @@
             </div>
           </div>
 
+          <!-- Alert Actions -->
           <div class="alert-actions">
             <button mat-button (click)="setReminder(alert); $event.stopPropagation()">
               <mat-icon>notifications</mat-icon>

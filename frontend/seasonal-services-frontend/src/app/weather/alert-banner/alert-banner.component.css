@@ -1,4 +1,4 @@
-/* alert-banner.component.css */
+/* Container Styles */
 .alert-banner-container {
   position: sticky;
   top: 0;
@@ -7,18 +7,19 @@
   transform-origin: top;
 }
 
-.alert-banner-container .alert-banner {
+.alert-banner {
   background: #121212;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   padding: 8px 16px;
 }
 
-.alert-banner-container .alerts-wrapper {
+.alerts-wrapper {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.alert-banner-container .alert-card {
+/* Alert Card Styles */
+.alert-card {
   border-radius: 12px;
   margin-bottom: 12px;
   overflow: hidden;
@@ -27,12 +28,13 @@
   background: #1e1e1e;
 }
 
-.alert-banner-container .alert-card:hover {
+.alert-card:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.alert-banner-container .alert-header {
+/* Alert Header Styles */
+.alert-header {
   display: flex;
   align-items: center;
   padding: 16px;
@@ -41,11 +43,12 @@
   position: relative;
 }
 
-.alert-banner-container .alert-header:hover {
+.alert-header:hover {
   background-color: #2a2a2a;
 }
 
-.alert-banner-container .alert-icon-wrapper {
+/* Icon and Pulse Styles */
+.alert-icon-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -57,7 +60,7 @@
   background: #2a2a2a;
 }
 
-.alert-banner-container .alert-pulse {
+.alert-pulse {
   position: absolute;
   top: 0;
   left: 0;
@@ -67,19 +70,19 @@
   animation: pulse 2s infinite;
 }
 
-.alert-banner-container .alert-summary {
+.alert-summary {
   flex: 1;
   min-width: 0;
 }
 
-.alert-banner-container .alert-type {
+.alert-type {
   font-size: 1.1rem;
   font-weight: 500;
   margin-bottom: 4px;
   color: #ffffff;
 }
 
-.alert-banner-container .alert-headline {
+.alert-headline {
   font-size: 0.9rem;
   margin-bottom: 4px;
   white-space: nowrap;
@@ -88,7 +91,7 @@
   color: #e0e0e0;
 }
 
-.alert-banner-container .alert-timing {
+.alert-timing {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -96,13 +99,13 @@
   color: #b0b0b0;
 }
 
-.alert-banner-container .timing-icon {
+.timing-icon {
   font-size: 16px;
   width: 16px;
   height: 16px;
 }
 
-.alert-banner-container .urgency {
+.urgency {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -110,45 +113,46 @@
   font-weight: 500;
 }
 
-.alert-banner-container .urgency-icon {
+.urgency-icon {
   font-size: 16px;
   width: 16px;
   height: 16px;
 }
 
-.alert-banner-container .expand-icon {
+.expand-icon {
   margin-left: 16px;
   transition: transform 0.3s ease;
 }
 
-.alert-banner-container .alert-details {
+/* Alert Details */
+.alert-details {
   padding: 0 16px 16px;
 }
 
-.alert-banner-container .outlook-content {
+.outlook-content {
   background: #2a2a2a;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
 }
 
-.alert-banner-container .outlook-section {
+.outlook-section {
   margin-bottom: 16px;
 }
 
-.alert-banner-container .outlook-section h4 {
+.outlook-section h4 {
   color: #90caf9;
   font-size: 1rem;
   margin: 0 0 8px 0;
 }
 
-.alert-banner-container .outlook-section p {
+.outlook-section p {
   color: #ffffff;
   line-height: 1.5;
   margin: 0;
 }
 
-.alert-banner-container .outlook-meta {
+.outlook-meta {
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
@@ -158,31 +162,31 @@
   border-top: 1px solid #3a3a3a;
 }
 
-.alert-banner-container .alert-description {
+.alert-description {
   color: #ffffff;
   line-height: 1.6;
   margin-bottom: 16px;
 }
 
-.alert-banner-container .instruction {
+.instruction {
   background: #2a2a2a;
   border-radius: 8px;
   padding: 16px;
   margin-top: 16px;
 }
 
-.alert-banner-container .instruction h4 {
+.instruction h4 {
   color: #90caf9;
   margin: 0 0 8px 0;
 }
 
-.alert-banner-container .alert-actions {
+.alert-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.alert-banner-container .alert-actions button {
+.alert-actions button {
   color: #ffffff;
   background: #333333;
   border: none;
@@ -191,47 +195,43 @@
   transition: background 0.3s ease;
 }
 
-.alert-banner-container .alert-actions button:hover {
+.alert-actions button:hover {
   background: #444444;
 }
 
 /* Severity Styles */
-.alert-banner-container .severity-extreme {
-  background: linear-gradient(135deg, #b71c1c, #b71c1c);
+.severity-extreme {
   border-left: 4px solid #ff1744;
 }
 
-.alert-banner-container .severity-severe {
-  background: linear-gradient(135deg, #d84315, #d84315);
+.severity-severe {
   border-left: 4px solid #ff5722;
 }
 
-.alert-banner-container .severity-moderate {
-  background: linear-gradient(135deg, #f57c00, #f57c00);
+.severity-moderate {
   border-left: 4px solid #ffa726;
 }
 
-.alert-banner-container .severity-minor {
-  background: linear-gradient(135deg, #2979ff, #2979ff);
+.severity-minor {
   border-left: 4px solid #2196f3;
 }
 
-/* Severity Icon Styles */
-.alert-banner-container .severity-icon-extreme {
+/* Icon Styles */
+.severity-icon-extreme {
   color: #ff1744;
   animation: pulse 2s infinite;
 }
 
-.alert-banner-container .severity-icon-severe {
+.severity-icon-severe {
   color: #ff5722;
   animation: pulse 3s infinite;
 }
 
-.alert-banner-container .severity-icon-moderate {
+.severity-icon-moderate {
   color: #ffa726;
 }
 
-.alert-banner-container .severity-icon-minor {
+.severity-icon-minor {
   color: #2196f3;
 }
 
@@ -256,49 +256,42 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .alert-banner-container .alert-banner {
+  .alert-banner {
     padding: 8px;
   }
 
-  .alert-banner-container .alert-header {
+  .alert-header {
     padding: 12px;
   }
 
-  .alert-banner-container .alert-icon-wrapper {
+  .alert-icon-wrapper {
     width: 40px;
     height: 40px;
     margin-right: 12px;
   }
 
-  .alert-banner-container .alert-type {
+  .alert-type {
     font-size: 1rem;
   }
 
-  .alert-banner-container .alert-headline {
+  .alert-headline {
     font-size: 0.85rem;
   }
 
-  .alert-banner-container .alert-timing {
+  .alert-timing {
     font-size: 0.75rem;
     flex-wrap: wrap;
   }
 
-  .alert-banner-container .alert-details {
+  .alert-details {
     padding: 0 12px 12px;
   }
 
-  .alert-banner-container .alert-actions {
+  .alert-actions {
     flex-direction: column;
   }
 
-  .alert-banner-container .alert-actions button {
+  .alert-actions button {
     width: 100%;
-  }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .alert-banner-container .alert-banner {
-    background: #121212;
   }
 }
