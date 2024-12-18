@@ -49,7 +49,7 @@ export class LawnCareServicePageComponent {
         'Regular soil testing and pH balancing',
         'Environmentally friendly weed control solutions'
       ],
-      imageUrl: 'https://media.istockphoto.com/id/1357530144/photo/adult-male-professional-landscaping-contractor-working-outdoors-cutting-grass-and-maintaining.jpg?s=2048x2048&w=is&k=20&c=DxlMvgyPd74jD5frj-J_Fkh8h37CZxH8hV8Dz6sL2E0=',
+      imageUrl: 'https://media.istockphoto.com/id/177391388/photo/mulching-around-the-bushes.jpg?s=2048x2048&w=is&k=20&c=nYXjJIAml6jBKTupjVWFsO-cxwBHwMWlSlVFwZTu8uI=',
       imageAlt: 'Professional lawn maintenance'
     },
     {
@@ -62,7 +62,7 @@ export class LawnCareServicePageComponent {
         'Water-efficient irrigation system design',
         'Professional installation and project management'
       ],
-      imageUrl: 'https://media.istockphoto.com/id/1406742992/photo/landscaping-the-garden-plant-flowers.jpg?s=2048x2048&w=is&k=20&c=wN72ZCipz-W92FOqVoX0ZPNHhB5uPt8kZEGXB8ECPO4=',
+      imageUrl: 'https://media.istockphoto.com/id/92624397/photo/summer-garden.jpg?s=2048x2048&w=is&k=20&c=rcCRzG_Y3PXnPkHXChfFcqHrPzq__qaUupH6MitPlyE=',
       imageAlt: 'Landscape design services',
       reversed: true
     },
@@ -76,7 +76,7 @@ export class LawnCareServicePageComponent {
         'Core aeration and overseeding',
         'Soil amendment and conditioning'
       ],
-      imageUrl: 'https://media.istockphoto.com/id/1364186436/photo/close-up-of-a-lawn-sprinkler-head-watering-grass.jpg?s=2048x2048&w=is&k=20&c=8T4dZ-OKx0Dd7XJ3mXyPnuwsO8bEGmXwBN-WPZuJ8pM=',
+      imageUrl: 'https://media.istockphoto.com/id/1174599934/photo/spraying-pesticide-with-portable-sprayer-to-eradicate-garden-weeds-in-the-lawn-weedicide.jpg?s=2048x2048&w=is&k=20&c=nlhm2B93S6VrJP_m_odDotUnZVz62pLFRlGB576PP1A=',
       imageAlt: 'Lawn treatment application'
     }
   ];

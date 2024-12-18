@@ -1,25 +1,8 @@
-/* Global Variables */
-:root {
-  --primary-green: #4CAF50;
-  --secondary-green: #45a049;
-  --accent-green: #81C784;
-  --light-green: #E8F5E9;
-  --dark-green: #2E7D32;
-  --text-dark: #1a374d;
-  --text-light: #4a5568;
-  --white: #ffffff;
-  --gray-light: #f8fafc;
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-  --transition: all 0.3s ease;
-}
-
 /* Hero Section */
 .hero-section {
   height: 80vh;
   background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-    url('https://media.istockphoto.com/id/1276583472/photo/green-lawn-at-morning-dew.jpg?s=2048x2048&w=is&k=20&c=2hLJ1kERL8DZGUAIBHFxGJPQZg_2g4oi0P2OJuGPJUY=');
+    url('https://media.istockphoto.com/id/475958716/photo/lawn-mower.jpg?s=2048x2048&w=is&k=20&c=6Q3aPOuE3eFtI18xN_RX1kO3r7O7ycS88oTSGMS4Jds=');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -34,12 +17,12 @@
   max-width: 900px;
   padding: 0 20px;
   z-index: 1;
-  color: var(--white);
+  color: #ffffff;
 }
 
 .season-badge {
-  background: var(--primary-green);
-  color: var(--white);
+  background: #4CAF50;
+  color: #ffffff;
   padding: 8px 16px;
   border-radius: 20px;
   display: inline-block;
@@ -73,7 +56,7 @@
 
 /* Highlights Section */
 .highlights-section {
-  background: var(--white);
+  background: #ffffff;
   padding: 60px 20px;
   margin-top: -60px;
   position: relative;
@@ -89,17 +72,17 @@
 }
 
 .highlight-card {
-  background: var(--white);
+  background: #ffffff;
   padding: 30px;
   text-align: center;
   border-radius: 10px;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .highlight-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .highlight-card mat-icon {
@@ -107,31 +90,31 @@
   height: 40px;
   width: 40px;
   margin-bottom: 20px;
-  color: var(--primary-green);
+  color: #4CAF50;
 }
 
 .highlight-card h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: var(--text-dark);
+  color: #1a374d;
 }
 
 /* Seasonal Section */
 .seasonal-section {
   padding: 80px 20px;
-  background: var(--gray-light);
+  background: #f8fafc;
   text-align: center;
 }
 
 .seasonal-section h2 {
   font-size: 2.5rem;
-  color: var(--text-dark);
+  color: #1a374d;
   margin-bottom: 15px;
 }
 
 .section-subtitle {
   font-size: 1.2rem;
-  color: var(--text-light);
+  color: #4a5568;
   margin-bottom: 50px;
 }
 
@@ -144,21 +127,21 @@
 }
 
 .season-card {
-  background: var(--white);
+  background: #ffffff;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .season-card:hover {
   transform: translateY(-10px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .season-header {
   padding: 30px;
-  color: var(--white);
+  color: #ffffff;
   text-align: center;
 }
 
@@ -180,7 +163,7 @@
 
 .season-content h4 {
   font-size: 1.5rem;
-  color: var(--text-dark);
+  color: #1a374d;
   margin-bottom: 15px;
 }
 
@@ -196,17 +179,17 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  color: var(--text-light);
+  color: #4a5568;
 }
 
 .season-services mat-icon {
-  color: var(--primary-green);
+  color: #4CAF50;
 }
 
 .season-button {
   width: 100%;
   padding: 12px;
-  color: var(--white);
+  color: #ffffff;
   border: none;
 }
 
@@ -238,14 +221,14 @@
 
 .service-content h2 {
   font-size: 2.5rem;
-  color: var(--text-dark);
+  color: #1a374d;
   margin-bottom: 20px;
 }
 
 .service-content p {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--text-light);
+  color: #4a5568;
   margin-bottom: 30px;
 }
 
@@ -261,24 +244,24 @@
   gap: 10px;
   margin-bottom: 15px;
   font-size: 1.1rem;
-  color: var(--text-light);
+  color: #4a5568;
 }
 
 .service-bullets mat-icon {
-  color: var(--primary-green);
+  color: #4CAF50;
 }
 
 .service-image {
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .service-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 }
 
 .service-image:hover img {
@@ -288,7 +271,7 @@
 /* Maintenance Plans Section */
 .maintenance-section {
   padding: 80px 20px;
-  background: var(--gray-light);
+  background: #f8fafc;
   text-align: center;
 }
 
@@ -304,16 +287,21 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: var(--transition);
+  transition: all 0.3s ease;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .plan-card:hover {
   transform: translateY(-10px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .plan-price {
   font-size: 2rem;
-  color: var(--primary-green);
+  color: #4CAF50;
   font-weight: bold;
   margin: 20px 0;
 }
@@ -330,11 +318,11 @@
   align-items: center;
   gap: 10px;
   padding: 10px 0;
-  color: var(--text-light);
+  color: #4a5568;
 }
 
 .plan-features mat-icon {
-  color: var(--primary-green);
+  color: #4CAF50;
 }
 
 mat-card-actions {
@@ -350,7 +338,7 @@ mat-card-actions {
   background-position: center;
   padding: 100px 20px;
   text-align: center;
-  color: var(--white);
+  color: #ffffff;
 }
 
 .cta-content {
