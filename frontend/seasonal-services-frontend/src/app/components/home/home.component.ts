@@ -41,14 +41,11 @@ import {
           <h1>Professional Snow & Lawn Services in Iowa City</h1>
           <p class="hero-subtitle">Year-Round Property Excellence Since 2010</p>
           <div class="hero-cta">
-            <button mat-raised-button color="primary" routerLink="/quote">
-              <mat-icon>calculate</mat-icon>
-              Get a Free Quote
+            <button mat-raised-button color="primary" routerLink="/booking">
+              <mat-icon>calendar_today</mat-icon>
+              Book Now
             </button>
-            <button mat-stroked-button (click)="scrollToSection('services')" class="explore-btn">
-              <mat-icon>explore</mat-icon>
-              Explore Services
-            </button>
+
           </div>
         </div>
         <div class="scroll-indicator">
