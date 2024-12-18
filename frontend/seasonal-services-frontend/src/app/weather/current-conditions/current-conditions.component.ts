@@ -1,10 +1,10 @@
+// current-conditions.component.ts
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ServiceStatus } from '../interfaces/weather.interfaces';
 import {
   Chart,
   ChartConfiguration,
@@ -17,7 +17,6 @@ import {
   Tooltip
 } from 'chart.js';
 
-
 Chart.register(
   LineController,
   LineElement,
@@ -28,16 +27,11 @@ Chart.register(
   Tooltip
 );
 
-interface ConditionThreshold {
-  value: number;
-  label: string;
-  severity: 'low' | 'moderate' | 'high' | 'extreme';
-}
-
 interface HourlyForecast {
   time: string;
   snowProbability: number;
-  accumulation: number;
+  temperature: number;
+  windSpeed: number;
 }
 
 @Component({
@@ -50,66 +44,78 @@ interface HourlyForecast {
     MatCardModule,
     MatTooltipModule
   ],
-  templateUrl: './current-conditions.component.html',
-  styleUrls: ['./current-conditions.component.css']
+  template: `
+    <mat-card class="forecast-card">
+      <mat-card-header>
+        <mat-card-title class="white-text">24-Hour Snow Forecast</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas #forecastChart></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  `,
+  styles: [`
+    .forecast-card {
+      background: #1c2a3e;
+      border-radius: 12px;
+      margin: 20px;
+      padding: 20px;
+    }
+
+    .white-text {
+      color: #ffffff !important;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    mat-card-subtitle,
+    mat-card-content {
+      color: #ffffff !important;
+    }
+  `]
 })
 export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
-  @Input() snowProbability: number = 0;
-  @Input() accumulation: number = 0;
-  @Input() groundTemp: number = 32;
-  @Input() windSpeed: number = 0;
-  @Input() serviceStatus: ServiceStatus = ServiceStatus.NOT_NEEDED;
-  @Input() isServiceRequired: boolean = false;
-  @Input() hourlyForecast: HourlyForecast[] = [];
+  @Input() set data(value: HourlyForecast[]) {
+    if (value && value.length > 0) {
+      this.hourlyForecast = value;
+      if (this.chart) {
+        this.updateChartData();
+      }
+    }
+  }
 
-  @ViewChild('snowChart') snowChartCanvas!: ElementRef;
+  hourlyForecast: HourlyForecast[] = [];
+  @ViewChild('forecastChart') forecastChartCanvas!: ElementRef;
   private chart: Chart | null = null;
 
-  readonly snowProbabilityThresholds: ConditionThreshold[] = [
-    { value: 30, label: 'Low Chance', severity: 'low' },
-    { value: 60, label: 'Moderate Chance', severity: 'moderate' },
-    { value: 80, label: 'High Chance', severity: 'high' }
-  ];
-
-  readonly windThresholds: ConditionThreshold[] = [
-    { value: 10, label: 'Light Breeze', severity: 'low' },
-    { value: 20, label: 'Moderate Wind', severity: 'moderate' },
-    { value: 30, label: 'Strong Wind', severity: 'high' }
-  ];
-
-  statusClass: string = '';
-  temperatureStatus: string = '';
-  windStatus: string = '';
-
   ngAfterViewInit() {
-    this.initializeChart();
+    setTimeout(() => {
+      this.initializeChart();
+    }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['serviceStatus']) {
-      this.updateStatusClass();
-    }
-    if (changes['groundTemp']) {
-      this.updateTemperatureStatus();
-    }
-    if (changes['windSpeed']) {
-      this.updateWindStatus();
-    }
-    if (changes['hourlyForecast'] && this.chart) {
-      this.updateChartData();
+    if (changes['data'] && !changes['data'].firstChange) {
+      if (this.chart) {
+        this.updateChartData();
+      } else {
+        this.initializeChart();
+      }
     }
   }
 
   private initializeChart() {
-    if (!this.snowChartCanvas) return;
+    if (!this.forecastChartCanvas || !this.hourlyForecast.length) return;
 
-    const ctx = this.snowChartCanvas.nativeElement.getContext('2d');
-
-    console.log('Chart Data:', {
-      labels: this.getNext24Hours(),
-      snowProbs: this.hourlyForecast.map(h => h.snowProbability),
-      accumulations: this.hourlyForecast.map(h => h.accumulation)
-    });
+    const ctx = this.forecastChartCanvas.nativeElement.getContext('2d');
 
     const config: ChartConfiguration = {
       type: 'line',
@@ -121,18 +127,27 @@ export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
             data: this.hourlyForecast.map(h => h.snowProbability),
             borderColor: '#2196f3',
             backgroundColor: 'rgba(33, 150, 243, 0.1)',
-            yAxisID: 'probability',
             fill: true,
-            tension: 0.4
+            tension: 0.4,
+            yAxisID: 'probability'
           },
           {
-            label: 'Accumulation (inches)',
-            data: this.hourlyForecast.map(h => h.accumulation),
-            borderColor: '#4caf50',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            yAxisID: 'accumulation',
+            label: 'Temperature (°F)',
+            data: this.hourlyForecast.map(h => h.temperature),
+            borderColor: '#ff4081',
+            backgroundColor: 'rgba(255, 64, 129, 0.1)',
             fill: true,
-            tension: 0.4
+            tension: 0.4,
+            yAxisID: 'temperature'
+          },
+          {
+            label: 'Wind Speed (mph)',
+            data: this.hourlyForecast.map(h => h.windSpeed),
+            borderColor: '#69f0ae',
+            backgroundColor: 'rgba(105, 240, 174, 0.1)',
+            fill: true,
+            tension: 0.4,
+            yAxisID: 'windSpeed'
           }
         ]
       },
@@ -163,13 +178,6 @@ export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
             },
             bodyFont: {
               size: 13
-            },
-            callbacks: {
-              label: (context) => {
-                const label = context.dataset.label || '';
-                const value = context.parsed.y;
-                return `${label}: ${value.toFixed(1)}`;
-              }
             }
           }
         },
@@ -190,27 +198,45 @@ export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
             },
             title: {
               display: true,
-              text: 'Probability (%)',
+              text: 'Snow Probability (%)',
               color: '#2196f3'
             }
           },
-          accumulation: {
+          temperature: {
             type: 'linear',
             position: 'right',
-            min: 0,
             grid: {
               display: false
             },
             ticks: {
-              color: '#4caf50',
+              color: '#ff4081',
               font: {
                 size: 12
               }
             },
             title: {
               display: true,
-              text: 'Accumulation (inches)',
-              color: '#4caf50'
+              text: 'Temperature (°F)',
+              color: '#ff4081'
+            }
+          },
+          windSpeed: {
+            type: 'linear',
+            position: 'right',
+            offset: true,
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#69f0ae',
+              font: {
+                size: 12
+              }
+            },
+            title: {
+              display: true,
+              text: 'Wind Speed (mph)',
+              color: '#69f0ae'
             }
           },
           x: {
@@ -234,17 +260,12 @@ export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
   }
 
   private updateChartData() {
-    if (!this.chart) return;
-
-    console.log('Updating chart with data:', {
-      labels: this.getNext24Hours(),
-      probabilities: this.hourlyForecast.map(h => h.snowProbability),
-      accumulations: this.hourlyForecast.map(h => h.accumulation)
-    });
+    if (!this.chart || !this.hourlyForecast.length) return;
 
     this.chart.data.labels = this.getNext24Hours();
     this.chart.data.datasets[0].data = this.hourlyForecast.map(h => h.snowProbability);
-    this.chart.data.datasets[1].data = this.hourlyForecast.map(h => h.accumulation);
+    this.chart.data.datasets[1].data = this.hourlyForecast.map(h => h.temperature);
+    this.chart.data.datasets[2].data = this.hourlyForecast.map(h => h.windSpeed);
     this.chart.update();
   }
 
@@ -252,75 +273,5 @@ export class CurrentConditionsComponent implements OnChanges, AfterViewInit {
     return this.hourlyForecast
       .slice(0, 24)
       .map(h => h.time);
-  }
-
-  private updateStatusClass(): void {
-    const statusClasses = {
-      [ServiceStatus.REQUIRED]: 'status-required',
-      [ServiceStatus.MONITORING]: 'status-monitoring',
-      [ServiceStatus.NOT_NEEDED]: 'status-normal'
-    };
-    this.statusClass = statusClasses[this.serviceStatus];
-  }
-
-  private updateTemperatureStatus(): void {
-    if (this.groundTemp <= 20) {
-      this.temperatureStatus = 'Rapid Snow Accumulation Likely';
-    } else if (this.groundTemp <= 32) {
-      this.temperatureStatus = 'Snow Accumulation Possible';
-    } else {
-      this.temperatureStatus = 'Snow May Not Stick';
-    }
-  }
-
-  private updateWindStatus(): void {
-    const threshold = this.findThreshold(this.windSpeed, this.windThresholds);
-    this.windStatus = threshold ? threshold.label : 'Calm Conditions';
-  }
-
-  getProgressBarClass(value: number, thresholds: ConditionThreshold[]): string {
-    const threshold = this.findThreshold(value, thresholds);
-    return threshold ? `severity-${threshold.severity}` : '';
-  }
-
-  private findThreshold(value: number, thresholds: ConditionThreshold[]): ConditionThreshold | null {
-    return thresholds
-      .slice()
-      .reverse()
-      .find(t => value >= t.value) || null;
-  }
-
-  getTooltip(value: number, thresholds: ConditionThreshold[]): string {
-    const threshold = this.findThreshold(value, thresholds);
-    return threshold ? threshold.label : 'Low';
-  }
-
-  shouldShowRecommendation(): boolean {
-    return this.accumulation >= 1.5 || this.snowProbability >= 50;
-  }
-
-  getServiceRecommendation(): string {
-    if (this.accumulation >= 2) {
-      return 'Service required - Expected accumulation exceeds threshold';
-    } else if (this.snowProbability >= 70) {
-      return 'Service recommended - High probability of significant snowfall';
-    } else if (this.snowProbability >= 50) {
-      return 'Monitor conditions - Moderate chance of snow';
-    }
-    return '';
-  }
-
-  getServiceWindow(): string {
-    const highProbabilityHours = this.hourlyForecast
-      .slice(0, 24)
-      .filter(h => h.snowProbability >= 50);
-
-    if (highProbabilityHours.length > 0) {
-      const firstHour = highProbabilityHours[0].time;
-      const lastHour = highProbabilityHours[highProbabilityHours.length - 1].time;
-      return `${firstHour} - ${lastHour}`;
-    }
-
-    return 'No immediate service window';
   }
 }

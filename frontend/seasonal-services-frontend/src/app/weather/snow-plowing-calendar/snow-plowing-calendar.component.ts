@@ -58,15 +58,7 @@ import {
 </app-hourly-forecast>
 
 
-      <app-current-conditions
-  [snowProbability]="getCurrentSnowProbability()"
-  [accumulation]="getExpectedAccumulation()"
-  [groundTemp]="currentGroundTemp"
-  [windSpeed]="currentWindSpeed"
-  [serviceStatus]="getServiceStatus()"
-  [isServiceRequired]="isServiceRequired()"
-  [hourlyForecast]="hourlyForecast"
-></app-current-conditions>
+<app-current-conditions [data]="hourlyForecast"></app-current-conditions>
 
 
 

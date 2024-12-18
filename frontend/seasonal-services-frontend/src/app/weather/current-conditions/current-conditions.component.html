@@ -1,110 +1,27 @@
-<mat-card class="current-conditions" [class]="statusClass">
+<!-- current-conditions.component.html -->
+<mat-card class="forecast-card">
   <mat-card-header>
-    <mat-card-title>Current Conditions</mat-card-title>
+    <mat-card-title class="white-text">24-Hour Snow Forecast</mat-card-title>
   </mat-card-header>
 
-
-  <!-----
   <mat-card-content>
-    <div class="conditions-grid">
+    <div class="chart-container">
+      <canvas #forecastChart></canvas>
+    </div>
 
-      <div class="stat-box snow-probability"
-           [matTooltip]="getTooltip(snowProbability, snowProbabilityThresholds)">
-        <div class="stat-icon snowflake-icon">
-          <mat-icon>ac_unit</mat-icon>
-        </div>
-        <div class="stat-content">
-          <h3>Snow Probability</h3>
-          <div class="stat-value">{{snowProbability}}%</div>
-          <div class="stat-progress">
-            <mat-progress-bar
-              mode="determinate"
-              [value]="snowProbability"
-              [class]="getProgressBarClass(snowProbability, snowProbabilityThresholds)">
-            </mat-progress-bar>
-          </div>
-        </div>
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-color probability"></div>
+        <span>Snow Probability</span>
       </div>
---->
-      <!-- Expected Accumulation -->
-
-      <!----
-      <div class="stat-box accumulation" [class.alert]="isServiceRequired">
-        <div class="stat-icon accumulation-icon">
-          <mat-icon>height</mat-icon>
-        </div>
-        <div class="stat-content">
-          <h3>Expected Accumulation</h3>
-          <div class="stat-value">{{accumulation}}"</div>
-          <div class="status-indicator" [class]="statusClass">
-            {{serviceStatus}}
-          </div>
-        </div>
+      <div class="legend-item">
+        <div class="legend-color temperature"></div>
+        <span>Temperature</span>
       </div>
----->
-      <!-- Ground Temperature -->
-
-
-      <!---
-      <div class="stat-box temperature">
-        <div class="stat-icon temperature-icon">
-          <mat-icon>thermostat</mat-icon>
-        </div>
-        <div class="stat-content">
-          <h3>Ground Temperature</h3>
-          <div class="stat-value">{{groundTemp}}°F</div>
-          <div class="condition-note">{{temperatureStatus}}</div>
-        </div>
-      </div>
---->
-      <!-- Wind Conditions -->
-
-      <!-----
-      <div class="stat-box wind"
-           [class.alert]="windSpeed >= 20"
-           [matTooltip]="'Wind conditions may affect snow distribution'">
-        <div class="stat-icon wind-icon">
-          <mat-icon>air</mat-icon>
-        </div>
-        <div class="stat-content">
-          <h3>Wind Conditions</h3>
-          <div class="stat-value">{{windSpeed}} mph</div>
-          <div class="condition-note">{{windStatus}}</div>
-        </div>
+      <div class="legend-item">
+        <div class="legend-color wind-speed"></div>
+        <span>Wind Speed</span>
       </div>
     </div>
   </mat-card-content>
 </mat-card>
-
---->
-
-<div class="snow-forecast-section">
-  <mat-card-subtitle>24-Hour Snow Forecast</mat-card-subtitle>
-  <div class="chart-container">
-    <canvas #snowChart></canvas>
-  </div>
-  <div class="chart-legend">
-    <div class="legend-item">
-      <div class="legend-color probability"></div>
-      <span>Snow Probability</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color accumulation"></div>
-      <span>Expected Accumulation</span>
-    </div>
-  </div>
-</div>
-
-
-<!-- Add a service recommendation section -->
-<div class="service-recommendation" *ngIf="shouldShowRecommendation()">
-  <mat-icon>warning</mat-icon>
-  <div class="recommendation-content">
-    <h4>Service Recommendation</h4>
-    <p>{{ getServiceRecommendation() }}</p>
-    <div class="timing-info">
-      <mat-icon>schedule</mat-icon>
-      <span>Recommended service window: {{ getServiceWindow() }}</span>
-    </div>
-  </div>
-</div>
