@@ -260,6 +260,55 @@ import {
         </div>
       </div>
     </div>
+
+    <!-- Weather Preview Section -->
+<section class="weather-preview">
+  <div class="weather-preview-content">
+    <div class="weather-info">
+      <h2>Be Winter-Ready with Real-Time Updates</h2>
+      <p>Stay ahead of winter weather with our real-time monitoring system. Access up-to-the-minute alerts, detailed forecasts, and service schedules—all sourced directly from the trusted National Weather Service (weather.gov). Prepare confidently for whatever winter brings!</p>
+
+
+
+      <div class="weather-features">
+        <div class="weather-feature">
+          <mat-icon>warning</mat-icon>
+          <span>Real-time weather alerts</span>
+        </div>
+        <div class="weather-feature">
+          <mat-icon>schedule</mat-icon>
+          <span>24/7 monitoring</span>
+        </div>
+        <div class="weather-feature">
+          <mat-icon>map</mat-icon>
+          <span>Local road conditions</span>
+        </div>
+        <div class="weather-feature">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Service scheduling</span>
+        </div>
+      </div>
+
+      <div class="weather-cta">
+        <button class="primary-btn" routerLink="weather-dashboard">
+          <mat-icon>visibility</mat-icon>
+          View Weather Page
+        </button>
+        <button class="secondary-btn" routerLink="/safety-tips">
+          <mat-icon>security</mat-icon>
+          Safety Tips
+        </button>
+      </div>
+    </div>
+
+    <div class="weather-preview-image">
+      <img
+        src="https://media.istockphoto.com/id/1127448496/photo/winter-storm-warning-sign-with-snowfall-and-stormy-background.jpg?s=2048x2048&w=is&k=20&c=KrlqAZqTP8xiGZevodBMOqNMqDhlwCRYQl74WpGf2dw="
+        alt="Winter weather monitoring"
+      >
+    </div>
+  </div>
+</section>
   `,
   animations: [
     trigger('fadeInOut', [
