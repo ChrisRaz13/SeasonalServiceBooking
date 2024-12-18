@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SafetyTipsDialogComponent } from '../safety-tips-dialog/safety-tips-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { WeatherService } from '../../services/weather.service';
 import { Subject, fromEvent } from 'rxjs';
@@ -27,7 +29,8 @@ import {
     MatIconModule,
     MatCardModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDialogModule
   ],
   template: `
     <div class="homepage-container" [attr.data-season]="activeSeason">
@@ -294,10 +297,10 @@ import {
           <mat-icon>visibility</mat-icon>
           View Weather Page
         </button>
-        <button class="secondary-btn" routerLink="/safety-tips">
+        <button class="secondary-btn" (click)="openSafetyTips()">
           <mat-icon>security</mat-icon>
-          Safety Tips
-        </button>
+             Safety Tips
+          </button>
       </div>
     </div>
 
@@ -452,8 +455,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private weatherService: WeatherService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
+
+  openSafetyTips(): void {
+    this.dialog.open(SafetyTipsDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      panelClass: 'safety-tips-dialog'
+    });
+  }
+
 
   ngOnInit(): void {
     this.loadWeatherAlerts();

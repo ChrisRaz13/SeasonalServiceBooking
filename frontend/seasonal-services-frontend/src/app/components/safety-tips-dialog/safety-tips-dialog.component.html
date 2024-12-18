@@ -1,0 +1,44 @@
+<div class="safety-dialog-container">
+  <div class="dialog-header">
+    <h2>
+      <mat-icon>security</mat-icon>
+      Winter Safety Tips
+    </h2>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <p class="intro-text">
+      Being prepared for winter weather is crucial for safety. Review these important tips to protect yourself, your family, and your property during severe winter conditions.
+    </p>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let category of safetyCategories">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>{{category.icon}}</mat-icon>
+            {{category.title}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <ul class="safety-tips-list">
+          <li *ngFor="let tip of category.tips">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{tip}}</span>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="dialog-footer">
+    <p class="emergency-note">
+      For emergencies, always call 911. Stay informed about local weather conditions and follow official guidance during severe weather events.
+    </p>
+    <button mat-raised-button color="primary" (click)="closeDialog()">
+      Got It
+    </button>
+  </div>
+</div>

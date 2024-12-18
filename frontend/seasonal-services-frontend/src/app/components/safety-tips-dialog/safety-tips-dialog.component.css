@@ -1,0 +1,119 @@
+.safety-dialog-container {
+  width: 100%;
+  max-width: 800px;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background-color: #1a374d;
+  color: white;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+}
+
+.dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.intro-text {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+mat-accordion {
+  display: block;
+}
+
+mat-expansion-panel {
+  margin-bottom: 10px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+mat-expansion-panel-header {
+  padding: 20px;
+}
+
+mat-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1a374d;
+  font-weight: 500;
+}
+
+.safety-tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.safety-tips-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  line-height: 1.4;
+}
+
+.safety-tips-list mat-icon {
+  color: #4caf50;
+  font-size: 20px;
+}
+
+.dialog-footer {
+  padding: 20px 24px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.emergency-note {
+  color: #dc3545;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* Custom scrollbar */
+.dialog-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Animation for expansion panels */
+mat-expansion-panel {
+  transition: box-shadow 0.3s ease;
+}
+
+mat-expansion-panel:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
