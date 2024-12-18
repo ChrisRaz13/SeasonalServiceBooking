@@ -5,14 +5,17 @@ import { EmergencyServiceComponent } from './components/emergency-service/emerge
 import { SnowPlowingServicePageComponent } from './components/snow-plowing-service-page/snow-plowing-service-page.component';
 import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/snow-plowing-calendar.component';
 import { BookingComponent } from './components/booking/booking.component';
+import { LawnCareServicePageComponent } from './components/lawn-care-service-page/lawn-care-service-page.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Home | Alex Services' },
   { path: 'emergency-service-24-7', component: EmergencyServiceComponent, title: '24/7 Emergency Services' },
   { path: 'snowplowing-service-page', component: SnowPlowingServicePageComponent, title: 'Snow Removal Services' },
+  { path: 'lawn-care-service-page', component: LawnCareServicePageComponent, title: 'Lawn Care Services'},
   { path: 'weather-dashboard', component: SnowPlowingCalendarComponent, title: 'Weather Dashboard' },
   { path: 'booking', component: BookingComponent, title: 'Book a Service' },
   { path: '**', redirectTo: '' }
+
 ];
 
 @NgModule({

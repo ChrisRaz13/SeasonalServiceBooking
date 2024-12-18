@@ -1,0 +1,435 @@
+/* Global Variables */
+:root {
+  --primary-green: #4CAF50;
+  --secondary-green: #45a049;
+  --accent-green: #81C784;
+  --light-green: #E8F5E9;
+  --dark-green: #2E7D32;
+  --text-dark: #1a374d;
+  --text-light: #4a5568;
+  --white: #ffffff;
+  --gray-light: #f8fafc;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero-section {
+  height: 80vh;
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url('https://media.istockphoto.com/id/1276583472/photo/green-lawn-at-morning-dew.jpg?s=2048x2048&w=is&k=20&c=2hLJ1kERL8DZGUAIBHFxGJPQZg_2g4oi0P2OJuGPJUY=');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 900px;
+  padding: 0 20px;
+  z-index: 1;
+  color: var(--white);
+}
+
+.season-badge {
+  background: var(--primary-green);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.hero-buttons button {
+  padding: 12px 32px;
+  font-size: 1.2rem;
+}
+
+/* Highlights Section */
+.highlights-section {
+  background: var(--white);
+  padding: 60px 20px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+}
+
+.highlights-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.highlight-card {
+  background: var(--white);
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.highlight-card mat-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 20px;
+  color: var(--primary-green);
+}
+
+.highlight-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+}
+
+/* Seasonal Section */
+.seasonal-section {
+  padding: 80px 20px;
+  background: var(--gray-light);
+  text-align: center;
+}
+
+.seasonal-section h2 {
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.section-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 50px;
+}
+
+.seasonal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.season-card {
+  background: var(--white);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.season-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.season-header {
+  padding: 30px;
+  color: var(--white);
+  text-align: center;
+}
+
+.season-header mat-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 10px;
+}
+
+.season-header h3 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.season-content {
+  padding: 30px;
+}
+
+.season-content h4 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.season-services {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.season-services li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--text-light);
+}
+
+.season-services mat-icon {
+  color: var(--primary-green);
+}
+
+.season-button {
+  width: 100%;
+  padding: 12px;
+  color: var(--white);
+  border: none;
+}
+
+/* Service Sections */
+.service-sections {
+  padding: 80px 20px;
+}
+
+.service-section {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.service-section.reversed {
+  direction: rtl;
+}
+
+.service-section.reversed .service-content {
+  direction: ltr;
+}
+
+.service-content {
+  padding: 20px;
+}
+
+.service-content h2 {
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+.service-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin-bottom: 30px;
+}
+
+.service-bullets {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.service-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+.service-bullets mat-icon {
+  color: var(--primary-green);
+}
+
+.service-image {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+
+.service-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Maintenance Plans Section */
+.maintenance-section {
+  padding: 80px 20px;
+  background: var(--gray-light);
+  text-align: center;
+}
+
+.plans-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.plan-card:hover {
+  transform: translateY(-10px);
+}
+
+.plan-price {
+  font-size: 2rem;
+  color: var(--primary-green);
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  text-align: left;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  color: var(--text-light);
+}
+
+.plan-features mat-icon {
+  color: var(--primary-green);
+}
+
+mat-card-actions {
+  margin-top: auto;
+  padding: 16px;
+}
+
+/* Call to Action Section */
+.cta-section {
+  background: linear-gradient(rgba(46,125,50,0.9), rgba(46,125,50,0.9)),
+    url('https://media.istockphoto.com/id/1276583472/photo/green-lawn-at-morning-dew.jpg?s=2048x2048&w=is&k=20&c=2hLJ1kERL8DZGUAIBHFxGJPQZg_2g4oi0P2OJuGPJUY=');
+  background-size: cover;
+  background-position: center;
+  padding: 100px 20px;
+  text-align: center;
+  color: var(--white);
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.cta-buttons button {
+  padding: 12px 32px;
+  font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .service-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .service-section.reversed {
+    direction: ltr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .seasonal-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+
+  .highlight-card {
+    padding: 20px;
+  }
+
+  .service-content h2 {
+    font-size: 2rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+  }
+
+  .season-card {
+    margin: 0 10px;
+  }
+}

@@ -20,10 +20,8 @@ import { filter } from 'rxjs/operators';
     HttpClientModule,
     FormsModule,
     NavBarComponent,
-    HomeComponent,
-    SnowPlowingCalendarComponent,
     FooterComponent
-  ],
+],
   template: `
     <app-nav-bar></app-nav-bar>
     <main>

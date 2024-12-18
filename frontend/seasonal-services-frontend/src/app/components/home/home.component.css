@@ -584,7 +584,7 @@
   align-items: center;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #e5d4d41a;
 }
 
 .alert-timing {
@@ -592,22 +592,40 @@
   color: #90caf9;
 }
 
-/* Outlook specific styles */
-.outlook-item {
-  background: rgba(25, 118, 210, 0.1);
-}
-
 .outlook-content {
-  padding: 1rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 1.5rem;
   margin: 1rem 0;
 }
 
-.outlook-day-one {
+.outlook-meta {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.outlook-section {
+  margin: 1.5rem 0;
+}
+
+.outlook-section h5 {
+  color: #64b5f6;
   font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.outlook-section p {
+  color: #f0f4f8;
   line-height: 1.6;
-  color: #e3f2fd;
+  white-space: pre-line;
+  margin: 0;
+}
+
+.alert-item.outlook-item {
+  background: rgba(25, 118, 210, 0.1);
+  border-left: 4px solid #1976d2;
 }
 
 /* Scrollbar Styling */

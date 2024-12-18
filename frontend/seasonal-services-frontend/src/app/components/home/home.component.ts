@@ -85,8 +85,8 @@ import {
         </div>
       </section>
 
-      <!-- Service Content -->
-      <section class="services-showcase" [ngClass]="activeSeason">
+<!-- Service Content -->
+<section class="services-showcase" [ngClass]="activeSeason">
         <div *ngIf="activeSeason === 'winter'" class="service-content winter-content" [@contentAnimation]>
           <h2 class="section-title">Professional Snow Management</h2>
           <div class="service-grid">
@@ -187,38 +187,49 @@ import {
           </div>
 
           <!-- Hazardous Weather Outlooks -->
-          <div class="alert-section" *ngIf="getHazardousWeatherOutlooks().length > 0">
-            <h4 class="section-title">Hazardous Weather Outlook</h4>
-            <div class="alerts-list">
-              <div *ngFor="let alert of getHazardousWeatherOutlooks()"
-                   class="alert-item outlook-item"
-                   [ngClass]="getAlertSeverityClass(alert.severity)">
-                <div class="alert-item-header">
-                  <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
-                  <div class="alert-item-title">
-                    <h4>{{ alert.event }}</h4>
-                    <span class="alert-severity-badge">{{ alert.severity }}</span>
-                  </div>
-                </div>
-                <div class="outlook-content" *ngIf="alert.outlook">
-                  <p class="outlook-day-one">{{ alert.outlook.dayOne }}</p>
-                  <p class="outlook-extended" *ngIf="alert.outlook.extendedOutlook">
-                    <strong>Extended Outlook:</strong><br>
-                    {{ alert.outlook.extendedOutlook }}
-                  </p>
-                  <p class="spotter-info" *ngIf="alert.outlook.spotterInfo">
-                    <strong>Spotter Information:</strong><br>
-                    {{ alert.outlook.spotterInfo }}
-                  </p>
-                </div>
-                <div class="alert-details">
-                  <span class="alert-timing">
-                    Issued: {{ formatDate(alert.onset || '') }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="alert-section" *ngIf="getHazardousWeatherOutlooks().length > 0">
+  <h4 class="section-title">Hazardous Weather Outlook</h4>
+  <div class="alerts-list">
+    <div *ngFor="let alert of getHazardousWeatherOutlooks()"
+         class="alert-item outlook-item"
+         [ngClass]="getAlertSeverityClass(alert.severity)">
+      <div class="alert-item-header">
+        <mat-icon>{{ getAlertIcon(alert.severity) }}</mat-icon>
+        <div class="alert-item-title">
+          <h4>{{ alert.event }}</h4>
+          <span class="alert-severity-badge">{{ alert.severity }}</span>
+        </div>
+      </div>
+      <div class="outlook-content" *ngIf="alert.outlook">
+        <div class="outlook-meta">
+          <p><strong>Issued by:</strong> {{ alert.outlook.issuedBy }}</p>
+          <p><strong>Areas:</strong> {{ alert.outlook.regions.join(', ') }}</p>
+        </div>
+
+        <div class="outlook-section" *ngIf="alert.outlook.dayOne">
+          <h5>Today's Outlook</h5>
+          <p style="white-space: pre-line">{{ alert.outlook.dayOne }}</p>
+        </div>
+
+        <div class="outlook-section" *ngIf="alert.outlook.extendedOutlook">
+          <h5>Extended Outlook (Days 2-7)</h5>
+          <p style="white-space: pre-line">{{ alert.outlook.extendedOutlook }}</p>
+        </div>
+
+        <div class="outlook-section" *ngIf="alert.outlook.spotterInfo">
+          <h5>Spotter Information</h5>
+          <p style="white-space: pre-line">{{ alert.outlook.spotterInfo }}</p>
+        </div>
+      </div>
+
+      <div class="alert-details">
+        <span class="alert-timing">
+          Issued: {{ formatDate(alert.onset || '') }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
           <!-- Other Alerts -->
           <div class="alert-section" *ngIf="getOtherAlerts().length > 0">
@@ -278,6 +289,7 @@ import {
   ],
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit, OnDestroy {
   weatherAlerts: WeatherAlert[] = [];
   activeSeason: 'winter' | 'summer' = 'winter';
@@ -392,12 +404,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private weatherService: WeatherService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadWeatherAlerts();
     this.initScrollListener();
-    setInterval(() => this.loadWeatherAlerts(), 300000); // Refresh every 5 minutes
+    setInterval(() => this.loadWeatherAlerts(), 300000);
   }
 
   ngOnDestroy(): void {
@@ -417,9 +429,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.activeSeason = season;
   }
 
+  // Weather Alert Methods
   loadWeatherAlerts(): void {
-    const lat = 42.032974;
-    const lon = -93.581543;
+    const lat = 41.6611277;
+    const lon = -91.5301683;
 
     this.isLoading = true;
     this.hasError = false;
@@ -453,30 +466,74 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private processAlerts(features: any[]): void {
-    this.weatherAlerts = features.map(feature => ({
-      severity: feature.properties.severity as AlertSeverity,
-      event: feature.properties.event,
-      headline: feature.properties.headline,
-      description: feature.properties.description,
-      instruction: feature.properties.instruction,
-      expires: feature.properties.expires,
-      onset: feature.properties.onset,
-      status: feature.properties.status,
-      messageType: feature.properties.messageType,
-      category: feature.properties.category,
-      urgency: feature.properties.urgency,
-      certainty: feature.properties.certainty,
-      areaDesc: feature.properties.areaDesc,
-      response: feature.properties.response,
-      outlook: feature.properties.description.includes('Hazardous Weather Outlook')
-        ? WeatherUtils.parseWeatherOutlook(feature.properties.description)
-        : undefined
-    }));
+    this.weatherAlerts = features.map(feature => {
+      const alert: WeatherAlert = {
+        severity: feature.properties.severity as AlertSeverity,
+        event: feature.properties.event,
+        headline: feature.properties.headline,
+        description: feature.properties.description,
+        instruction: feature.properties.instruction,
+        expires: feature.properties.expires,
+        onset: feature.properties.effective,
+        status: feature.properties.status,
+        messageType: feature.properties.messageType,
+        category: feature.properties.category,
+        urgency: feature.properties.urgency,
+        certainty: feature.properties.certainty,
+        areaDesc: feature.properties.areaDesc,
+        response: feature.properties.response
+      };
+
+      if (feature.properties.event.toLowerCase().includes('hazardous weather outlook')) {
+        const description = feature.properties.description;
+        console.log('Raw HWO description:', description); // Debug log
+
+
+        const sections = description.split(/\.{3,}|\.\n/).map((section: string) => section.trim());
+        console.log('Split sections:', sections); // Debug log
+
+        let dayOne = '';
+        let extendedOutlook = '';
+        let spotterInfo = '';
+
+        sections.forEach((section: string, index: number) => {
+          console.log(`Processing section ${index}:`, section); // Debug log
+
+          if (section.toLowerCase().includes('this hazardous weather outlook') ||
+            section.toLowerCase().includes('hazardous weather outlook for')) {
+            // Skip the header section
+            return;
+          } else if (section.toLowerCase().includes('days 2 through 7') ||
+            section.toLowerCase().includes('extended forecast')) {
+            extendedOutlook = section.trim();
+          } else if (section.toLowerCase().includes('spotter')) {
+            spotterInfo = section.trim();
+          } else if (section.length > 0) {
+            // If it's not empty and not already categorized, it's likely the day one forecast
+            dayOne = section.trim();
+          }
+        });
+
+        alert.outlook = {
+          issuedBy: feature.properties.senderName || '',
+          issuedAt: feature.properties.effective || '',
+          regions: feature.properties.areaDesc?.split(';').map((r: string) => r.trim()) || [],
+          dayOne: dayOne,
+          extendedOutlook: extendedOutlook,
+          spotterInfo: spotterInfo
+        };
+
+        console.log('Processed outlook:', alert.outlook); // Debug log
+      }
+
+      return alert;
+    });
 
     // Sort alerts by severity
     this.weatherAlerts.sort((a, b) => this.getSeverityWeight(b.severity) - this.getSeverityWeight(a.severity));
   }
 
+  // Alert Helper Methods
   private getSeverityWeight(severity: AlertSeverity): number {
     const weights: Record<AlertSeverity, number> = {
       [AlertSeverity.EXTREME]: 4,

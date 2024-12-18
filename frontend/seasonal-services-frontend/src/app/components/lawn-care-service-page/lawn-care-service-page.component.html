@@ -1,0 +1,123 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="season-badge">Current Season: Spring</div>
+    <h1>Professional Lawn & Landscape Services</h1>
+    <p>Creating and Maintaining Beautiful, Sustainable Landscapes in Iowa City</p>
+    <div class="hero-buttons">
+      <button mat-raised-button color="primary" routerLink="/quote">
+        <mat-icon>description</mat-icon>
+        Get a Free Quote
+      </button>
+      <button mat-stroked-button color="accent" routerLink="/schedule">
+        <mat-icon>event</mat-icon>
+        Schedule Service
+      </button>
+    </div>
+  </div>
+  <div class="hero-overlay"></div>
+</section>
+
+<!-- Service Highlights -->
+<section class="highlights-section">
+  <div class="highlights-container">
+    <div class="highlight-card" *ngFor="let highlight of serviceHighlights">
+      <mat-icon [style.color]="'#4CAF50'">{{highlight.icon}}</mat-icon>
+      <h3>{{highlight.title}}</h3>
+      <p>{{highlight.description}}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Seasonal Packages -->
+<section class="seasonal-section">
+  <h2>Seasonal Care Programs</h2>
+  <p class="section-subtitle">Tailored lawn care packages for every season</p>
+
+  <div class="seasonal-container">
+    <div class="season-card" *ngFor="let package of seasonalPackages">
+      <div class="season-header" [style.background-color]="package.color">
+        <mat-icon>{{package.icon}}</mat-icon>
+        <h3>{{package.season}}</h3>
+      </div>
+      <div class="season-content">
+        <h4>{{package.title}}</h4>
+        <p>{{package.description}}</p>
+        <ul class="season-services">
+          <li *ngFor="let service of package.services">
+            <mat-icon>check_circle</mat-icon>
+            {{service}}
+          </li>
+        </ul>
+        <button mat-raised-button [style.background-color]="package.color" class="season-button">
+          Learn More
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Sections -->
+<section class="service-sections">
+  <div class="service-section" *ngFor="let section of serviceSections" [class.reversed]="section.reversed">
+    <div class="service-content">
+      <h2>{{section.title}}</h2>
+      <p>{{section.description}}</p>
+      <ul class="service-bullets">
+        <li *ngFor="let point of section.bulletPoints">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{point}}</span>
+        </li>
+      </ul>
+      <button mat-raised-button color="primary">Learn More</button>
+    </div>
+    <div class="service-image">
+      <img [src]="section.imageUrl" [alt]="section.imageAlt">
+    </div>
+  </div>
+</section>
+
+<!-- Maintenance Plans -->
+<section class="maintenance-section">
+  <h2>Maintenance Plans</h2>
+  <p class="section-subtitle">Choose the perfect plan for your lawn</p>
+
+  <div class="plans-container">
+    <mat-card class="plan-card" *ngFor="let plan of maintenancePlans">
+      <mat-card-header>
+        <mat-card-title>{{plan.title}}</mat-card-title>
+        <mat-card-subtitle>{{plan.description}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="plan-price">{{plan.price}}</p>
+        <ul class="plan-features">
+          <li *ngFor="let feature of plan.features">
+            <mat-icon>done</mat-icon>
+            {{feature}}
+          </li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary">Select Plan</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Ready to Transform Your Landscape?</h2>
+    <p>Let our experts create and maintain the perfect outdoor space for your home or business.</p>
+    <div class="cta-buttons">
+      <button mat-raised-button color="primary" routerLink="/quote">
+        <mat-icon>description</mat-icon>
+        Get Started
+      </button>
+      <button mat-stroked-button color="accent" routerLink="/contact">
+        <mat-icon>phone</mat-icon>
+        Contact Us
+      </button>
+    </div>
+  </div>
+</section>
