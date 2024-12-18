@@ -1,112 +1,164 @@
-/* hourly-forecast.component.css */
+/* General Hourly Forecast Container */
 .hourly-forecast {
-  background: var(--background-blur, rgba(25, 42, 86, 0.7));
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border-blur, rgba(255, 255, 255, 0.1));
+  background: rgba(15, 23, 42, 0.85); /* Modern dark background */
+  backdrop-filter: blur(12px); /* Glassmorphism effect */
+  border-radius: 16px;
+  margin-bottom: 0; /* Remove extra margin */
+  padding: 0; /* Tighten container */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+mat-card-content {
+  padding: 0; /* Remove padding around content */
 }
 
 .chart-container {
-  height: 300px;
-  margin: 20px 0;
-  padding: 20px;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
+  height: auto;
+  display: none; /* Hide chart container if unused */
 }
 
+/* Horizontal Scrollable Timeline for Hours */
 .hourly-timeline {
   display: flex;
-  overflow-x: auto;
-  padding: 20px;
-  gap: 16px;
+  overflow-x: auto; /* Horizontal scroll */
+  gap: 12px;
+  padding: 16px 10px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-.hour-card {
-  min-width: 120px;
-  padding: 16px;
+.hourly-timeline::-webkit-scrollbar {
+  height: 8px;
+}
+
+.hourly-timeline::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.hourly-timeline::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.hourly-timeline::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Individual Hour Cards */
+.hour-card {
+  min-width: 140px;
+  padding: 12px;
+  background: rgba(30, 41, 59, 0.85); /* Darker card background */
   border-radius: 12px;
   text-align: center;
-  transition: transform 0.3s;
-  border: 1px solid var(--border-blur, rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
+.hour-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Highlight for Snow-Likely Hours */
 .hour-card.snow-likely {
-  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(33, 150, 243, 0.05));
-  border-color: rgba(33, 150, 243, 0.3);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.3), rgba(33, 150, 243, 0.1));
+  border: 1px solid rgba(33, 150, 243, 0.5);
 }
 
+/* Time Display */
 .hour-time {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #bbdefb;
 }
 
+/* Temperature Display */
 .hour-temp {
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 8px;
+  color: #ffffff;
   font-family: 'Roboto Mono', monospace;
 }
 
+/* Snow Probability Display */
 .snow-chance {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .snow-chance mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  opacity: 0.5;
+  font-size: 20px;
+  color: #90caf9;
+  opacity: 0.6;
+  transition: color 0.3s ease;
 }
 
 .snow-chance mat-icon.active {
-  opacity: 1;
   color: #2196f3;
+  opacity: 1;
 }
 
+/* Snow Accumulation Display */
 .accumulation {
-  font-size: 0.9rem;
-  padding: 4px 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2196f3;
   background: rgba(33, 150, 243, 0.2);
+  border: 1px solid rgba(33, 150, 243, 0.5);
   border-radius: 4px;
+  padding: 4px 8px;
   display: inline-block;
 }
 
-/* Scrollbar Styles */
-.hourly-timeline::-webkit-scrollbar {
-  height: 6px;
-}
-
-.hourly-timeline::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-}
-
-.hourly-timeline::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-.hourly-timeline::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
+/* Responsive Design for Mobile */
 @media (max-width: 768px) {
   .hour-card {
     min-width: 100px;
+    padding: 10px;
   }
 
   .hour-time {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .hour-temp {
     font-size: 1.2rem;
+  }
+
+  .accumulation {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hour-card {
+    min-width: 90px;
+    padding: 8px;
+  }
+
+  .hour-time {
+    font-size: 0.8rem;
+  }
+
+  .hour-temp {
+    font-size: 1.1rem;
+  }
+
+  .snow-chance mat-icon {
+    font-size: 16px;
   }
 }

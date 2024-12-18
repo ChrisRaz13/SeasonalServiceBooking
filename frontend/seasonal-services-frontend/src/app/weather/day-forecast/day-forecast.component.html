@@ -1,5 +1,6 @@
+<!---
 <div class="forecast-container" [class.high-impact]="isHighImpactWeather(forecast.dayPeriod)">
-  <!-- Day Period -->
+
   <div class="forecast-period" *ngIf="forecast.dayPeriod">
     <div class="period-header" [class.today]="isToday">
       <div class="header-main">
@@ -18,7 +19,7 @@
     </div>
 
     <div class="period-details">
-      <!-- Wind Info -->
+
       <div class="detail-item wind-info"
            [class.highlight]="shouldHighlightWind(forecast.dayPeriod.windSpeed)"
            [matTooltip]="shouldHighlightWind(forecast.dayPeriod.windSpeed) ? 'High winds expected' : ''">
@@ -26,7 +27,7 @@
         <span>{{ getWindDescription(forecast.dayPeriod.windSpeed, forecast.dayPeriod.windDirection) }}</span>
       </div>
 
-      <!-- Precipitation Info -->
+
       <div class="detail-item precipitation"
            *ngIf="getPrecipitationDetails(forecast.dayPeriod)"
            [class.snow-expected]="forecast.dayPeriod.snowProbability > 0">
@@ -34,7 +35,7 @@
         <span>{{ getPrecipitationDetails(forecast.dayPeriod) }}</span>
       </div>
 
-      <!-- Service Status -->
+
       <div class="detail-item service-status"
            [class]="getStatusColor(getServiceStatus(forecast.dayPeriod))"
            *ngIf="getServiceStatus(forecast.dayPeriod) !== ServiceStatus.NOT_NEEDED">
@@ -53,9 +54,9 @@
 
   <mat-divider *ngIf="forecast.nightPeriod"></mat-divider>
 
-  <!-- Night Period -->
+
   <div class="forecast-period night" *ngIf="forecast.nightPeriod" [class.high-impact]="isHighImpactWeather(forecast.nightPeriod)">
-    <!-- Same structure as day period, with night-specific styling -->
+
     <div class="period-header">
       <div class="header-main">
         <div class="header-title">
@@ -73,7 +74,7 @@
     </div>
 
     <div class="period-details">
-      <!-- Wind Info -->
+
       <div class="detail-item wind-info"
            [class.highlight]="shouldHighlightWind(forecast.nightPeriod.windSpeed)"
            [matTooltip]="shouldHighlightWind(forecast.nightPeriod.windSpeed) ? 'High winds expected' : ''">
@@ -81,7 +82,7 @@
         <span>{{ getWindDescription(forecast.nightPeriod.windSpeed, forecast.nightPeriod.windDirection) }}</span>
       </div>
 
-      <!-- Precipitation Info -->
+
       <div class="detail-item precipitation"
            *ngIf="getPrecipitationDetails(forecast.nightPeriod)"
            [class.snow-expected]="forecast.nightPeriod.snowProbability > 0">
@@ -89,7 +90,7 @@
         <span>{{ getPrecipitationDetails(forecast.nightPeriod) }}</span>
       </div>
 
-      <!-- Service Status -->
+
       <div class="detail-item service-status"
            [class]="getStatusColor(getServiceStatus(forecast.nightPeriod))"
            *ngIf="getServiceStatus(forecast.nightPeriod) !== ServiceStatus.NOT_NEEDED">
@@ -106,3 +107,4 @@
     </div>
   </div>
 </div>
+--->

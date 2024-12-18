@@ -50,6 +50,13 @@ import {
         [alerts]="weatherAlerts">
       </app-alert-banner>
 
+      <app-hourly-forecast
+  *ngIf="hourlyForecast && hourlyForecast.length > 0"
+  [forecast]="hourlyForecast"
+  [chartData]="hourlyChartData"
+  [chartOptions]="hourlyChartOptions">
+</app-hourly-forecast>
+
 
       <app-current-conditions
   [snowProbability]="getCurrentSnowProbability()"
@@ -61,11 +68,7 @@ import {
   [hourlyForecast]="hourlyForecast"
 ></app-current-conditions>
 
-      <app-hourly-forecast
-        [forecast]="hourlyForecast"
-        [chartData]="hourlyChartData"
-        [chartOptions]="hourlyChartOptions">
-      </app-hourly-forecast>
+
 
       <app-weekly-forecast
         [forecast]="dailyForecast"
@@ -193,35 +196,33 @@ export class SnowPlowingCalendarComponent implements OnInit {
   }
 
   private updateCharts(): void {
-    try {
-      if (!this.hourlyForecast.length) {
-        console.warn('No hourly forecast data available for charts');
-        return;
-      }
-
-      this.hourlyChartData = {
-        labels: this.hourlyForecast.map(h => h.time),
-        datasets: [
-          {
-            label: 'Temperature (°F)',
-            data: this.hourlyForecast.map(h => h.temperature),
-            borderColor: '#ff4081',
-            tension: 0.4,
-            yAxisID: 'y-temp'
-          },
-          {
-            label: 'Snow Probability (%)',
-            data: this.hourlyForecast.map(h => h.snowProbability),
-            borderColor: '#2196f3',
-            tension: 0.4,
-            yAxisID: 'y-prob'
-          }
-        ]
-      };
-    } catch (error) {
-      console.error('Error updating charts:', error);
+    if (!this.hourlyForecast || this.hourlyForecast.length === 0) {
+      console.warn('No hourly forecast data available for charts');
+      this.hourlyChartData = { labels: [], datasets: [] };
+      return;
     }
+
+    this.hourlyChartData = {
+      labels: this.hourlyForecast.map(h => h.time),
+      datasets: [
+        {
+          label: 'Temperature (°F)',
+          data: this.hourlyForecast.map(h => h.temperature),
+          borderColor: '#ff4081',
+          tension: 0.4,
+          yAxisID: 'y-temp'
+        },
+        {
+          label: 'Snow Probability (%)',
+          data: this.hourlyForecast.map(h => h.snowProbability),
+          borderColor: '#2196f3',
+          tension: 0.4,
+          yAxisID: 'y-prob'
+        }
+      ]
+    };
   }
+
 
   getCurrentSnowProbability(): number {
     return this.hourlyForecast[0]?.snowProbability || 0;

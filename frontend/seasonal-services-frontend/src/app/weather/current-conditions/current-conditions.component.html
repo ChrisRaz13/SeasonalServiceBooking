@@ -3,9 +3,11 @@
     <mat-card-title>Current Conditions</mat-card-title>
   </mat-card-header>
 
+
+  <!-----
   <mat-card-content>
     <div class="conditions-grid">
-      <!-- Snow Probability -->
+
       <div class="stat-box snow-probability"
            [matTooltip]="getTooltip(snowProbability, snowProbabilityThresholds)">
         <div class="stat-icon snowflake-icon">
@@ -23,8 +25,10 @@
           </div>
         </div>
       </div>
-
+--->
       <!-- Expected Accumulation -->
+
+      <!----
       <div class="stat-box accumulation" [class.alert]="isServiceRequired">
         <div class="stat-icon accumulation-icon">
           <mat-icon>height</mat-icon>
@@ -37,8 +41,11 @@
           </div>
         </div>
       </div>
-
+---->
       <!-- Ground Temperature -->
+
+
+      <!---
       <div class="stat-box temperature">
         <div class="stat-icon temperature-icon">
           <mat-icon>thermostat</mat-icon>
@@ -49,8 +56,10 @@
           <div class="condition-note">{{temperatureStatus}}</div>
         </div>
       </div>
-
+--->
       <!-- Wind Conditions -->
+
+      <!-----
       <div class="stat-box wind"
            [class.alert]="windSpeed >= 20"
            [matTooltip]="'Wind conditions may affect snow distribution'">
@@ -66,6 +75,9 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+--->
+
 <div class="snow-forecast-section">
   <mat-card-subtitle>24-Hour Snow Forecast</mat-card-subtitle>
   <div class="chart-container">
