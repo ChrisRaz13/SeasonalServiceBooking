@@ -448,7 +448,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Property-safe snow removal techniques',
         'Walkway and entrance clearing'
       ],
-      link: '/quote',
+      link: '/booking',
       buttonText: 'Get Started'
     },
     {
@@ -460,7 +460,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Parking lot clearing and maintenance',
         'Snow hauling services available'
       ],
-      link: '/commercial',
+      link: '/services/commercial-snow',
       buttonText: 'Learn More'
     },
     {
@@ -472,7 +472,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Driveway entrance maintenance',
         'Custom service schedules'
       ],
-      link: '/hoa',
+      link: '/booking',
       buttonText: 'Request Service'
     },
     {
@@ -484,7 +484,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Premium ice melt application',
         '24/7 ice monitoring'
       ],
-      link: '/ice-control',
+      link: '/services/ice-management',
       buttonText: 'Learn More'
     }
   ];
@@ -499,7 +499,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Edge trimming & cleanup',
         'Flexible service schedules'
       ],
-      link: '/lawn-care',
+      link: '/booking',
       buttonText: 'Schedule Service'
     },
     {
@@ -511,7 +511,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Fertilization programs',
         'Weed control services'
       ],
-      link: '/seasonal',
+      link: '/services/seasonal-programs',
       buttonText: 'View Programs'
     },
     {
@@ -523,7 +523,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Native plant installation',
         'Hardscape features'
       ],
-      link: '/landscaping',
+      link: '/booking',
       buttonText: 'Start Planning'
     },
     {
@@ -535,7 +535,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         'Large area management',
         'Professional appearance guarantee'
       ],
-      link: '/commercial',
+      link: '/booking',
       buttonText: 'Request Quote'
     }
   ];

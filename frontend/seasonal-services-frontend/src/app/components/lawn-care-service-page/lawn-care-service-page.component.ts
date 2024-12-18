@@ -84,7 +84,7 @@ export class LawnCareServicePageComponent {
   seasonalPackages: SeasonalPackage[] = [
     {
       season: 'Spring',
-      title: 'Spring Revival Package',
+      title: 'Spring Package',
       description: 'Wake up your lawn from winter dormancy',
       services: [
         'Deep cleaning and debris removal',
@@ -98,7 +98,7 @@ export class LawnCareServicePageComponent {
     },
     {
       season: 'Summer',
-      title: 'Summer Vitality Package',
+      title: 'Summer Package',
       description: 'Maintain a lush, green lawn all summer',
       services: [
         'Weekly precision mowing',
@@ -112,7 +112,7 @@ export class LawnCareServicePageComponent {
     },
     {
       season: 'Fall',
-      title: 'Fall Preparation Package',
+      title: 'Fall Package',
       description: 'Prepare your lawn for winter dormancy',
       services: [
         'Leaf removal and cleanup',
