@@ -312,6 +312,93 @@ import {
     </div>
   </div>
 </section>
+
+<div class="seasonal-transition">
+  <div class="transition-content">
+    <h2>Preparing for Spring: A Smooth Transition from Winter</h2>
+
+    <div class="transition-grid">
+      <!-- Winter Damage Assessment -->
+      <div class="transition-card">
+        <div class="card-icon">
+          <mat-icon>search</mat-icon>
+        </div>
+        <h3>Winter Damage Assessment</h3>
+        <p>Winter can take a toll on your property. Salt damage, snow mold, and ice damage need early spring attention to ensure a healthy summer lawn.</p>
+        <ul class="damage-list">
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Salt damage to grass edges</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Snow mold identification</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Ice and plow damage repair</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Early Spring Care -->
+      <div class="transition-card">
+        <div class="card-icon">
+          <mat-icon>eco</mat-icon>
+        </div>
+        <h3>Early Spring Care</h3>
+        <p>The actions you take in early spring set the foundation for a beautiful lawn throughout summer. Timing is crucial for optimal results.</p>
+        <ul class="care-list">
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Debris removal and raking</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Pre-emergent weed control</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Initial fertilization</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Professional Services -->
+      <div class="transition-card">
+        <div class="card-icon">
+          <mat-icon>engineering</mat-icon>
+        </div>
+        <h3>Professional Services</h3>
+        <p>Our comprehensive spring preparation services ensure your lawn bounces back strong after winter dormancy.</p>
+        <ul class="services-list">
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Professional soil testing</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Core aeration</span>
+          </li>
+          <li>
+            <mat-icon>check_circle</mat-icon>
+            <span>Overseeding bare spots</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cta-container">
+      <p class="cta-text">
+        Don't wait until summer reveals winter's damage. Early spring preparation is key to a lush, healthy lawn.
+      </p>
+      <button mat-raised-button color="primary" routerLink="/lawn-care-service-page">
+        <mat-icon>grass</mat-icon>
+        View Lawn Care Services
+      </button>
+    </div>
+  </div>
+</div>
   `,
   animations: [
     trigger('fadeInOut', [
