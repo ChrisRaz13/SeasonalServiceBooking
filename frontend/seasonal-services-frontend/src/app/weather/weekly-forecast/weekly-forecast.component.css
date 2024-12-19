@@ -1,3 +1,4 @@
+/* weekly-forecast.component.css */
 .weekly-forecast-card {
   background: #1c2a3e;
   margin: 20px 0;
@@ -54,6 +55,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  width: 100%;
 }
 
 .period-card {
@@ -62,6 +64,11 @@
   border-radius: 12px;
   flex: 1 1 calc(50% - 20px);
   transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: auto;
+  overflow: visible;
 }
 
 .period-card:hover {
@@ -130,18 +137,21 @@
   margin-bottom: 16px;
 }
 
-.details-button {
-  width: 100%;
-  color: #29b6f6;
-}
-
 .detailed-forecast {
-  margin-top: 16px;
   padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   color: #e1f5fe;
   line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: fit-content;
+  height: auto;
+  flex-grow: 1;
 }
 
 .day-period {
@@ -159,5 +169,12 @@
 
   .period-card {
     flex: 1 1 100%;
+    margin-bottom: 20px;
+    min-height: auto;
+  }
+
+  .detailed-forecast {
+    padding: 10px;
+    font-size: 0.95em;
   }
 }

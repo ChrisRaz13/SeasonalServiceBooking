@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+// weekly-forecast.component.ts
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,7 +25,6 @@ import {
 })
 export class WeeklyForecastComponent {
   @Input() forecast: DayForecast[] = [];
-  @Output() toggleDetails = new EventEmitter<WeatherPeriod>();
 
   formatDate(dateString: string, format: string): string {
     const date = new Date(dateString);
@@ -49,9 +49,5 @@ export class WeeklyForecastComponent {
 
   hasSnowInfo(period: WeatherPeriod): boolean {
     return period.snowProbability > 0 || period.snowAmount > 0;
-  }
-
-  onToggleDetails(period: WeatherPeriod): void {
-    this.toggleDetails.emit(period);
   }
 }
