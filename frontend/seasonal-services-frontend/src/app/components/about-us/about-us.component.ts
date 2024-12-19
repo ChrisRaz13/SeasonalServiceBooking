@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Flip } from 'gsap/Flip';
+import * as L from 'leaflet';
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -45,16 +46,9 @@ interface ServiceCard {
   styleUrls: ['./about-us.component.css'],
 })
 export class AboutUsComponent implements OnInit, AfterViewInit {
-  @ViewChild('cursor') cursor!: ElementRef<HTMLElement>;
-  @ViewChild('cursorDot') cursorDot!: ElementRef<HTMLElement>;
   @ViewChild('parallaxContainer') parallaxContainer!: ElementRef<HTMLElement>;
   @ViewChild('counterSection') counterSection!: ElementRef<HTMLElement>;
 
-  mouseX = 0;
-  mouseY = 0;
-  cursorX = 0;
-  cursorY = 0;
-  isHovering = false;
   currentServiceIndex = 0;
   countersStarted = false;
 
@@ -112,6 +106,8 @@ export class AboutUsComponent implements OnInit, AfterViewInit {
     },
   ];
 
+  private map!: L.Map;
+
   constructor() {}
 
   ngOnInit() {
@@ -120,15 +116,8 @@ export class AboutUsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.initializeAnimations();
-    this.initializeCustomCursor();
     this.initializeScrollTriggers();
-  }
-
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    this.mouseX = event.clientX;
-    this.mouseY = event.clientY;
-    this.updateCursor();
+    this.initMap();
   }
 
   onServiceCardHover(isEntering: boolean, target: EventTarget | null) {
@@ -156,32 +145,6 @@ export class AboutUsComponent implements OnInit, AfterViewInit {
     Flip.from(state, {
       duration: 0.6,
       ease: 'power2.inOut',
-    });
-  }
-
-  private updateCursor() {
-    if (!this.cursor?.nativeElement || !this.cursorDot?.nativeElement) return;
-
-    this.cursorX += (this.mouseX - this.cursorX) * 0.1;
-    this.cursorY += (this.mouseY - this.cursorY) * 0.1;
-
-    this.cursor.nativeElement.style.transform = `translate3d(${this.cursorX}px, ${this.cursorY}px, 0)`;
-    this.cursorDot.nativeElement.style.transform = `translate3d(${this.mouseX}px, ${this.mouseY}px, 0)`;
-  }
-
-  private initializeCustomCursor() {
-    requestAnimationFrame(this.updateCursor.bind(this));
-
-    document.querySelectorAll('.hover-effect').forEach((element) => {
-      element.addEventListener('mouseenter', () => {
-        this.isHovering = true;
-        this.cursor?.nativeElement.classList.add('cursor-hover');
-      });
-
-      element.addEventListener('mouseleave', () => {
-        this.isHovering = false;
-        this.cursor?.nativeElement.classList.remove('cursor-hover');
-      });
     });
   }
 
@@ -269,5 +232,45 @@ export class AboutUsComponent implements OnInit, AfterViewInit {
         },
       });
     });
+  }
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: [41.661128, -91.530168],
+      zoom: 12,
+    });
+
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.map);
+
+    // Add marker and circle for Iowa City
+    L.marker([41.661128, -91.530168] as L.LatLngTuple)
+      .addTo(this.map)
+      .bindPopup('Iowa City - We Serve Here!')
+      .openPopup();
+
+    L.circle([41.661128, -91.530168] as L.LatLngTuple, {
+      color: 'blue',
+      fillColor: '#007bff',
+      fillOpacity: 0.2,
+      radius: 5000, // Radius in meters
+    })
+      .addTo(this.map)
+      .bindPopup('Service Area: Iowa City');
+
+    // Add marker and circle for Muscatine
+    L.marker([41.4245, -91.0430] as L.LatLngTuple)
+      .addTo(this.map)
+      .bindPopup('Muscatine - Serving You!');
+
+    L.circle([41.4245, -91.0430] as L.LatLngTuple, {
+      color: 'green',
+      fillColor: '#00ff00',
+      fillOpacity: 0.2,
+      radius: 5000, // Radius in meters
+    })
+      .addTo(this.map)
+      .bindPopup('Service Area: Muscatine');
   }
 }

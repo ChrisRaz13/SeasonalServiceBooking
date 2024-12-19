@@ -1,15 +1,3 @@
-<div class="custom-cursor" #cursor></div>
-<div class="cursor-dot" #cursorDot></div>
-
-<!-- Floating Elements Background -->
-<div class="floating-background">
-  <div class="floating-element" *ngFor="let i of [1,2,3,4,5]">
-    <svg viewBox="0 0 100 100">
-      <path d="M10,50 Q50,10 90,50 Q50,90 10,50" class="floating-path"></path>
-    </svg>
-  </div>
-</div>
-
 <!-- Main Content -->
 <div class="about-container">
   <!-- Dynamic Intro Section -->
@@ -110,20 +98,20 @@
     </div>
   </section>
 
-  <!-- Interactive Map Section -->
+  <!-- Map Section -->
   <section class="map-section reveal-section">
+    <h2>Our Service Area</h2>
+    <div id="map" style="height: 400px; margin-bottom: 20px;"></div>
     <div class="service-area-map">
-      <h2>Our Service Area</h2>
-      <div class="map-container">
-        <!-- Replace with actual map implementation -->
-        <div class="map-placeholder">
-          <div class="pulse-point" style="left: 50%; top: 50%"></div>
-        </div>
-      </div>
+      <h3>Explore Our Coverage</h3>
+      <ul class="service-list">
+        <li>Iowa City</li>
+        <li>Muscatine</li>
+      </ul>
     </div>
   </section>
 
-  <!-- Contact Section with Parallax -->
+  <!-- Contact Section -->
   <section class="contact-section reveal-section parallax-bg">
     <div class="contact-content">
       <h2>Ready to Experience Our Services?</h2>
