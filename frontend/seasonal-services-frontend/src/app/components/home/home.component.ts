@@ -45,7 +45,10 @@ import {
               <mat-icon>calendar_today</mat-icon>
               Book Now
             </button>
-
+            <button mat-stroked-button (click)="scrollToSection('services')" class="explore-btn">
+              <mat-icon>explore</mat-icon>
+              Explore Services
+            </button>
           </div>
         </div>
         <div class="scroll-indicator">
