@@ -1,0 +1,146 @@
+<div class="custom-cursor" #cursor></div>
+<div class="cursor-dot" #cursorDot></div>
+
+<!-- Floating Elements Background -->
+<div class="floating-background">
+  <div class="floating-element" *ngFor="let i of [1,2,3,4,5]">
+    <svg viewBox="0 0 100 100">
+      <path d="M10,50 Q50,10 90,50 Q50,90 10,50" class="floating-path"></path>
+    </svg>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="about-container">
+  <!-- Dynamic Intro Section -->
+  <section class="intro-section reveal-section">
+    <div class="text-reveal">
+      <h1 class="gradient-text">Committed to Our Community</h1>
+      <div class="typing-container">
+        <p class="typing-text">From snow removal to fresh groceries, we're here to serve Iowa City.</p>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <div class="arrows">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Services Section -->
+  <section class="services-section reveal-section" #parallaxContainer>
+    <div class="services-grid">
+      <div class="service-card"
+       *ngFor="let service of services"
+       [attr.data-service]="service.id"
+       (mouseenter)="onServiceCardHover(true, $event.target)"
+       (mouseleave)="onServiceCardHover(false, $event.target)"
+       (click)="flipCard($event.target)">
+
+        <!-- Front of Card -->
+        <div class="card-front">
+          <div class="service-icon">
+            <mat-icon>{{service.icon}}</mat-icon>
+          </div>
+          <h3>{{service.title}}</h3>
+          <p>{{service.description}}</p>
+
+          <div class="features-preview">
+            <div class="feature-dot" *ngFor="let feature of service.features"></div>
+          </div>
+
+          <div class="flip-prompt">
+            <span>Click to learn more</span>
+            <mat-icon>touch_app</mat-icon>
+          </div>
+        </div>
+
+        <!-- Back of Card -->
+        <div class="card-back">
+          <div class="service-details">
+            <ul class="feature-list">
+              <li *ngFor="let feature of service.features" class="feature-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>{{feature}}</span>
+              </li>
+            </ul>
+
+            <div class="service-stats">
+              <div class="stat-item" *ngFor="let stat of service.stats">
+                <div class="stat-number" [attr.data-target]="stat.value">0</div>
+                <div class="stat-label">{{stat.label}}{{stat.suffix}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Timeline -->
+  <section class="timeline-section reveal-section">
+    <div class="timeline-container">
+      <div class="timeline-entry">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>2020</h3>
+          <p>Started snow removal services</p>
+        </div>
+      </div>
+      <div class="timeline-entry">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>2024</h3>
+          <p>Launched lawn care services</p>
+        </div>
+      </div>
+      <div class="timeline-entry">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>2024</h3>
+          <p>Opened Alex's Market</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Map Section -->
+  <section class="map-section reveal-section">
+    <div class="service-area-map">
+      <h2>Our Service Area</h2>
+      <div class="map-container">
+        <!-- Replace with actual map implementation -->
+        <div class="map-placeholder">
+          <div class="pulse-point" style="left: 50%; top: 50%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section with Parallax -->
+  <section class="contact-section reveal-section parallax-bg">
+    <div class="contact-content">
+      <h2>Ready to Experience Our Services?</h2>
+      <div class="cta-buttons">
+        <a mat-raised-button color="primary" routerLink="/quote" class="hover-effect">
+          <span class="button-content">
+            <mat-icon>calculate</mat-icon>
+            Get a Quote
+          </span>
+        </a>
+        <a mat-raised-button color="accent" href="/market" class="hover-effect">
+          <span class="button-content">
+            <mat-icon>store</mat-icon>
+            Visit Market
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { EmergencyServiceComponent } from './components/emergency-service/emergency-service.component';
@@ -7,6 +7,7 @@ import { SnowPlowingCalendarComponent } from './weather/snow-plowing-calendar/sn
 import { BookingComponent } from './components/booking/booking.component';
 import { LawnCareServicePageComponent } from './components/lawn-care-service-page/lawn-care-service-page.component';
 import { ServiceDetailComponent } from './components/service-detail/service-detail.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Home | Alex Services' },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'lawn-care-service-page', component: LawnCareServicePageComponent, title: 'Lawn Care Services'},
   { path: 'weather-dashboard', component: SnowPlowingCalendarComponent, title: 'Weather Dashboard' },
   { path: 'booking', component: BookingComponent, title: 'Book a Service' },
+  { path: 'about-us', component: AboutUsComponent, title: 'About Us'},
   { path: 'services/:id', component: ServiceDetailComponent},
   {
     path: 'commercial-snow',
