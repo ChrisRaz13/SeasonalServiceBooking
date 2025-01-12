@@ -12,11 +12,8 @@ A full-stack application showcasing a family-owned business offering both **snow
 2. [Features](#features)
 3. [Tech Stack](#tech-stack)
 4. [Screenshots](#screenshots)
-5. [Getting Started](#getting-started)
-6. [Project Structure](#project-structure)
-7. [Usage](#usage)
-8. [Future Enhancements](#future-enhancements)
-9. [License](#license)
+5. [Future Enhancements](#future-enhancements)
+
 
 ---
 
@@ -50,3 +47,15 @@ This website is designed to help customers easily book services, check the lates
 
 ## Screenshots
 
+## Future Enhancements
+- **Online Payments**  
+  - Integrate a secure payment gateway so customers can pay for snow removal and lawn care services directly on the website. This would streamline transactions and reduce administrative work.
+
+  - **User Account System**  
+  - Implement registration and login features, allowing customers to view their service history, save payment methods, and manage recurring appointments from a personalized dashboard.
+
+- **Automated Notifications**  
+  - Set up email or SMS reminders to notify clients about upcoming appointments or severe weather conditions that could affect their scheduled services.
+
+- **Loyalty & Referral Programs**  
+  - Introduce loyalty points or referral incentives to encourage repeat business, reward ongoing clients, and attract new customers through word-of-mouth.
