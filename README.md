@@ -1,8 +1,5 @@
 # Snowplowing & Lawn Care Services Website
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
-
 A full-stack application showcasing a family-owned business offering both **snow removal** and **lawn care** services. This repository features a user-friendly interface with helpful functionalities, including weather forecasts, a simple booking system, and a 24/7 emergency service page.
 
 ---
