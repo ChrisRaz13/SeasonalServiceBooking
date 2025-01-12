@@ -51,7 +51,7 @@ This website is designed to help customers easily book services, check the lates
 - **Online Payments**  
   - Integrate a secure payment gateway so customers can pay for snow removal and lawn care services directly on the website. This would streamline transactions and reduce administrative work.
 
-  - **User Account System**  
+- **User Account System**  
   - Implement registration and login features, allowing customers to view their service history, save payment methods, and manage recurring appointments from a personalized dashboard.
 
 - **Automated Notifications**  
